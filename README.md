@@ -132,16 +132,16 @@ Ce projet utilise [Semantic Versioning](https://semver.org/).
 
 ## 👤 Auteur
 
-**Steve-Landry KOUOKAM NONO**
+**Steve Landry KOUOKAM NONO**
 - Formation : HETIC Mastère Data & IA
 - Alternance : Data Analyst @ Michelin
-- Contact : [LinkedIn](https://linkedin.com/in/steve-music)
+- Contact : [LinkedIn](https://www.linkedin.com/in/steve-landry-kouokam-nono-18b175291/)
 
 ---
 
 ## 📝 License
 
-Ce projet est privé. Tous droits réservés © 2026 Steve-Landry KOUOKAM NONO.
+Ce projet est privé. Tous droits réservés © 2026 Steve Landry KOUOKAM NONO.
 
 ---
 
