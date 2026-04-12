@@ -1,148 +1,239 @@
 # 🌳 FamilyRoots
 
-> Application mobile de généalogie collaborative — Construis ton arbre, connecte ta famille.
+> Application mobile-first de généalogie collaborative — construis ton arbre, connecte ta famille.
 
-[![Version](https://img.shields.io/badge/version-0.2.0-green.svg)](https://github.com/Steve-Music/FamilyRoots)
-[![Status](https://img.shields.io/badge/status-MVP%20Design-blue.svg)]()
-[![Stack](https://img.shields.io/badge/stack-Flutter%20%7C%20NestJS%20%7C%20Supabase-purple.svg)]()
+![Version](https://img.shields.io/badge/version-v0.4.0-green.svg)
+![Status](https://img.shields.io/badge/status-MVP%20en%20construction-blue.svg)
+![Stack](https://img.shields.io/badge/stack-Flutter%20%7C%20NestJS%20%7C%20GraphQL%20%7C%20Supabase-purple.svg)
 
 ---
 
 ## 📋 À propos
 
-**FamilyRoots** est une application mobile-first permettant aux familles de :
-- 🌲 Construire leur arbre généalogique de manière collaborative
-- 👨‍👩‍👧‍👦 Inviter des proches à contribuer
-- 🎂 Recevoir des notifications pour les anniversaires et événements familiaux
-- 🔐 Gérer les accès avec un système d'invitation sécurisé
+**FamilyRoots** est une application de généalogie collaborative pensée d’abord pour le mobile.  
+L’objectif est de permettre à une famille de :
 
-### Différenciateurs clés
-- **Collaboration native** — Chaque membre peut enrichir l'arbre
-- **Support polygamie** — Adapté aux structures familiales africaines et autres
-- **Mobile-first** — Optimisé pour l'usage quotidien
-- **Freemium** — Gratuit jusqu'à 15 membres, plans payants pour les grandes familles
+- 🌲 construire un arbre généalogique partagé
+- 👨‍👩‍👧‍👦 inviter des proches à contribuer
+- 🎂 suivre les anniversaires et événements familiaux
+- 🔐 gérer l’accès via authentification et invitations sécurisées
+
+### Différenciateurs
+- **Collaboration native** — plusieurs membres peuvent enrichir l’arbre
+- **Support des structures familiales complexes** — y compris la polygamie
+- **Mobile-first** — usage simple et quotidien
+- **Freemium** — version gratuite pour les petites familles, plans évolutifs ensuite
 
 ---
 
-## 🏗️ État du projet
+## 🚧 État actuel du projet
 
-| Phase | Statut | Description |
-|-------|--------|-------------|
-| **Paquet 1** — Fondations Produit | ✅ Terminé | PRD, Maquettes, User Flow, Scope Freeze |
-| **Paquet 2** — Architecture Technique | ✅ Terminé | ERD, Prisma, API GraphQL, Backlog |
-| **Paquet 3** — Règles Métier & Design System | 🔜 À venir | Règles métier, corrections UI, composants |
-| **Sprint 1** — Infrastructure & Auth | ⏳ Planifié | NestJS, Supabase, Flutter setup |
+| Bloc | Statut | Détails |
+|---|---|---|
+| Documentation produit | ✅ Terminé | PRD, scope freeze, audit, user flow, design system |
+| Architecture technique | ✅ Terminé | ERD, Prisma schema, API GraphQL, backlog |
+| Backend | ✅ Initialisé | NestJS + GraphQL + Prisma + Supabase |
+| Authentification | ✅ Fonctionnelle | Supabase Auth côté app |
+| App Flutter | ✅ Initialisée | thème, routing, écrans MVP de base |
+| Navigation | ✅ Fonctionnelle | login, register, home, create/join family, tree, profile |
+| Intégration Flutter ↔ GraphQL | 🚧 En cours | Sprint 3 |
+| Arbre interactif complet | 🚧 En cours | placeholder / intégration progressive |
+| Notifications avancées | ⏳ À venir | centre de notifications + logique métier complète |
 
-**Version actuelle :** `v0.2.0` (Paquet 2 complet)
+**Version actuelle :** `v0.4.0`
 
 ---
 
 ## 📁 Structure du projet
 
-```
-FamilyRoots/
-├── docs/                          # Documentation projet
-│   ├── 01-product/                # PRD, Scope, Audit
-│   ├── 02-design/                 # Maquettes, User Flows
-│   ├── 03-architecture/           # ERD, Prisma, API Spec
-│   ├── 04-backlog/                # User Stories, Sprints
-│   └── INDEX.md                   # Table des matières
+```text
+FamilyRoot/
+├── docs/
+│   ├── 00-legacy/              # Archives, anciennes versions, premières maquettes
+│   ├── 01-product/             # PRD, scope freeze, audit, charte
+│   ├── 02-design/              # Maquettes, user flow, design system
+│   ├── 03-architecture/        # ERD, business rules, Prisma, API GraphQL
+│   ├── 04-backlog/             # Backlog MVP
+│   └── INDEX.md
 │
-├── src/                           # Code source (à venir)
-│   ├── backend/                   # NestJS + GraphQL
-│   └── mobile/                    # Flutter
+├── src/
+│   ├── backend/                # NestJS + GraphQL + Prisma + Supabase
+│   └── mobile/                 # Flutter app
 │
-└── README.md
+├── .env.template
+├── CHANGELOG.md
+├── README.md
+└── .gitignore
 ```
 
 ---
 
-## 🛠️ Stack Technique
+## 🛠️ Stack technique
 
 ### Backend
-- **Framework:** NestJS (Node.js)
-- **API:** GraphQL (Apollo Server, code-first)
-- **ORM:** Prisma
-- **Database:** PostgreSQL (Supabase)
-- **Auth:** Supabase Auth (JWT)
-- **Storage:** Supabase Storage (photos)
+- **NestJS**
+- **GraphQL (Apollo)**
+- **Prisma ORM**
+- **PostgreSQL via Supabase**
+- **Supabase Auth**
+- **Supabase Storage**
 
 ### Mobile
-- **Framework:** Flutter 3.x
-- **State:** Riverpod
-- **Navigation:** GoRouter
-- **GraphQL:** graphql_flutter
-- **Push:** Firebase Cloud Messaging
+- **Flutter 3.x**
+- **Riverpod**
+- **GoRouter**
+- **Supabase Flutter**
+- **GraphQL côté client** en cours d’intégration
 
-### Infrastructure
-- **Database/Auth/Storage:** Supabase
-- **CI/CD:** GitHub Actions
-- **Hosting:** À définir (Vercel/Railway pour backend)
+### Outils
+- Git / GitHub
+- Chrome pour debug web Flutter
+- Semantic Versioning
+- Documentation produit structurée dans `docs/`
 
 ---
 
-## 📊 MVP Scope
+## ✅ Ce qui fonctionne déjà
 
-### Écrans (18)
-- Onboarding (4) — Splash, slides intro
-- Auth (5) — Login, Register, Confirmation, Créer/Rejoindre famille
-- Dashboard (2) — Stats, Notifications
-- Arbre (2) — Vue interactive, Popup membre
-- Profils (3) — Mon profil, Profil membre, Édition
-- Features (2) — Invitation, Ajouter membre
+### Backend
+- serveur NestJS démarrable
+- schéma Prisma en place
+- modules principaux :
+  - Auth
+  - Profile
+  - Family
+  - Member
+  - Invitation
+  - Notification
+- GraphQL opérationnel
 
-### Tables BDD (8)
-`Profile` · `Family` · `UserFamily` · `Member` · `Relationship` · `Event` · `Invitation` · `Notification`
+### Mobile
+- app Flutter lancée
+- thème FamilyRoots appliqué
+- authentification Supabase fonctionnelle
+- écrans présents :
+  - Login
+  - Register
+  - Home
+  - Create Family
+  - Join Family
+  - Tree
+  - Profile
+- navigation via GoRouter
 
-### Hors MVP (V1.5+)
-- Forgot Password, Social Login
-- QR Code invitation
-- Multi-familles
-- Calendrier dédié
-- Fil d'activité
-- Web App
+### Produit / Architecture
+- MVP défini
+- architecture auth clarifiée
+- conventions `Profile` / `Member` / `Family` figées
+- distinction `family.code` / `invitation.code` documentée
+
+---
+
+## 🧭 Roadmap immédiate
+
+### Sprint 3 — priorité actuelle
+Connexion complète **Flutter ↔ Backend GraphQL** :
+
+- [ ] brancher `me`
+- [ ] brancher `createFamily`
+- [ ] brancher `joinFamily`
+- [ ] brancher `familyTree`
+- [ ] brancher `dashboard`
+- [ ] injecter le JWT Supabase dans les headers GraphQL
+- [ ] remplacer les placeholders par des données réelles
+
+### Ensuite
+- [ ] arbre généalogique interactif complet
+- [ ] centre de notifications
+- [ ] dashboard dynamique
+- [ ] stabilisation UX (loading, empty states, errors)
+- [ ] préparation d’une release MVP exploitable
+
+---
+
+## ▶️ Lancer le projet en local
+
+### 1. Cloner le repo
+```bash
+git clone git@github.com:Steve-Landry-NONO/FamilyRoot.git
+cd FamilyRoot
+```
+
+### 2. Backend
+```bash
+cd src/backend
+npm install
+npm run start:dev
+```
+
+Le backend doit ensuite être disponible localement sur son port de dev.
+
+### 3. Mobile Flutter
+```bash
+cd src/mobile
+flutter pub get
+flutter run -d chrome
+```
+
+---
+
+## 🔐 Configuration
+
+Un fichier `.env.template` est présent à la racine du projet.
+
+Prévois au minimum :
+- URL Supabase
+- clé publique Supabase
+- variables backend nécessaires à NestJS / Prisma
+- URL du backend GraphQL pour Flutter
 
 ---
 
 ## 📄 Documentation
 
-Voir [docs/INDEX.md](docs/INDEX.md) pour la liste complète des documents.
+La documentation projet est centralisée dans :
+
+```text
+docs/INDEX.md
+```
 
 ### Documents clés
-| Document | Description |
-|----------|-------------|
-| [MVP Scope Freeze](docs/01-product/FamilyRoots_MVP_Scope_Freeze_v1.0.html) | Source of Truth — Périmètre gelé |
-| [Architecture Auth + ERD](docs/03-architecture/FamilyRoots_Architecture_Auth_ERD_v1.1.html) | Modèle de données + décisions techniques |
-| [API GraphQL Spec](docs/03-architecture/FamilyRoots_API_GraphQL_Spec_v1.0.html) | Types, Queries, Mutations |
-| [Backlog MVP](docs/04-backlog/FamilyRoots_Backlog_MVP_v1.0.html) | 24 User Stories sur 3 sprints |
+| Document | Rôle |
+|---|---|
+| `docs/01-product/FamilyRoots_MVP_Scope_Freeze_v1.0.html` | périmètre MVP gelé |
+| `docs/03-architecture/FamilyRoots_Architecture_Auth_ERD_v1.1.html` | auth + ERD |
+| `docs/03-architecture/FamilyRoots_API_GraphQL_Spec_v1.0.html` | contrat API GraphQL |
+| `docs/03-architecture/FamilyRoots_Prisma_Schema_v1.0.prisma` | modèle Prisma |
+| `docs/04-backlog/FamilyRoots_Backlog_MVP_v1.0.html` | backlog MVP |
 
 ---
 
 ## 🏷️ Versioning
 
-Ce projet utilise [Semantic Versioning](https://semver.org/).
+Le projet suit une logique **SemVer**.
 
-| Tag | Description |
-|-----|-------------|
-| `v0.1.0` | Paquet 1 — Fondations Produit |
-| `v0.2.0` | Paquet 2 — Architecture Technique |
-| `v1.0.0` | MVP prêt pour release |
+| Version | Signification |
+|---|---|
+| `v0.3.0` | documentation structurée et repo réorganisé |
+| `v0.4.0` | backend + app Flutter + auth + navigation de base |
+| `v0.5.0` | cible probable après intégration GraphQL Sprint 3 |
+| `v1.0.0` | MVP stable prêt à être présenté / déployé |
 
 ---
 
 ## 👤 Auteur
 
 **Steve Landry KOUOKAM NONO**
-- Formation : HETIC Mastère Data & IA
-- Alternance : Data Analyst @ Michelin
-- Contact : [LinkedIn](https://www.linkedin.com/in/steve-landry-kouokam-nono-18b175291/)
+- HETIC — Mastère Data & IA
+- Data Analyst @ Michelin
+- LinkedIn : https://www.linkedin.com/in/steve-landry-kouokam-nono-18b175291/
 
 ---
 
-## 📝 License
+## 📝 Licence
 
-Ce projet est privé. Tous droits réservés © 2026 Steve Landry KOUOKAM NONO.
+Projet privé — tous droits réservés © 2026 Steve Landry KOUOKAM NONO.
 
 ---
 
-*Dernière mise à jour : 11 Avril 2026*
+*Dernière mise à jour : 12 avril 2026*
