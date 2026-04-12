@@ -53,3 +53,4 @@ secrets/
 .env
 .env.local
 .env.*.local
+.Rhistory
