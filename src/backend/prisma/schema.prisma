@@ -1,0 +1,229 @@
+// ============================================
+// FamilyRoots — Prisma Schema v1.0
+// ============================================
+// Connecté à Supabase PostgreSQL
+// Auth géré par Supabase Auth (auth.users)
+// ============================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum FamilyRole {
+  ADMIN
+  MEMBER
+}
+
+enum RelationType {
+  PARENT
+  CHILD
+  SPOUSE
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum EventType {
+  BIRTHDAY
+  WEDDING
+  DEATH
+  CUSTOM
+}
+
+enum NotificationType {
+  BIRTHDAY_REMINDER
+  WEDDING_REMINDER
+  MEMBER_ADDED
+  FAMILY_JOINED
+  INVITATION_USED
+}
+
+enum FamilyTier {
+  FREE
+  FAMILLE
+  FAMILLE_PLUS
+}
+
+// ============================================
+// MODELS
+// ============================================
+
+/// Profil applicatif lié à auth.users de Supabase
+model Profile {
+  id        String   @id @default(uuid())
+  authId    String   @unique @map("auth_id") // UUID de auth.users
+  email     String   @unique
+  firstName String   @map("first_name")
+  lastName  String   @map("last_name")
+  avatarUrl String?  @map("avatar_url")
+  fcmToken  String?  @map("fcm_token") // Pour push notifications
+  settings  Json     @default("{}")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  families      UserFamily[]
+  notifications Notification[]
+  linkedMember  Member?        @relation("LinkedProfile")
+
+  // Invitations créées par ce profil
+  createdInvitations Invitation[] @relation("InvitationCreator")
+  // Invitations utilisées par ce profil
+  usedInvitations    Invitation[] @relation("InvitationUser")
+
+  @@map("profiles")
+}
+
+/// Groupe familial
+model Family {
+  id        String     @id @default(uuid())
+  name      String // Nom de la famille
+  code      String     @unique // FAM-XXXXXX (identifiant public)
+  tier      FamilyTier @default(FREE)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  members     Member[]
+  users       UserFamily[]
+  invitations Invitation[]
+  events      Event[]
+
+  @@map("families")
+}
+
+/// Table pivot Profile <-> Family avec rôle
+model UserFamily {
+  id        String     @id @default(uuid())
+  profileId String     @map("profile_id")
+  familyId  String     @map("family_id")
+  role      FamilyRole @default(MEMBER)
+  joinedAt  DateTime   @default(now()) @map("joined_at")
+
+  // Relations
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  family  Family  @relation(fields: [familyId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, familyId])
+  @@map("user_families")
+}
+
+/// Membre de l'arbre généalogique
+model Member {
+  id              String    @id @default(uuid())
+  familyId        String    @map("family_id")
+  linkedProfileId String?   @unique @map("linked_profile_id") // Si lié à un compte
+  firstName       String    @map("first_name")
+  lastName        String    @map("last_name")
+  birthDate       DateTime? @map("birth_date")
+  deathDate       DateTime? @map("death_date")
+  gender          Gender?
+  birthPlace      String?   @map("birth_place")
+  bio             String?
+  photoUrl        String?   @map("photo_url")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  family        Family         @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  linkedProfile Profile?       @relation("LinkedProfile", fields: [linkedProfileId], references: [id])
+  relationsFrom Relationship[] @relation("RelationFrom")
+  relationsTo   Relationship[] @relation("RelationTo")
+  events        Event[]
+
+  @@index([familyId])
+  @@map("members")
+}
+
+/// Relation entre deux membres
+model Relationship {
+  id           String       @id @default(uuid())
+  fromMemberId String       @map("from_member_id")
+  toMemberId   String       @map("to_member_id")
+  type         RelationType
+  createdAt    DateTime     @default(now()) @map("created_at")
+
+  // Relations
+  fromMember Member @relation("RelationFrom", fields: [fromMemberId], references: [id], onDelete: Cascade)
+  toMember   Member @relation("RelationTo", fields: [toMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([fromMemberId, toMemberId, type])
+  @@index([fromMemberId])
+  @@index([toMemberId])
+  @@map("relationships")
+}
+
+/// Événement familial (anniversaire, mariage, etc.)
+model Event {
+  id           String    @id @default(uuid())
+  familyId     String    @map("family_id")
+  memberId     String?   @map("member_id") // Membre concerné (optionnel)
+  type         EventType
+  title        String
+  description  String?
+  date         DateTime // Date de l'événement
+  isRecurring  Boolean   @default(false) @map("is_recurring")
+  reminderDays Int[]     @default([7, 1, 0]) @map("reminder_days") // J-7, J-1, J
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  family Family  @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  member Member? @relation(fields: [memberId], references: [id], onDelete: SetNull)
+
+  @@index([familyId])
+  @@index([date])
+  @@map("events")
+}
+
+/// Invitation à rejoindre une famille
+model Invitation {
+  id          String    @id @default(uuid())
+  familyId    String    @map("family_id")
+  code        String    @unique // INV-XXXXXXXXXXXX
+  createdById String    @map("created_by_id")
+  usedById    String?   @map("used_by_id")
+  expiresAt   DateTime  @map("expires_at")
+  usedAt      DateTime? @map("used_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  family    Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  createdBy Profile  @relation("InvitationCreator", fields: [createdById], references: [id])
+  usedBy    Profile? @relation("InvitationUser", fields: [usedById], references: [id])
+
+  @@index([familyId])
+  @@index([code])
+  @@map("invitations")
+}
+
+/// Notification in-app
+model Notification {
+  id        String           @id @default(uuid())
+  profileId String           @map("profile_id")
+  type      NotificationType
+  title     String
+  body      String
+  data      Json             @default("{}") // Métadonnées (memberId, eventId, etc.)
+  isRead    Boolean          @default(false) @map("is_read")
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  // Relations
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+  @@index([createdAt])
+  @@map("notifications")
+}
