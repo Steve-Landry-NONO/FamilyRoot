@@ -1,0 +1,206 @@
+<h2 class="sr-only">Maquettes web desktop FamilyRoots : Landing page et onboarding</h2>
+<style>
+.browser{width:100%;max-width:680px;background:#fff;border-radius:12px;border:1px solid var(--color-border-tertiary);overflow:hidden;margin:0 auto 24px}
+.browser-bar{height:36px;background:#F5F5DC;border-bottom:1px solid #D4A574;display:flex;align-items:center;padding:0 12px;gap:8px}
+.browser-dot{width:10px;height:10px;border-radius:50%;background:#D4A574}
+.browser-dot.r{background:#E63946}
+.browser-dot.y{background:#FF9800}
+.browser-dot.g{background:#4CAF50}
+.browser-url{flex:1;height:22px;background:#FFF8E7;border-radius:11px;margin-left:12px;display:flex;align-items:center;padding:0 12px;font-size:11px;color:#8B4513}
+.web-content{min-height:420px;background:#FFF8E7}
+.web-header{height:56px;background:#2D5016;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.web-logo{display:flex;align-items:center;gap:10px;color:#fff}
+.web-logo-icon{width:32px;height:32px;position:relative}
+.wl-f{position:absolute;border-radius:50%}
+.wl-f1{width:20px;height:20px;background:#4A7023;top:2px;left:6px}
+.wl-f2{width:14px;height:14px;background:#6B8E23;top:0;left:2px}
+.wl-f3{width:14px;height:14px;background:#6B8E23;top:0;right:2px}
+.wl-dot{position:absolute;width:5px;height:5px;background:rgba(255,255,255,0.9);border-radius:50%;top:8px;left:14px}
+.wl-trunk{position:absolute;width:4px;height:10px;background:#D4A574;bottom:0;left:14px;border-radius:2px}
+.web-logo-text{font-family:Georgia,serif;font-size:18px;font-weight:500}
+.web-nav{display:flex;gap:24px;align-items:center}
+.web-nav a{color:#D4A574;font-size:13px;text-decoration:none}
+.web-nav a:hover{color:#fff}
+.web-btn-login{padding:8px 20px;background:transparent;border:1.5px solid #D4A574;color:#D4A574;border-radius:18px;font-size:13px;cursor:pointer}
+.web-btn-signup{padding:8px 20px;background:#D4A574;border:none;color:#5D4037;border-radius:18px;font-size:13px;font-weight:500;cursor:pointer;margin-left:8px}
+.hero{display:flex;align-items:center;padding:48px 32px;gap:40px}
+.hero-text{flex:1}
+.hero-title{font-family:Georgia,serif;font-size:32px;color:#2D5016;font-weight:500;line-height:1.2;margin-bottom:16px}
+.hero-desc{color:#5D4037;font-size:15px;line-height:1.6;margin-bottom:24px}
+.hero-btns{display:flex;gap:12px}
+.btn-hero-primary{padding:14px 28px;background:#2D5016;color:#fff;border:none;border-radius:24px;font-size:15px;font-weight:500;cursor:pointer}
+.btn-hero-secondary{padding:14px 28px;background:transparent;color:#2D5016;border:2px solid #2D5016;border-radius:24px;font-size:15px;font-weight:500;cursor:pointer}
+.hero-visual{width:220px;height:220px;position:relative}
+.hv-tree{width:100%;height:100%;position:relative}
+.hv-f{position:absolute;border-radius:50%}
+.hv-f1{width:100px;height:100px;background:#2D5016;top:20px;left:60px}
+.hv-f2{width:70px;height:70px;background:#4A7023;top:50px;left:30px}
+.hv-f3{width:70px;height:70px;background:#4A7023;top:50px;right:30px}
+.hv-f4{width:50px;height:50px;background:#6B8E23;top:10px;left:40px}
+.hv-f5{width:50px;height:50px;background:#6B8E23;top:10px;right:40px}
+.hv-trunk{position:absolute;width:16px;height:60px;background:#5D4037;bottom:10px;left:50%;transform:translateX(-50%);border-radius:6px}
+.hv-branch{position:absolute;width:8px;height:30px;background:#5D4037;border-radius:4px}
+.hv-bl{bottom:50px;left:75px;transform:rotate(-30deg)}
+.hv-br{bottom:55px;right:75px;transform:rotate(30deg)}
+.hv-dot{position:absolute;background:rgba(255,255,255,0.9);border-radius:50%}
+.hv-d1{width:16px;height:16px;top:55px;left:105px}
+.hv-d2{width:12px;height:12px;top:45px;left:80px}
+.hv-d3{width:12px;height:12px;top:48px;right:80px}
+.hv-d4{width:10px;height:10px;top:30px;left:90px}
+.hv-d5{width:10px;height:10px;top:28px;right:90px}
+.features{display:flex;gap:20px;padding:0 32px 32px}
+.feature-card{flex:1;background:#fff;border-radius:16px;padding:20px;border:1px solid #D4A574}
+.feature-icon{width:48px;height:48px;background:#F5F5DC;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.feature-icon svg{width:24px;height:24px}
+.feature-title{color:#2D5016;font-size:15px;font-weight:500;margin-bottom:6px}
+.feature-desc{color:#8B4513;font-size:12px;line-height:1.4}
+.screen-title{text-align:center;color:var(--color-text-secondary);font-size:13px;margin-bottom:8px;font-weight:500}
+</style>
+<div class="screen-title">Landing Page / Welcome</div>
+<div class="browser">
+<div class="browser-bar">
+<div class="browser-dot r"></div>
+<div class="browser-dot y"></div>
+<div class="browser-dot g"></div>
+<div class="browser-url">familyroots.app</div>
+</div>
+<div class="web-content">
+<div class="web-header">
+<div class="web-logo">
+<div class="web-logo-icon">
+<div class="wl-f wl-f1"></div>
+<div class="wl-f wl-f2"></div>
+<div class="wl-f wl-f3"></div>
+<div class="wl-dot"></div>
+<div class="wl-trunk"></div>
+</div>
+<span class="web-logo-text">FamilyRoots</span>
+</div>
+<div class="web-nav">
+<a href="#">Fonctionnalites</a>
+<a href="#">Tarifs</a>
+<a href="#">A propos</a>
+<button class="web-btn-login">Connexion</button>
+<button class="web-btn-signup">S'inscrire</button>
+</div>
+</div>
+<div class="hero">
+<div class="hero-text">
+<h1 class="hero-title">Vos racines,<br/>votre histoire</h1>
+<p class="hero-desc">Construisez votre arbre genealogique en famille. Partagez souvenirs, photos et histoires avec vos proches, ou qu'ils soient dans le monde.</p>
+<div class="hero-btns">
+<button class="btn-hero-primary">Creer ma famille</button>
+<button class="btn-hero-secondary">Rejoindre une famille</button>
+</div>
+</div>
+<div class="hero-visual">
+<div class="hv-tree">
+<div class="hv-f hv-f1"></div>
+<div class="hv-f hv-f2"></div>
+<div class="hv-f hv-f3"></div>
+<div class="hv-f hv-f4"></div>
+<div class="hv-f hv-f5"></div>
+<div class="hv-dot hv-d1"></div>
+<div class="hv-dot hv-d2"></div>
+<div class="hv-dot hv-d3"></div>
+<div class="hv-dot hv-d4"></div>
+<div class="hv-dot hv-d5"></div>
+<div class="hv-trunk"></div>
+<div class="hv-branch hv-bl"></div>
+<div class="hv-branch hv-br"></div>
+</div>
+</div>
+</div>
+<div class="features">
+<div class="feature-card">
+<div class="feature-icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2">
+<circle cx="12" cy="6" r="4"/>
+<path d="M12 10v4"/>
+<circle cx="6" cy="18" r="3"/>
+<circle cx="18" cy="18" r="3"/>
+<path d="M12 14l-4 2"/>
+<path d="M12 14l4 2"/>
+</svg>
+</div>
+<div class="feature-title">Arbre collaboratif</div>
+<div class="feature-desc">Chaque membre peut completer ses informations et ajouter ses liens familiaux.</div>
+</div>
+<div class="feature-card">
+<div class="feature-icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2">
+<rect x="3" y="4" width="18" height="16" rx="2"/>
+<path d="M3 10h18"/>
+<path d="M8 4v6"/>
+<path d="M16 4v6"/>
+</svg>
+</div>
+<div class="feature-title">Calendrier familial</div>
+<div class="feature-desc">Ne ratez plus aucun anniversaire, mariage ou evenement important.</div>
+</div>
+<div class="feature-card">
+<div class="feature-icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2">
+<path d="M12 2C8 2 4 6 4 12c0 8 8 10 8 10s8-2 8-10c0-6-4-10-8-10z"/>
+<path d="M12 8v4"/>
+<circle cx="12" cy="16" r="1" fill="#2D5016"/>
+</svg>
+</div>
+<div class="feature-title">Notifications</div>
+<div class="feature-desc">Alertes personnalisees pour les naissances, mariages et moments cles.</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="screen-title">Ecran d'inscription</div>
+<div class="browser">
+<div class="browser-bar">
+<div class="browser-dot r"></div>
+<div class="browser-dot y"></div>
+<div class="browser-dot g"></div>
+<div class="browser-url">familyroots.app/signup</div>
+</div>
+<div class="web-content" style="display:flex;min-height:400px">
+<div style="flex:1;background:#2D5016;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px">
+<div style="width:140px;height:140px;position:relative;margin-bottom:24px">
+<div style="position:absolute;width:80px;height:80px;background:#4A7023;border-radius:50%;top:15px;left:30px"></div>
+<div style="position:absolute;width:55px;height:55px;background:#6B8E23;border-radius:50%;top:25px;left:10px"></div>
+<div style="position:absolute;width:55px;height:55px;background:#6B8E23;border-radius:50%;top:25px;right:10px"></div>
+<div style="position:absolute;width:10px;height:10px;background:rgba(255,255,255,0.9);border-radius:50%;top:45px;left:65px"></div>
+<div style="position:absolute;width:8px;height:8px;background:rgba(255,255,255,0.8);border-radius:50%;top:38px;left:50px"></div>
+<div style="position:absolute;width:8px;height:8px;background:rgba(255,255,255,0.8);border-radius:50%;top:40px;right:50px"></div>
+<div style="position:absolute;width:10px;height:40px;background:#D4A574;border-radius:5px;bottom:0;left:65px"></div>
+</div>
+<div style="color:#fff;font-family:Georgia,serif;font-size:24px;font-weight:500;text-align:center;margin-bottom:12px">Bienvenue dans<br/>FamilyRoots</div>
+<div style="color:#D4A574;font-size:13px;text-align:center">Rejoignez des milliers de familles<br/>qui preservent leur histoire.</div>
+</div>
+<div style="flex:1;padding:32px;display:flex;flex-direction:column;justify-content:center">
+<div style="font-family:Georgia,serif;font-size:22px;color:#2D5016;margin-bottom:24px">Creer un compte</div>
+<div style="margin-bottom:16px">
+<label style="display:block;font-size:12px;color:#8B4513;margin-bottom:6px">Prenom</label>
+<input type="text" placeholder="Votre prenom" style="width:100%;padding:12px 16px;border:1.5px solid #D4A574;border-radius:12px;background:#FFF8E7;font-size:14px;box-sizing:border-box">
+</div>
+<div style="margin-bottom:16px">
+<label style="display:block;font-size:12px;color:#8B4513;margin-bottom:6px">Nom de famille</label>
+<input type="text" placeholder="Votre nom" style="width:100%;padding:12px 16px;border:1.5px solid #D4A574;border-radius:12px;background:#FFF8E7;font-size:14px;box-sizing:border-box">
+</div>
+<div style="margin-bottom:16px">
+<label style="display:block;font-size:12px;color:#8B4513;margin-bottom:6px">Email</label>
+<input type="email" placeholder="votre@email.com" style="width:100%;padding:12px 16px;border:1.5px solid #D4A574;border-radius:12px;background:#FFF8E7;font-size:14px;box-sizing:border-box">
+</div>
+<div style="margin-bottom:20px">
+<label style="display:block;font-size:12px;color:#8B4513;margin-bottom:6px">Mot de passe</label>
+<input type="password" placeholder="8 caracteres minimum" style="width:100%;padding:12px 16px;border:1.5px solid #D4A574;border-radius:12px;background:#FFF8E7;font-size:14px;box-sizing:border-box">
+</div>
+<button style="width:100%;padding:14px;background:#2D5016;color:#fff;border:none;border-radius:22px;font-size:15px;font-weight:500;cursor:pointer;margin-bottom:16px">Creer mon compte</button>
+<div style="text-align:center;font-size:13px;color:#5D4037">Deja un compte ? <span style="color:#2D5016;font-weight:500;cursor:pointer">Se connecter</span></div>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+<button style="padding:10px 20px;border-radius:20px;background:#2D5016;border:none;color:#fff;cursor:pointer;font-size:13px" onclick="sendPrompt('Cree maintenant les maquettes pour les ecrans Connexion et Inscription mobile FamilyRoots')">Connexion / Inscription</button>
+<button style="padding:10px 20px;border-radius:20px;border:1.5px solid #2D5016;background:transparent;color:#2D5016;cursor:pointer;font-size:13px" onclick="sendPrompt('Cree les maquettes Home / Dashboard FamilyRoots mobile et web')">Home / Dashboard</button>
+<button style="padding:10px 20px;border-radius:20px;border:1.5px solid #4A7023;background:transparent;color:#4A7023;cursor:pointer;font-size:13px" onclick="sendPrompt('Cree les maquettes de l arbre genealogique FamilyRoots')">Arbre genealogique</button>
+</div>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FamilyRoots - User Flow Diagram MVP</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+  <style>
+    :root {
+      --foret: #2D5016;
+      --feuille: #4A7023;
+      --sable: #D4A574;
+      --ivoire: #FFF8E7;
+      --creme: #F5F5DC;
+      --terre: #8B4513;
+      --bois: #5D4037;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--creme); min-height: 100vh; }
+    
+    .header {
+      background: linear-gradient(135deg, var(--foret) 0%, var(--feuille) 100%);
+      padding: 30px;
+      text-align: center;
+      color: white;
+    }
+    .header h1 { font-size: 28px; margin-bottom: 8px; }
+    .header p { font-size: 14px; color: var(--sable); }
+    
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      padding: 20px;
+      background: var(--ivoire);
+      border-bottom: 2px solid var(--sable);
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--bois);
+    }
+    .legend-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+    }
+    
+    .diagram-container {
+      padding: 30px;
+      overflow-x: auto;
+      background: white;
+      margin: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+    
+    .info-section {
+      max-width: 1000px;
+      margin: 0 auto 30px;
+      padding: 0 20px;
+    }
+    .info-card {
+      background: var(--ivoire);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      border: 1px solid var(--sable);
+    }
+    .info-card h3 {
+      color: var(--foret);
+      font-size: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .info-card ul {
+      list-style: none;
+      font-size: 13px;
+      color: var(--bois);
+    }
+    .info-card li {
+      padding: 6px 0;
+      border-bottom: 1px solid var(--sable);
+    }
+    .info-card li:last-child { border: none; }
+    .info-card li strong { color: var(--foret); }
+    
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--terre);
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🌳 FamilyRoots — User Flow MVP</h1>
+    <p>Parcours utilisateur complet de l'application</p>
+  </div>
+  
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#2D5016"></div> Entry Point</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#4A7023"></div> Authentification</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#6B8E23"></div> Écrans principaux</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#D4A574"></div> Empty States</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#F44336"></div> États d'erreur</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#FFF8E7;border:1px solid #8B4513"></div> Décisions</div>
+  </div>
+  
+  <div class="diagram-container">
+    <pre class="mermaid">
+flowchart TB
+    subgraph ENTRY["🚀 POINTS D'ENTRÉE"]
+        START([Lancement App]) --> SPLASH[Splash Screen]
+        SPLASH --> CHECK{Utilisateur connecté ?}
+    end
+
+    subgraph ONBOARDING["📱 ONBOARDING"]
+        CHECK -->|Non| ONB1[Onboarding 1]
+        ONB1 --> ONB2[Onboarding 2]
+        ONB2 --> ONB3[Onboarding 3]
+        ONB3 --> AUTH_CHOICE{Choix}
+    end
+
+    subgraph AUTH["🔐 AUTHENTIFICATION"]
+        AUTH_CHOICE -->|Nouveau| REGISTER[Inscription]
+        AUTH_CHOICE -->|Existant| LOGIN[Connexion]
+        AUTH_CHOICE -->|Code invite| JOIN[Rejoindre]
+        
+        REGISTER --> EMAIL_CONFIRM[Confirmation Email]
+        EMAIL_CONFIRM --> FAMILY_CHOICE{A une famille ?}
+        
+        LOGIN --> DASHBOARD
+        JOIN --> DASHBOARD
+        
+        FAMILY_CHOICE -->|Non| CREATE_FAMILY[Créer famille]
+        FAMILY_CHOICE -->|Oui| DASHBOARD
+        CREATE_FAMILY --> DASHBOARD
+    end
+
+    CHECK -->|Oui| DASHBOARD
+
+    subgraph MAIN["🏠 NAVIGATION PRINCIPALE"]
+        DASHBOARD[Dashboard]
+        TREE[Arbre]
+        PROFILE[Mon Profil]
+        NOTIFS[Notifications]
+        
+        DASHBOARD <--> TREE
+        DASHBOARD <--> PROFILE
+        DASHBOARD <--> NOTIFS
+    end
+
+    subgraph ACTIONS["⚡ ACTIONS"]
+        TREE --> ADD[Ajouter membre]
+        TREE --> VIEW[Voir profil]
+        DASHBOARD --> INVITE[Inviter]
+        DASHBOARD --> CALENDAR[Calendrier]
+        PROFILE --> EDIT[Modifier]
+        PROFILE --> SETTINGS[Réglages]
+    end
+
+    subgraph STATES["📋 ÉTATS SPÉCIAUX"]
+        EMPTY_TREE[Arbre vide]
+        EMPTY_NOTIF[Notifs vides]
+        ERROR[Erreur réseau]
+        LOADING[Chargement]
+    end
+
+    SETTINGS --> LOGOUT[Déconnexion]
+    LOGOUT --> LOGIN
+
+    style DASHBOARD fill:#6B8E23,color:#fff
+    style TREE fill:#6B8E23,color:#fff
+    style PROFILE fill:#6B8E23,color:#fff
+    style NOTIFS fill:#6B8E23,color:#fff
+    style LOGIN fill:#4A7023,color:#fff
+    style REGISTER fill:#4A7023,color:#fff
+    style JOIN fill:#4A7023,color:#fff
+    style CREATE_FAMILY fill:#4A7023,color:#fff
+    style EMAIL_CONFIRM fill:#4A7023,color:#fff
+    style START fill:#2D5016,color:#fff
+    style SPLASH fill:#2D5016,color:#fff
+    style EMPTY_TREE fill:#D4A574,color:#5D4037
+    style EMPTY_NOTIF fill:#D4A574,color:#5D4037
+    style ERROR fill:#F44336,color:#fff
+    </pre>
+  </div>
+  
+  <div class="info-section">
+    <div class="info-card">
+      <h3>📊 Métriques du Flow</h3>
+      <ul>
+        <li><strong>Écrans totaux MVP :</strong> 24 écrans</li>
+        <li><strong>Points de décision :</strong> 5 embranchements</li>
+        <li><strong>Chemins critiques :</strong> 3 (inscription, connexion, invitation)</li>
+        <li><strong>Clics max pour action clé :</strong> 4 (inscription → dashboard)</li>
+      </ul>
+    </div>
+    
+    <div class="info-card">
+      <h3>🎯 Parcours Critiques</h3>
+      <ul>
+        <li><strong>Nouveau utilisateur :</strong> Splash → Onboarding → Inscription → Confirmation → Créer famille → Dashboard</li>
+        <li><strong>Utilisateur existant :</strong> Splash → Login → Dashboard</li>
+        <li><strong>Invité :</strong> Splash → Onboarding → Rejoindre (code) → Dashboard</li>
+        <li><strong>Consultation arbre :</strong> Dashboard → Arbre → Sélection membre → Profil</li>
+      </ul>
+    </div>
+    
+    <div class="info-card">
+      <h3>⚠️ Points d'Attention UX</h3>
+      <ul>
+        <li><strong>Empty states :</strong> Arbre vide, Notifications vides, Calendrier vide — doivent guider l'utilisateur vers l'action</li>
+        <li><strong>Erreurs :</strong> Connexion échouée, Code invalide, Réseau — doivent proposer une solution</li>
+        <li><strong>Confirmation email :</strong> Permettre saisie code OU clic lien — flexibilité</li>
+        <li><strong>Multi-familles :</strong> Switch rapide depuis header dashboard</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="footer">
+    FamilyRoots User Flow MVP — Steve-Landry KOUOKAM NONO — HETIC Mastère Data & IA
+  </div>
+  
+  <script>
+    mermaid.initialize({ 
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#6B8E23',
+        primaryTextColor: '#fff',
+        primaryBorderColor: '#4A7023',
+        lineColor: '#8B4513',
+        secondaryColor: '#D4A574',
+        tertiaryColor: '#FFF8E7',
+        background: '#ffffff'
+      }
+    });
+  </script>
+</body>
+</html>

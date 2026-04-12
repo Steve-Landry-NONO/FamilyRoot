@@ -1,0 +1,303 @@
+<h2 class="sr-only">Maquette web desktop FamilyRoots : Dashboard principal avec sidebar</h2>
+<style>
+.browser{width:100%;max-width:680px;background:#fff;border-radius:12px;border:1px solid var(--color-border-tertiary);overflow:hidden;margin:0 auto 20px}
+.browser-bar{height:32px;background:#F5F5DC;border-bottom:1px solid #D4A574;display:flex;align-items:center;padding:0 12px;gap:6px}
+.browser-dot{width:10px;height:10px;border-radius:50%}
+.dot-r{background:#E63946}
+.dot-y{background:#FF9800}
+.dot-g{background:#4CAF50}
+.browser-url{flex:1;height:20px;background:#FFF8E7;border-radius:10px;margin-left:12px;padding:0 12px;font-size:10px;color:#8B4513;display:flex;align-items:center}
+.app-layout{display:flex;min-height:480px}
+.sidebar{width:200px;background:#2D5016;padding:16px 0;display:flex;flex-direction:column}
+.sidebar-logo{display:flex;align-items:center;gap:8px;padding:0 16px 20px;border-bottom:1px solid rgba(255,255,255,0.15)}
+.s-logo-icon{width:28px;height:28px;position:relative}
+.s-f{position:absolute;border-radius:50%}
+.s-f1{width:16px;height:16px;background:#4A7023;top:3px;left:6px}
+.s-f2{width:11px;height:11px;background:#6B8E23;top:1px;left:2px}
+.s-f3{width:11px;height:11px;background:#6B8E23;top:1px;right:2px}
+.s-dot{position:absolute;width:4px;height:4px;background:rgba(255,255,255,0.9);border-radius:50%;top:8px;left:12px}
+.s-trunk{position:absolute;width:3px;height:8px;background:#D4A574;bottom:0;left:13px;border-radius:2px}
+.s-logo-text{color:#fff;font-family:Georgia,serif;font-size:14px;font-weight:500}
+.nav-section{padding:16px 0}
+.nav-label{font-size:9px;color:#D4A574;text-transform:uppercase;padding:0 16px;margin-bottom:8px;letter-spacing:0.5px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;color:rgba(255,255,255,0.7);font-size:12px;cursor:pointer;transition:all 0.2s}
+.nav-item:hover{background:rgba(255,255,255,0.1);color:#fff}
+.nav-item.active{background:rgba(255,255,255,0.15);color:#fff;border-left:3px solid #D4A574}
+.nav-item svg{width:18px;height:18px;opacity:0.8}
+.nav-item.active svg{opacity:1}
+.nav-badge{margin-left:auto;background:#E91E63;color:#fff;font-size:9px;padding:2px 6px;border-radius:8px}
+.sidebar-footer{margin-top:auto;padding:16px;border-top:1px solid rgba(255,255,255,0.15)}
+.user-info{display:flex;align-items:center;gap:10px}
+.user-avatar{width:32px;height:32px;background:#D4A574;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#5D4037;font-size:11px;font-weight:500}
+.user-details{flex:1}
+.user-name{color:#fff;font-size:12px;font-weight:500}
+.user-role{color:#D4A574;font-size:10px}
+.main-content{flex:1;background:#FFF8E7;display:flex;flex-direction:column}
+.top-bar{height:56px;background:#fff;border-bottom:1px solid #D4A574;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.page-title{font-family:Georgia,serif;font-size:18px;color:#2D5016;font-weight:500}
+.top-actions{display:flex;gap:12px;align-items:center}
+.search-box{width:200px;height:32px;background:#FFF8E7;border:1px solid #D4A574;border-radius:16px;padding:0 12px;font-size:11px;display:flex;align-items:center;gap:8px;color:#8B4513}
+.search-box svg{width:14px;height:14px;opacity:0.6}
+.notif-btn{width:32px;height:32px;background:#F5F5DC;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
+.notif-btn svg{width:16px;height:16px}
+.notif-dot{position:absolute;top:2px;right:2px;width:8px;height:8px;background:#E91E63;border-radius:50%;border:2px solid #fff}
+.dashboard-content{flex:1;padding:20px 24px;overflow-y:auto}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:#fff;border-radius:12px;padding:16px;border:1px solid #D4A574}
+.stat-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.stat-icon svg{width:20px;height:20px}
+.stat-value{font-size:22px;color:#2D5016;font-weight:500;margin-bottom:2px}
+.stat-label{font-size:11px;color:#8B4513}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel{background:#fff;border-radius:14px;border:1px solid #D4A574;overflow:hidden}
+.panel-header{padding:14px 16px;border-bottom:1px solid #D4A574;display:flex;justify-content:space-between;align-items:center}
+.panel-title{font-size:13px;color:#2D5016;font-weight:500}
+.panel-link{font-size:11px;color:#8B4513;text-decoration:none}
+.panel-content{padding:12px 16px}
+.event-row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #F5F5DC}
+.event-row:last-child{border:none}
+.ev-date{width:40px;height:44px;background:#2D5016;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ev-day{color:#fff;font-size:14px;font-weight:500}
+.ev-mon{color:#D4A574;font-size:8px;text-transform:uppercase}
+.ev-info{flex:1}
+.ev-type{font-size:9px;color:#8B4513}
+.ev-name{font-size:12px;color:#2D5016;font-weight:500}
+.ev-desc{font-size:10px;color:#5D4037}
+.ev-badge{font-size:9px;padding:3px 8px;border-radius:10px}
+.badge-bday{background:#E8F5E9;color:#2D5016}
+.badge-wed{background:#F3E5F5;color:#9C27B0}
+.activity-row{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #F5F5DC}
+.activity-row:last-child{border:none}
+.act-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500}
+.act-content{flex:1}
+.act-text{font-size:11px;color:#5D4037;line-height:1.4}
+.act-text strong{color:#2D5016}
+.act-time{font-size:9px;color:#8B4513;margin-top:3px}
+.family-tree-preview{height:140px;background:#F5F5DC;border-radius:10px;display:flex;align-items:center;justify-content:center;position:relative;margin:8px 0}
+.tree-node{position:absolute;display:flex;flex-direction:column;align-items:center}
+.tree-avatar{width:32px;height:32px;border-radius:50%;border:2px solid #2D5016;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;background:#fff}
+.tree-name{font-size:8px;color:#5D4037;margin-top:3px;white-space:nowrap}
+.tree-line{position:absolute;background:#D4A574}
+.screen-title{text-align:center;color:var(--color-text-secondary);font-size:13px;margin-bottom:8px;font-weight:500}
+</style>
+
+<div class="screen-title">Dashboard Web Desktop</div>
+<div class="browser">
+<div class="browser-bar">
+<div class="browser-dot dot-r"></div>
+<div class="browser-dot dot-y"></div>
+<div class="browser-dot dot-g"></div>
+<div class="browser-url">familyroots.app/dashboard</div>
+</div>
+<div class="app-layout">
+<div class="sidebar">
+<div class="sidebar-logo">
+<div class="s-logo-icon">
+<div class="s-f s-f1"></div>
+<div class="s-f s-f2"></div>
+<div class="s-f s-f3"></div>
+<div class="s-dot"></div>
+<div class="s-trunk"></div>
+</div>
+<span class="s-logo-text">FamilyRoots</span>
+</div>
+<div class="nav-section">
+<div class="nav-label">Menu principal</div>
+<div class="nav-item active">
+<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 12l9-9 9 9v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1v-9z"/></svg>
+<span>Tableau de bord</span>
+</div>
+<div class="nav-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg>
+<span>Arbre familial</span>
+</div>
+<div class="nav-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+<span>Membres</span>
+<span class="nav-badge">47</span>
+</div>
+<div class="nav-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M8 4v6M16 4v6"/></svg>
+<span>Calendrier</span>
+</div>
+</div>
+<div class="nav-section">
+<div class="nav-label">Notifications</div>
+<div class="nav-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+<span>Alertes</span>
+<span class="nav-badge">3</span>
+</div>
+<div class="nav-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+<span>Activite recente</span>
+</div>
+</div>
+<div class="nav-section">
+<div class="nav-label">Administration</div>
+<div class="nav-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+<span>Invitations</span>
+</div>
+<div class="nav-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+<span>Parametres</span>
+</div>
+</div>
+<div class="sidebar-footer">
+<div class="user-info">
+<div class="user-avatar">SL</div>
+<div class="user-details">
+<div class="user-name">Steve-Landry</div>
+<div class="user-role">Administrateur</div>
+</div>
+</div>
+</div>
+</div>
+<div class="main-content">
+<div class="top-bar">
+<div class="page-title">Tableau de bord</div>
+<div class="top-actions">
+<div class="search-box">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="M21 21l-4-4"/></svg>
+<span>Rechercher un membre...</span>
+</div>
+<div class="notif-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg>
+<div class="notif-dot"></div>
+</div>
+</div>
+</div>
+<div class="dashboard-content">
+<div class="stats-row">
+<div class="stat-card">
+<div class="stat-icon" style="background:#E8F5E9">
+<svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+</div>
+<div class="stat-value">47</div>
+<div class="stat-label">Membres actifs</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon" style="background:#F5F5DC">
+<svg viewBox="0 0 24 24" fill="none" stroke="#8B4513" stroke-width="2"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/></svg>
+</div>
+<div class="stat-value">4</div>
+<div class="stat-label">Generations</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon" style="background:#FCE4EC">
+<svg viewBox="0 0 24 24" fill="none" stroke="#E91E63" stroke-width="2"><path d="M12 4C8 4 4 8 4 12c0 6 8 10 8 10s8-4 8-10c0-4-4-8-8-8z"/></svg>
+</div>
+<div class="stat-value">12</div>
+<div class="stat-label">Mariages</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon" style="background:#E3F2FD">
+<svg viewBox="0 0 24 24" fill="none" stroke="#2196F3" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>
+</div>
+<div class="stat-value">8</div>
+<div class="stat-label">Evenements ce mois</div>
+</div>
+</div>
+<div class="content-grid">
+<div class="panel">
+<div class="panel-header">
+<span class="panel-title">Evenements a venir</span>
+<a href="#" class="panel-link">Voir tout</a>
+</div>
+<div class="panel-content">
+<div class="event-row">
+<div class="ev-date"><span class="ev-day">12</span><span class="ev-mon">Avr</span></div>
+<div class="ev-info">
+<div class="ev-type">Anniversaire</div>
+<div class="ev-name">Celia KOUOKAM</div>
+<div class="ev-desc">Ta cousine fete ses 25 ans</div>
+</div>
+<span class="ev-badge badge-bday">3j</span>
+</div>
+<div class="event-row">
+<div class="ev-date"><span class="ev-day">18</span><span class="ev-mon">Avr</span></div>
+<div class="ev-info">
+<div class="ev-type">Noces de coton</div>
+<div class="ev-name">Loic & Lindsay</div>
+<div class="ev-desc">1 an de mariage</div>
+</div>
+<span class="ev-badge badge-wed">9j</span>
+</div>
+<div class="event-row">
+<div class="ev-date"><span class="ev-day">25</span><span class="ev-mon">Avr</span></div>
+<div class="ev-info">
+<div class="ev-type">Anniversaire</div>
+<div class="ev-name">Papa Jean</div>
+<div class="ev-desc">60 ans</div>
+</div>
+<span class="ev-badge badge-bday">16j</span>
+</div>
+</div>
+</div>
+<div class="panel">
+<div class="panel-header">
+<span class="panel-title">Activite recente</span>
+<a href="#" class="panel-link">Voir tout</a>
+</div>
+<div class="panel-content">
+<div class="activity-row">
+<div class="act-avatar" style="background:#FCE4EC;color:#E91E63">MK</div>
+<div class="act-content">
+<div class="act-text"><strong>Marie</strong> a ajoute une photo de <strong>Malik</strong></div>
+<div class="act-time">Il y a 2 heures</div>
+</div>
+</div>
+<div class="activity-row">
+<div class="act-avatar" style="background:#E8F5E9;color:#2D5016">JD</div>
+<div class="act-content">
+<div class="act-text"><strong>Jean DIALLO</strong> a rejoint la famille</div>
+<div class="act-time">Il y a 5 heures</div>
+</div>
+</div>
+<div class="activity-row">
+<div class="act-avatar" style="background:#F3E5F5;color:#9C27B0">AK</div>
+<div class="act-content">
+<div class="act-text"><strong>Amadou</strong> a mis a jour son profil</div>
+<div class="act-time">Hier a 18:32</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="panel" style="margin-top:16px">
+<div class="panel-header">
+<span class="panel-title">Apercu de l'arbre familial</span>
+<a href="#" class="panel-link">Voir l'arbre complet</a>
+</div>
+<div class="panel-content">
+<div class="family-tree-preview">
+<div class="tree-line" style="width:2px;height:30px;top:50px;left:50%"></div>
+<div class="tree-line" style="width:120px;height:2px;top:80px;left:calc(50% - 60px)"></div>
+<div class="tree-line" style="width:2px;height:20px;top:80px;left:calc(50% - 60px)"></div>
+<div class="tree-line" style="width:2px;height:20px;top:80px;left:calc(50% + 60px)"></div>
+<div class="tree-node" style="top:15px;left:50%;transform:translateX(-50%)">
+<div class="tree-avatar" style="background:#E8F5E9;color:#2D5016">PJ</div>
+<div class="tree-name">Papa Jean</div>
+</div>
+<div class="tree-node" style="top:95px;left:calc(50% - 60px);transform:translateX(-50%)">
+<div class="tree-avatar" style="background:#FCE4EC;color:#E91E63">MK</div>
+<div class="tree-name">Marie</div>
+</div>
+<div class="tree-node" style="top:95px;left:calc(50% + 60px);transform:translateX(-50%)">
+<div class="tree-avatar" style="background:#E3F2FD;color:#2196F3">PK</div>
+<div class="tree-name">Pierre</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+<button style="padding:10px 20px;border-radius:20px;background:#2D5016;border:none;color:#fff;cursor:pointer;font-size:13px" onclick="sendPrompt('Cree les maquettes de l arbre genealogique FamilyRoots mobile et web')">Arbre genealogique</button>
+<button style="padding:10px 20px;border-radius:20px;border:1.5px solid #2D5016;background:transparent;color:#2D5016;cursor:pointer;font-size:13px" onclick="sendPrompt('Cree les maquettes du profil membre FamilyRoots')">Profil membre</button>
+<button style="padding:10px 20px;border-radius:20px;border:1.5px solid #4A7023;background:transparent;color:#4A7023;cursor:pointer;font-size:13px" onclick="sendPrompt('Genere un PDF complet de toutes les maquettes UI FamilyRoots')">Exporter en PDF</button>
+</div>

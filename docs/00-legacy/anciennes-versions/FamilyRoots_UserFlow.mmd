@@ -1,0 +1,141 @@
+---
+title: FamilyRoots - User Flow Diagram MVP
+---
+
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#2D5016', 'primaryTextColor': '#fff', 'primaryBorderColor': '#4A7023', 'lineColor': '#8B4513', 'secondaryColor': '#D4A574', 'tertiaryColor': '#FFF8E7'}}}%%
+
+flowchart TB
+    %% ===== ENTRY POINTS =====
+    subgraph ENTRY["🚀 POINTS D'ENTRÉE"]
+        START([Lancement App]) --> SPLASH[Splash Screen]
+        SPLASH --> CHECK{Utilisateur<br/>connecté ?}
+    end
+
+    %% ===== ONBOARDING =====
+    subgraph ONBOARDING["📱 ONBOARDING"]
+        CHECK -->|Non| ONB1[Onboarding 1<br/>Arbre collaboratif]
+        ONB1 --> ONB2[Onboarding 2<br/>Notifications]
+        ONB2 --> ONB3[Onboarding 3<br/>CTA]
+        ONB3 --> AUTH_CHOICE{Choix}
+    end
+
+    %% ===== AUTHENTIFICATION =====
+    subgraph AUTH["🔐 AUTHENTIFICATION"]
+        AUTH_CHOICE -->|Nouveau| REGISTER[Inscription]
+        AUTH_CHOICE -->|Existant| LOGIN[Connexion]
+        AUTH_CHOICE -->|Code invite| JOIN[Rejoindre Famille]
+        
+        REGISTER --> EMAIL_CONFIRM[Confirmation Email]
+        EMAIL_CONFIRM --> FAMILY_CHOICE{A une famille ?}
+        
+        LOGIN --> LOGIN_CHECK{Succès ?}
+        LOGIN_CHECK -->|Oui| DASHBOARD
+        LOGIN_CHECK -->|Non| LOGIN_ERROR[Erreur Login]
+        LOGIN_ERROR --> LOGIN
+        LOGIN -->|Oublié ?| FORGOT[Reset Password]
+        FORGOT --> LOGIN
+        
+        JOIN --> JOIN_CHECK{Code valide ?}
+        JOIN_CHECK -->|Oui| DASHBOARD
+        JOIN_CHECK -->|Non| JOIN_ERROR[Code invalide]
+        JOIN_ERROR --> JOIN
+        
+        FAMILY_CHOICE -->|Non| CREATE_FAMILY[Créer ma famille]
+        FAMILY_CHOICE -->|Oui/Code| JOIN
+        CREATE_FAMILY --> DASHBOARD
+    end
+
+    %% ===== CONNECTED USER =====
+    CHECK -->|Oui| DASHBOARD
+
+    %% ===== DASHBOARD =====
+    subgraph DASH["🏠 DASHBOARD"]
+        DASHBOARD[Dashboard Principal]
+        DASHBOARD --> QUICK_ADD[Quick: Ajouter]
+        DASHBOARD --> QUICK_INVITE[Quick: Inviter]
+        DASHBOARD --> QUICK_CALENDAR[Quick: Calendrier]
+        DASHBOARD --> ACTIVITY[Fil d'activité]
+        DASHBOARD --> EVENT_DETAIL[Détail événement]
+    end
+
+    %% ===== TREE =====
+    subgraph TREE["🌳 ARBRE GÉNÉALOGIQUE"]
+        TREE_VIEW[Vue Arbre]
+        TREE_EMPTY[Empty: Arbre vide]
+        TREE_VIEW --> NODE_SELECT{Sélection nœud}
+        NODE_SELECT --> MEMBER_POPUP[Popup membre]
+        MEMBER_POPUP --> MEMBER_PROFILE
+        MEMBER_POPUP --> TREE_VIEW
+        NODE_SELECT -->|+| ADD_MEMBER[Ajouter membre]
+        ADD_MEMBER --> ADD_FORM[Formulaire]
+        ADD_FORM --> TREE_VIEW
+    end
+
+    %% ===== PROFILES =====
+    subgraph PROFILES["👤 PROFILS"]
+        MY_PROFILE[Mon profil]
+        MEMBER_PROFILE[Profil membre]
+        EDIT_PROFILE[Modifier profil]
+        MY_PROFILE --> EDIT_PROFILE
+        EDIT_PROFILE --> MY_PROFILE
+        MEMBER_PROFILE --> EDIT_MEMBER[Modifier<br/>si autorisé]
+    end
+
+    %% ===== FEATURES =====
+    subgraph FEATURES["⚙️ FONCTIONNALITÉS"]
+        CALENDAR[Calendrier]
+        CALENDAR_EMPTY[Empty: Calendrier]
+        INVITE[Invitation]
+        INVITE --> SHARE_CODE[Partage code]
+        INVITE --> QR_CODE[QR Code]
+        SETTINGS[Réglages]
+        SETTINGS --> NOTIF_SETTINGS[Paramètres notifs]
+        SETTINGS --> SECURITY[Sécurité]
+        SETTINGS --> LOGOUT[Déconnexion]
+        MULTI_FAMILY[Multi-familles]
+        MULTI_FAMILY --> SWITCH_FAMILY[Changer famille]
+        SWITCH_FAMILY --> DASHBOARD
+    end
+
+    %% ===== NOTIFICATIONS =====
+    subgraph NOTIFS["🔔 NOTIFICATIONS"]
+        NOTIF_CENTER[Centre notifications]
+        NOTIF_EMPTY[Empty: Notifications]
+        NOTIF_CENTER --> NOTIF_DETAIL[Détail notif]
+        NOTIF_DETAIL --> EVENT_DETAIL
+        NOTIF_DETAIL --> MEMBER_PROFILE
+    end
+
+    %% ===== ERROR STATES =====
+    subgraph ERRORS["⚠️ ÉTATS D'ERREUR"]
+        ERROR_NETWORK[Erreur réseau]
+        ERROR_NETWORK --> RETRY[Réessayer]
+        LOADING[Loading State]
+    end
+
+    %% ===== NAVIGATION LINKS =====
+    DASHBOARD <--> TREE_VIEW
+    DASHBOARD <--> MY_PROFILE
+    DASHBOARD <--> NOTIF_CENTER
+    DASHBOARD <--> CALENDAR
+    
+    QUICK_ADD --> ADD_MEMBER
+    QUICK_INVITE --> INVITE
+    QUICK_CALENDAR --> CALENDAR
+    
+    LOGOUT --> LOGIN
+
+    %% ===== STYLING =====
+    classDef entry fill:#2D5016,stroke:#4A7023,color:#fff
+    classDef auth fill:#4A7023,stroke:#2D5016,color:#fff
+    classDef main fill:#6B8E23,stroke:#4A7023,color:#fff
+    classDef empty fill:#D4A574,stroke:#8B4513,color:#5D4037
+    classDef error fill:#F44336,stroke:#D32F2F,color:#fff
+    classDef decision fill:#FFF8E7,stroke:#8B4513,color:#5D4037
+
+    class START,SPLASH entry
+    class REGISTER,LOGIN,JOIN,EMAIL_CONFIRM,CREATE_FAMILY,FORGOT auth
+    class DASHBOARD,TREE_VIEW,MY_PROFILE,MEMBER_PROFILE,CALENDAR,INVITE,SETTINGS,NOTIF_CENTER main
+    class TREE_EMPTY,CALENDAR_EMPTY,NOTIF_EMPTY empty
+    class ERROR_NETWORK,LOGIN_ERROR,JOIN_ERROR error
+    class CHECK,AUTH_CHOICE,FAMILY_CHOICE,LOGIN_CHECK,JOIN_CHECK,NODE_SELECT decision

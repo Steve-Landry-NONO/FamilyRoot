@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FamilyRoots - Règles Métier MVP</title>
+  <style>
+    :root {
+      --foret: #2D5016;
+      --feuille: #4A7023;
+      --olive: #6B8E23;
+      --terre: #8B4513;
+      --sable: #D4A574;
+      --ivoire: #FFF8E7;
+      --creme: #F5F5DC;
+      --succes: #4CAF50;
+      --warning: #FF9800;
+      --erreur: #F44336;
+      --info: #2196F3;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--creme); color: var(--terre); line-height: 1.6; }
+    
+    .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    
+    .header {
+      background: linear-gradient(135deg, var(--foret) 0%, var(--feuille) 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .header h1 { font-size: 26px; margin-bottom: 8px; }
+    .header p { color: var(--sable); font-size: 14px; }
+    .badge { display: inline-block; background: var(--sable); color: var(--terre); padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-top: 10px; }
+    
+    .toc {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .toc h2 { color: var(--foret); font-size: 16px; margin-bottom: 12px; }
+    .toc-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .toc-item { font-size: 12px; padding: 8px 12px; background: var(--ivoire); border-radius: 6px; }
+    .toc-item a { color: var(--terre); text-decoration: none; }
+    .toc-item a:hover { color: var(--foret); }
+    
+    .section {
+      background: white;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .section-header {
+      background: var(--foret);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-header h2 { font-size: 18px; }
+    .section-icon { font-size: 24px; }
+    .section-body { padding: 24px; }
+    
+    .subsection { 
+      color: var(--feuille); 
+      font-size: 15px; 
+      margin: 20px 0 12px; 
+      font-weight: 600; 
+      border-left: 4px solid var(--olive);
+      padding-left: 12px;
+    }
+    .subsection:first-of-type { margin-top: 0; }
+    
+    .rule {
+      background: var(--ivoire);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 12px 0;
+      border-left: 4px solid var(--feuille);
+    }
+    .rule-id {
+      display: inline-block;
+      background: var(--foret);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .rule-title { font-weight: 600; color: var(--terre); margin-bottom: 6px; }
+    .rule-desc { font-size: 13px; color: #666; }
+    .rule-example {
+      background: white;
+      border: 1px solid var(--sable);
+      border-radius: 6px;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 12px;
+      font-family: monospace;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin: 12px 0;
+    }
+    th {
+      background: var(--feuille);
+      color: white;
+      padding: 10px;
+      text-align: left;
+    }
+    td {
+      padding: 10px;
+      border-bottom: 1px solid var(--sable);
+    }
+    tr:nth-child(even) { background: var(--ivoire); }
+    
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .tag-must { background: #FFEBEE; color: var(--erreur); }
+    .tag-should { background: #FFF3E0; color: var(--warning); }
+    .tag-could { background: #E3F2FD; color: var(--info); }
+    .tag-validation { background: #E8F5E9; color: var(--succes); }
+    .tag-limit { background: #FCE4EC; color: #C2185B; }
+    .tag-calc { background: #F3E5F5; color: #7B1FA2; }
+    
+    .formula {
+      background: #263238;
+      color: #80CBC4;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 12px;
+      margin: 10px 0;
+    }
+    
+    .warning-box {
+      background: #FFF3E0;
+      border: 1px solid var(--warning);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 12px 0;
+      font-size: 12px;
+    }
+    .warning-box::before { content: "⚠️ "; }
+    
+    .info-box {
+      background: #E3F2FD;
+      border: 1px solid var(--info);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 12px 0;
+      font-size: 12px;
+    }
+    .info-box::before { content: "ℹ️ "; }
+    
+    .success-box {
+      background: #E8F5E9;
+      border: 1px solid var(--succes);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 12px 0;
+      font-size: 12px;
+    }
+    .success-box::before { content: "✅ "; }
+    
+    code {
+      background: #ECEFF1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: monospace;
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 11px;
+      color: var(--terre);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- HEADER -->
+    <div class="header">
+      <h1>📜 Règles Métier MVP</h1>
+      <p>FamilyRoots — Spécifications fonctionnelles détaillées</p>
+      <span class="badge">Version 1.0 — Avril 2026</span>
+    </div>
+    
+    <!-- TABLE OF CONTENTS -->
+    <div class="toc">
+      <h2>📋 Sommaire</h2>
+      <div class="toc-list">
+        <div class="toc-item"><a href="#auth">1. Authentification & Inscription</a></div>
+        <div class="toc-item"><a href="#family">2. Gestion des Familles</a></div>
+        <div class="toc-item"><a href="#invitation">3. Système d'Invitation</a></div>
+        <div class="toc-item"><a href="#member">4. Membres & Relations</a></div>
+        <div class="toc-item"><a href="#tree">5. Arbre Généalogique</a></div>
+        <div class="toc-item"><a href="#notification">6. Notifications & Événements</a></div>
+        <div class="toc-item"><a href="#profile">7. Profils & Données</a></div>
+        <div class="toc-item"><a href="#tier">8. Tiers & Limites</a></div>
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 1: AUTH ==================== -->
+    <div class="section" id="auth">
+      <div class="section-header">
+        <span class="section-icon">🔐</span>
+        <h2>1. Authentification & Inscription</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">1.1 Inscription</h3>
+        
+        <div class="rule">
+          <span class="rule-id">AUTH-001</span>
+          <div class="rule-title">Champs obligatoires à l'inscription</div>
+          <div class="rule-desc">L'inscription requiert : email (unique), mot de passe, prénom, nom.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">AUTH-002</span>
+          <div class="rule-title">Validation email</div>
+          <div class="rule-desc">Format email valide (RFC 5322). Unicité vérifiée côté Supabase Auth.</div>
+          <div class="rule-example">
+            ✅ steve@example.com<br>
+            ❌ steve@<br>
+            ❌ steve.example.com
+          </div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">AUTH-003</span>
+          <div class="rule-title">Validation mot de passe</div>
+          <div class="rule-desc">Minimum 8 caractères. Au moins 1 majuscule, 1 minuscule, 1 chiffre.</div>
+          <div class="rule-example">
+            ✅ MonPass123<br>
+            ❌ password (pas de majuscule ni chiffre)<br>
+            ❌ PASS123 (pas de minuscule)<br>
+            ❌ Pass1 (< 8 caractères)
+          </div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">AUTH-004</span>
+          <div class="rule-title">Confirmation email obligatoire</div>
+          <div class="rule-desc">L'utilisateur doit confirmer son email via OTP (6 chiffres) envoyé par Supabase. Sans confirmation, accès limité à l'écran de confirmation uniquement.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">AUTH-005</span>
+          <div class="rule-title">Expiration OTP</div>
+          <div class="rule-desc">Le code OTP expire après 60 minutes. Possibilité de renvoyer après 60 secondes.</div>
+        </div>
+        
+        <h3 class="subsection">1.2 Connexion</h3>
+        
+        <div class="rule">
+          <span class="rule-id">AUTH-010</span>
+          <div class="rule-title">Persistance de session</div>
+          <div class="rule-desc">Le JWT est stocké en secure storage (Flutter). Refresh automatique avant expiration. Session valide 7 jours si inactif.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">AUTH-011</span>
+          <div class="rule-title">Déconnexion</div>
+          <div class="rule-desc">La déconnexion révoque le token côté Supabase et efface le secure storage local. Redirection vers l'écran de connexion.</div>
+        </div>
+        
+        <h3 class="subsection">1.3 Flux post-inscription</h3>
+        
+        <div class="rule">
+          <span class="rule-id">AUTH-020</span>
+          <div class="rule-title">Choix obligatoire : Créer ou Rejoindre</div>
+          <div class="rule-desc">Après confirmation email, l'utilisateur DOIT choisir entre créer une famille ou rejoindre une existante. Pas d'accès au dashboard sans famille.</div>
+        </div>
+        
+        <div class="success-box">
+          <strong>MVP Constraint:</strong> Un profil ne peut appartenir qu'à UNE seule famille. Cette contrainte est vérifiée dans <code>createFamily</code> et <code>joinFamily</code>.
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 2: FAMILY ==================== -->
+    <div class="section" id="family">
+      <div class="section-header">
+        <span class="section-icon">👨‍👩‍👧‍👦</span>
+        <h2>2. Gestion des Familles</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">2.1 Création de famille</h3>
+        
+        <div class="rule">
+          <span class="rule-id">FAM-001</span>
+          <div class="rule-title">Champs obligatoires</div>
+          <div class="rule-desc">Nom de famille (2-100 caractères), prénom du fondateur, nom du fondateur.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">FAM-002</span>
+          <div class="rule-title">Génération du code famille</div>
+          <div class="rule-desc">Format : <code>FAM-XXXXXX</code> (6 caractères alphanumériques majuscules). Généré automatiquement, unique, permanent.</div>
+          <div class="formula">
+            FAM-[A-Z0-9]{6}<br>
+            Exemple : FAM-7K3M9P
+          </div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">FAM-003</span>
+          <div class="rule-title">Rôle du créateur</div>
+          <div class="rule-desc">Le créateur devient automatiquement ADMIN de la famille. Seul rôle avec permissions de suppression et gestion des invitations.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">FAM-004</span>
+          <div class="rule-title">Membre "Moi" automatique</div>
+          <div class="rule-desc">À la création, un Member est automatiquement créé avec <code>linked_profile_id</code> pointant vers le créateur. C'est le point d'ancrage dans l'arbre.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">FAM-005</span>
+          <div class="rule-title">Tier par défaut</div>
+          <div class="rule-desc">Toute nouvelle famille commence en tier FREE (15 membres max).</div>
+        </div>
+        
+        <div class="warning-box">
+          <strong>FAM-006 — Contrainte MVP :</strong> Si l'utilisateur a déjà une famille, <code>createFamily</code> retourne l'erreur <code>ALREADY_IN_FAMILY</code>.
+        </div>
+        
+        <h3 class="subsection">2.2 Codes et identifiants</h3>
+        
+        <table>
+          <tr>
+            <th>Type</th>
+            <th>Format</th>
+            <th>Usage</th>
+            <th>Durée de vie</th>
+          </tr>
+          <tr>
+            <td><code>family.code</code></td>
+            <td>FAM-XXXXXX</td>
+            <td>Identifiant public (affichage, référence)</td>
+            <td>Permanent</td>
+          </tr>
+          <tr>
+            <td><code>invitation.code</code></td>
+            <td>INV-XXXXXXXXXXXX</td>
+            <td>Jeton pour rejoindre une famille</td>
+            <td>7 jours (configurable)</td>
+          </tr>
+        </table>
+        
+        <div class="info-box">
+          <strong>Règle absolue :</strong> On ne rejoint JAMAIS une famille avec <code>family.code</code>. Seul <code>invitation.code</code> permet de rejoindre.
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 3: INVITATION ==================== -->
+    <div class="section" id="invitation">
+      <div class="section-header">
+        <span class="section-icon">📨</span>
+        <h2>3. Système d'Invitation</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">3.1 Création d'invitation</h3>
+        
+        <div class="rule">
+          <span class="rule-id">INV-001</span>
+          <div class="rule-title">Génération du code invitation</div>
+          <div class="rule-desc">Format : <code>INV-XXXXXXXXXXXX</code> (12 caractères alphanumériques). Unique, usage unique.</div>
+          <div class="formula">
+            INV-[A-Z0-9]{12}<br>
+            Exemple : INV-8HK3M9PQ2WXY
+          </div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">INV-002</span>
+          <div class="rule-title">Expiration par défaut</div>
+          <div class="rule-desc">7 jours après création. Configurable de 1 à 30 jours.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">INV-003</span>
+          <div class="rule-title">Qui peut créer une invitation</div>
+          <div class="rule-desc">Tout membre de la famille (ADMIN ou MEMBER) peut créer des invitations.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">INV-004</span>
+          <div class="rule-title">Traçabilité</div>
+          <div class="rule-desc">Chaque invitation enregistre : créateur, date création, date expiration, utilisateur ayant utilisé le code, date d'utilisation.</div>
+        </div>
+        
+        <h3 class="subsection">3.2 Utilisation d'invitation</h3>
+        
+        <div class="rule">
+          <span class="rule-id">INV-010</span>
+          <div class="rule-title">Validation du code</div>
+          <div class="rule-desc">Vérifications dans l'ordre : existe → non expiré → non utilisé.</div>
+        </div>
+        
+        <table>
+          <tr>
+            <th>Condition</th>
+            <th>Erreur retournée</th>
+            <th>HTTP</th>
+          </tr>
+          <tr>
+            <td>Code inexistant</td>
+            <td><code>INVITATION_NOT_FOUND</code></td>
+            <td>404</td>
+          </tr>
+          <tr>
+            <td>Code expiré</td>
+            <td><code>INVITATION_EXPIRED</code></td>
+            <td>410</td>
+          </tr>
+          <tr>
+            <td>Code déjà utilisé</td>
+            <td><code>INVITATION_ALREADY_USED</code></td>
+            <td>409</td>
+          </tr>
+          <tr>
+            <td>User déjà dans une famille</td>
+            <td><code>ALREADY_IN_FAMILY</code></td>
+            <td>409</td>
+          </tr>
+        </table>
+        
+        <div class="rule">
+          <span class="rule-id">INV-011</span>
+          <div class="rule-title">Effet de joinFamily</div>
+          <div class="rule-desc">Transaction atomique : marquer invitation used → créer UserFamily (MEMBER) → créer Member "Moi" → notifier l'admin.</div>
+        </div>
+        
+        <h3 class="subsection">3.3 Partage d'invitation</h3>
+        
+        <div class="rule">
+          <span class="rule-id">INV-020</span>
+          <div class="rule-title">Méthodes de partage MVP</div>
+          <div class="rule-desc">Copier le code texte, partager via apps natives (SMS, WhatsApp, etc.). Pas de QR code en MVP.</div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 4: MEMBER ==================== -->
+    <div class="section" id="member">
+      <div class="section-header">
+        <span class="section-icon">👤</span>
+        <h2>4. Membres & Relations</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">4.1 Création de membre</h3>
+        
+        <div class="rule">
+          <span class="rule-id">MEM-001</span>
+          <div class="rule-title">Champs obligatoires</div>
+          <div class="rule-desc">Prénom (2-50 caractères), nom (2-50 caractères), relation avec un membre existant.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">MEM-002</span>
+          <div class="rule-title">Champs optionnels</div>
+          <div class="rule-desc">Date de naissance, date de décès, genre, bio (max 500 caractères), lieu de naissance, photo.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">MEM-003</span>
+          <div class="rule-title">Relation obligatoire</div>
+          <div class="rule-desc">Tout nouveau membre DOIT être lié à un membre existant via une relation (PARENT, CHILD, SPOUSE).</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">MEM-004</span>
+          <div class="rule-title">Membre orphelin interdit</div>
+          <div class="rule-desc">Impossible de créer un membre sans relation. Le premier membre (fondateur) est créé automatiquement.</div>
+        </div>
+        
+        <h3 class="subsection">4.2 Types de relations</h3>
+        
+        <table>
+          <tr>
+            <th>Type</th>
+            <th>Signification</th>
+            <th>Relation inverse</th>
+            <th>Stockage</th>
+          </tr>
+          <tr>
+            <td><code>PARENT</code></td>
+            <td>A est parent de B</td>
+            <td>B est CHILD de A</td>
+            <td>2 entrées créées</td>
+          </tr>
+          <tr>
+            <td><code>CHILD</code></td>
+            <td>A est enfant de B</td>
+            <td>B est PARENT de A</td>
+            <td>2 entrées créées</td>
+          </tr>
+          <tr>
+            <td><code>SPOUSE</code></td>
+            <td>A est conjoint de B</td>
+            <td>B est SPOUSE de A</td>
+            <td>2 entrées créées</td>
+          </tr>
+          <tr>
+            <td><code>SIBLING</code></td>
+            <td>A et B sont frères/sœurs</td>
+            <td>—</td>
+            <td>Calculé dynamiquement</td>
+          </tr>
+        </table>
+        
+        <div class="rule">
+          <span class="rule-id">MEM-010</span>
+          <div class="rule-title">Relations bidirectionnelles</div>
+          <div class="rule-desc">PARENT/CHILD et SPOUSE créent automatiquement la relation inverse. Une seule action utilisateur = 2 entrées en BDD.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">MEM-011</span>
+          <div class="rule-title">Calcul des siblings</div>
+          <div class="rule-desc">Les frères/sœurs sont calculés dynamiquement : membres ayant au moins un parent commun. Pas stocké en base.</div>
+          <div class="formula">
+            siblings(A) = { M | ∃ P : isParent(P, A) ∧ isParent(P, M) ∧ M ≠ A }
+          </div>
+        </div>
+        
+        <h3 class="subsection">4.3 Polygamie (support africain)</h3>
+        
+        <div class="rule">
+          <span class="rule-id">MEM-020</span>
+          <div class="rule-title">Conjoints multiples autorisés</div>
+          <div class="rule-desc">Un membre peut avoir plusieurs relations SPOUSE. Pas de limite technique.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">MEM-021</span>
+          <div class="rule-title">Enfants de différentes unions</div>
+          <div class="rule-desc">Un enfant peut avoir un seul père biologique et une seule mère biologique (2 PARENT max). Les demi-frères/sœurs sont calculés via parent commun.</div>
+        </div>
+        
+        <h3 class="subsection">4.4 Validations dates</h3>
+        
+        <div class="rule">
+          <span class="rule-id">MEM-030</span>
+          <div class="rule-title">Contraintes sur les dates</div>
+          <div class="rule-desc">
+            • birthDate ≤ aujourd'hui<br>
+            • deathDate ≤ aujourd'hui<br>
+            • Si les deux : birthDate < deathDate<br>
+            • Âge calculé : max 150 ans
+          </div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">MEM-031</span>
+          <div class="rule-title">Cohérence parent/enfant</div>
+          <div class="rule-desc">Un parent doit avoir au moins 12 ans de plus que son enfant (si dates connues). Warning soft, pas bloquant.</div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 5: TREE ==================== -->
+    <div class="section" id="tree">
+      <div class="section-header">
+        <span class="section-icon">🌳</span>
+        <h2>5. Arbre Généalogique</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">5.1 Structure de l'arbre</h3>
+        
+        <div class="rule">
+          <span class="rule-id">TREE-001</span>
+          <div class="rule-title">Racines de l'arbre</div>
+          <div class="rule-desc">Les "root members" sont les membres sans parents connus dans le système. Ils constituent le haut de l'arbre.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">TREE-002</span>
+          <div class="rule-title">Générations</div>
+          <div class="rule-desc">Calculées dynamiquement depuis les racines. Génération 0 = racines, +1 par niveau d'enfants.</div>
+          <div class="formula">
+            generation(M) = max(generation(parent(M))) + 1<br>
+            generation(root) = 0
+          </div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">TREE-003</span>
+          <div class="rule-title">Comptage générations</div>
+          <div class="rule-desc">Affiché sur le dashboard : nombre de niveaux distincts dans l'arbre.</div>
+        </div>
+        
+        <h3 class="subsection">5.2 Affichage</h3>
+        
+        <div class="rule">
+          <span class="rule-id">TREE-010</span>
+          <div class="rule-title">Vue par défaut</div>
+          <div class="rule-desc">L'arbre s'ouvre centré sur le membre "Moi" (linked_profile_id = current user).</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">TREE-011</span>
+          <div class="rule-title">Navigation</div>
+          <div class="rule-desc">Zoom (pinch), pan (drag), tap sur membre = popup détails.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">TREE-012</span>
+          <div class="rule-title">Indicateurs visuels</div>
+          <div class="rule-desc">
+            • Bordure spéciale pour "Moi"<br>
+            • Icône si membre a un compte lié<br>
+            • Grisé si décédé<br>
+            • Photo ou initiales
+          </div>
+        </div>
+        
+        <h3 class="subsection">5.3 Performances</h3>
+        
+        <div class="rule">
+          <span class="rule-id">TREE-020</span>
+          <div class="rule-title">Chargement optimisé</div>
+          <div class="rule-desc">Query <code>getFamilyTree</code> utilise DataLoader pour éviter N+1 sur les relations. Tous les membres et relations chargés en une requête.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">TREE-021</span>
+          <div class="rule-title">Limite d'affichage</div>
+          <div class="rule-desc">Jusqu'à 100 membres affichés simultanément (tier FAMILLE). Au-delà, lazy loading par branche.</div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 6: NOTIFICATION ==================== -->
+    <div class="section" id="notification">
+      <div class="section-header">
+        <span class="section-icon">🔔</span>
+        <h2>6. Notifications & Événements</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">6.1 Types de notifications</h3>
+        
+        <table>
+          <tr>
+            <th>Type</th>
+            <th>Déclencheur</th>
+            <th>Destinataires</th>
+            <th>Push</th>
+          </tr>
+          <tr>
+            <td><code>BIRTHDAY</code></td>
+            <td>J-7, J-1, J (CRON)</td>
+            <td>Tous les membres famille</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><code>WEDDING</code></td>
+            <td>J-7, J-1, J (CRON)</td>
+            <td>Tous les membres famille</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><code>MEMBER_ADDED</code></td>
+            <td>Ajout d'un membre</td>
+            <td>Tous les membres famille</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><code>FAMILY_JOINED</code></td>
+            <td>Nouveau membre rejoint</td>
+            <td>Admin uniquement</td>
+            <td>✅</td>
+          </tr>
+        </table>
+        
+        <h3 class="subsection">6.2 Événements anniversaire</h3>
+        
+        <div class="rule">
+          <span class="rule-id">NOTIF-001</span>
+          <div class="rule-title">Création automatique d'événement</div>
+          <div class="rule-desc">Si <code>birthDate</code> est fourni à la création d'un membre, un Event BIRTHDAY est créé automatiquement.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">NOTIF-002</span>
+          <div class="rule-title">Récurrence anniversaire</div>
+          <div class="rule-desc">Les anniversaires sont récurrents chaque année. Le CRON compare le jour/mois de l'événement avec aujourd'hui.</div>
+          <div class="formula">
+            isUpcoming(event, days) = <br>
+            &nbsp;&nbsp;dayOfYear(event.date) - dayOfYear(today) ∈ [0, days]<br>
+            &nbsp;&nbsp;// Gère le passage d'année
+          </div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">NOTIF-003</span>
+          <div class="rule-title">Rappels configurables</div>
+          <div class="rule-desc">Par défaut : J-7, J-1, J. Stocké dans <code>event.reminder_days</code> (INT[]). Personnalisable en V1.5.</div>
+        </div>
+        
+        <h3 class="subsection">6.3 CRON quotidien</h3>
+        
+        <div class="rule">
+          <span class="rule-id">NOTIF-010</span>
+          <div class="rule-title">Exécution</div>
+          <div class="rule-desc">Tous les jours à 08:00 UTC. Scanne tous les événements, génère les notifications pour les rappels du jour.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">NOTIF-011</span>
+          <div class="rule-title">Dédoublonnage</div>
+          <div class="rule-desc">Une notification n'est créée que si elle n'existe pas déjà pour ce (profile, event, reminder_day) dans les dernières 24h.</div>
+        </div>
+        
+        <h3 class="subsection">6.4 Push notifications</h3>
+        
+        <div class="rule">
+          <span class="rule-id">NOTIF-020</span>
+          <div class="rule-title">Service FCM</div>
+          <div class="rule-desc">Firebase Cloud Messaging pour iOS et Android. Token FCM stocké sur le Profile.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">NOTIF-021</span>
+          <div class="rule-title">Préférences utilisateur</div>
+          <div class="rule-desc">Chaque utilisateur peut désactiver les push globalement ou par type. Stocké dans Profile.settings (JSONB).</div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 7: PROFILE ==================== -->
+    <div class="section" id="profile">
+      <div class="section-header">
+        <span class="section-icon">⚙️</span>
+        <h2>7. Profils & Données</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">7.1 Données du profil</h3>
+        
+        <div class="rule">
+          <span class="rule-id">PROF-001</span>
+          <div class="rule-title">Synchronisation Profile ↔ Member</div>
+          <div class="rule-desc">Si un Profile a un <code>linkedMember</code>, la modification de firstName/lastName sur le Profile met aussi à jour le Member, et vice-versa.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">PROF-002</span>
+          <div class="rule-title">Avatar</div>
+          <div class="rule-desc">Upload vers Supabase Storage. Formats acceptés : JPG, PNG, WebP. Taille max : 5 MB. Redimensionné à 256x256.</div>
+        </div>
+        
+        <h3 class="subsection">7.2 Données sensibles</h3>
+        
+        <div class="rule">
+          <span class="rule-id">PROF-010</span>
+          <div class="rule-title">Pas d'export MVP</div>
+          <div class="rule-desc">L'export de données (GDPR) est prévu en V1.5. Les utilisateurs peuvent demander par email.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">PROF-011</span>
+          <div class="rule-title">Suppression de compte</div>
+          <div class="rule-desc">Hors MVP. En V1.5 : soft delete du Profile, conservation des Members (anonymisés si dernier admin).</div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 8: TIER ==================== -->
+    <div class="section" id="tier">
+      <div class="section-header">
+        <span class="section-icon">💎</span>
+        <h2>8. Tiers & Limites</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">8.1 Plans disponibles</h3>
+        
+        <table>
+          <tr>
+            <th>Tier</th>
+            <th>Prix</th>
+            <th>Membres max</th>
+            <th>Fonctionnalités</th>
+          </tr>
+          <tr>
+            <td><strong>FREE</strong></td>
+            <td>0 €</td>
+            <td>15</td>
+            <td>Toutes les fonctionnalités de base</td>
+          </tr>
+          <tr>
+            <td><strong>FAMILLE</strong></td>
+            <td>4.99 €/mois</td>
+            <td>100</td>
+            <td>+ Export PDF (V1.5)</td>
+          </tr>
+          <tr>
+            <td><strong>FAMILLE_PLUS</strong></td>
+            <td>9.99 €/mois</td>
+            <td>Illimité</td>
+            <td>+ Support prioritaire</td>
+          </tr>
+        </table>
+        
+        <h3 class="subsection">8.2 Vérification des limites</h3>
+        
+        <div class="rule">
+          <span class="rule-id">TIER-001</span>
+          <div class="rule-title">Contrôle à l'ajout</div>
+          <div class="rule-desc">Avant <code>addMember</code>, vérifier : <code>COUNT(members WHERE family_id = X) < tier.maxMembers</code>.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">TIER-002</span>
+          <div class="rule-title">Erreur limite atteinte</div>
+          <div class="rule-desc">Retourne <code>MEMBER_LIMIT_REACHED</code> (HTTP 402) avec message incitant à upgrader.</div>
+        </div>
+        
+        <div class="rule">
+          <span class="rule-id">TIER-003</span>
+          <div class="rule-title">Downgrade</div>
+          <div class="rule-desc">Si une famille downgrade et dépasse la nouvelle limite, les membres existants sont conservés mais aucun ajout possible.</div>
+        </div>
+        
+        <h3 class="subsection">8.3 Facturation (V1.5)</h3>
+        
+        <div class="info-box">
+          <strong>Hors MVP :</strong> Intégration Stripe prévue en V1.5. Pour le MVP, toutes les familles sont en tier FREE.
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- FOOTER -->
+    <div class="footer">
+      FamilyRoots — Règles Métier MVP v1.0 — Steve-Landry KOUOKAM NONO — HETIC Mastère Data & IA — Avril 2026
+    </div>
+    
+  </div>
+</body>
+</html>

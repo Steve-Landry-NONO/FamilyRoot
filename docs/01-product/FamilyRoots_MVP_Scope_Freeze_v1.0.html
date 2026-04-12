@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FamilyRoots - MVP Scope Freeze v1.0</title>
+  <style>
+    :root {
+      --foret: #2D5016;
+      --feuille: #4A7023;
+      --olive: #6B8E23;
+      --terre: #8B4513;
+      --sable: #D4A574;
+      --ivoire: #FFF8E7;
+      --creme: #F5F5DC;
+      --succes: #4CAF50;
+      --warning: #FF9800;
+      --erreur: #F44336;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--creme); color: var(--terre); line-height: 1.6; padding: 20px; }
+    
+    .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden; }
+    
+    .header {
+      background: linear-gradient(135deg, var(--foret) 0%, var(--feuille) 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    .header h1 { font-size: 28px; margin-bottom: 8px; }
+    .header p { color: var(--sable); font-size: 14px; }
+    .badge { display: inline-block; background: var(--sable); color: var(--terre); padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-top: 10px; }
+    
+    .content { padding: 30px; }
+    
+    .section-title {
+      color: var(--foret);
+      font-size: 18px;
+      margin: 24px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--sable);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .intro {
+      background: var(--ivoire);
+      border-left: 4px solid var(--foret);
+      padding: 16px;
+      margin-bottom: 20px;
+      border-radius: 0 8px 8px 0;
+    }
+    .intro p { font-size: 13px; }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 12px;
+    }
+    th {
+      background: var(--foret);
+      color: white;
+      padding: 10px 8px;
+      text-align: left;
+      font-weight: 600;
+    }
+    td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--sable);
+      vertical-align: top;
+    }
+    tr:nth-child(even) { background: var(--ivoire); }
+    tr:hover { background: var(--creme); }
+    
+    .status-mvp { 
+      display: inline-block;
+      background: #E8F5E9; 
+      color: var(--succes); 
+      padding: 3px 10px; 
+      border-radius: 10px; 
+      font-weight: 600;
+      font-size: 11px;
+    }
+    .status-v15 { 
+      display: inline-block;
+      background: #FFF3E0; 
+      color: var(--warning); 
+      padding: 3px 10px; 
+      border-radius: 10px; 
+      font-weight: 600;
+      font-size: 11px;
+    }
+    .status-v2 { 
+      display: inline-block;
+      background: #E3F2FD; 
+      color: #1976D2; 
+      padding: 3px 10px; 
+      border-radius: 10px; 
+      font-weight: 600;
+      font-size: 11px;
+    }
+    .status-out { 
+      display: inline-block;
+      background: #FFEBEE; 
+      color: var(--erreur); 
+      padding: 3px 10px; 
+      border-radius: 10px; 
+      font-weight: 600;
+      font-size: 11px;
+    }
+    
+    .priority-must { color: var(--succes); font-weight: 600; }
+    .priority-should { color: var(--warning); font-weight: 600; }
+    .priority-could { color: #1976D2; font-weight: 600; }
+    
+    .source { font-size: 10px; color: var(--terre); font-style: italic; }
+    
+    .summary-box {
+      background: var(--foret);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .summary-box h3 { margin-bottom: 12px; font-size: 14px; }
+    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .summary-item { text-align: center; }
+    .summary-value { font-size: 28px; font-weight: 700; }
+    .summary-label { font-size: 10px; color: var(--sable); text-transform: uppercase; }
+    
+    .conflict-note {
+      background: #FFF3E0;
+      border: 1px solid var(--warning);
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 11px;
+    }
+    .conflict-note strong { color: var(--warning); }
+    
+    .decision-box {
+      background: #E8F5E9;
+      border: 1px solid var(--succes);
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 11px;
+    }
+    .decision-box strong { color: var(--succes); }
+    
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background: var(--ivoire);
+      font-size: 11px;
+      color: var(--terre);
+      border-top: 1px solid var(--sable);
+    }
+    
+    @media print {
+      body { padding: 0; background: white; }
+      .container { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔒 MVP Scope Freeze</h1>
+      <p>Source of Truth — FamilyRoots v1.0</p>
+      <span class="badge">Document de verrouillage — 11 Avril 2026</span>
+    </div>
+    
+    <div class="content">
+      <div class="intro">
+        <p><strong>Objectif :</strong> Ce document gèle définitivement le périmètre MVP avant de passer à l'architecture technique (Paquet 2). Il réconcilie les incohérences identifiées entre l'Audit Maquettes v2.0, le PRD MVP, et le User Flow Diagram.</p>
+        <p style="margin-top:8px"><strong>Règle :</strong> Ce document fait foi. En cas de doute, c'est lui qui prime sur les autres documents.</p>
+      </div>
+      
+      <h2 class="section-title">📊 Résumé du Scope Gelé</h2>
+      
+      <div class="summary-box">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <div class="summary-value">18</div>
+            <div class="summary-label">Écrans MVP</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-value">17</div>
+            <div class="summary-label">User Stories</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-value">8</div>
+            <div class="summary-label">Tables BDD</div>
+          </div>
+        </div>
+      </div>
+      
+      <h2 class="section-title">⚠️ Arbitrages des Conflits</h2>
+      
+      <p style="font-size:13px;margin-bottom:16px">Les éléments ci-dessous présentaient des incohérences entre documents. Voici les décisions finales :</p>
+      
+      <table>
+        <thead>
+          <tr>
+            <th style="width:22%">Élément</th>
+            <th style="width:12%">Statut Final</th>
+            <th style="width:10%">Priorité</th>
+            <th style="width:18%">Source de Vérité</th>
+            <th style="width:38%">Justification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Forgot Password</strong></td>
+            <td><span class="status-v15">V1.5</span></td>
+            <td class="priority-should">SHOULD</td>
+            <td><span class="source">Audit ✓ / PRD ✗</span></td>
+            <td>L'Audit plaçait Forgot Password en MVP, le PRD aussi. <strong>MAIS</strong> pour un MVP rapide, on peut gérer via email support. Reporté V1.5 pour réduire le scope auth initial.</td>
+          </tr>
+          <tr>
+            <td><strong>Social Login (Google/Apple)</strong></td>
+            <td><span class="status-v15">V1.5</span></td>
+            <td class="priority-should">SHOULD</td>
+            <td><span class="source">Audit ✓ / PRD ✗</span></td>
+            <td>Le PRD listait Social Login en MVP (US-004). <strong>Décision :</strong> OAuth complexifie le MVP (config stores, tokens). Email/password suffit pour valider le produit. Reporté V1.5.</td>
+          </tr>
+          <tr>
+            <td><strong>QR Code Invitation</strong></td>
+            <td><span class="status-v15">V1.5</span></td>
+            <td class="priority-could">COULD</td>
+            <td><span class="source">Audit ✗ / PRD ✓</span></td>
+            <td>Le PRD incluait QR code dans US-050. L'Audit ne le mentionnait pas explicitement. <strong>Décision :</strong> Code texte + partage WhatsApp/SMS suffisent. QR est nice-to-have → V1.5.</td>
+          </tr>
+          <tr>
+            <td><strong>Multi-familles</strong></td>
+            <td><span class="status-v15">V1.5</span></td>
+            <td class="priority-should">SHOULD</td>
+            <td><span class="source">Audit ✓ / PRD ✗</span></td>
+            <td>Le PRD disait "lecture seule MVP". L'Audit disait V1.5. <strong>Décision :</strong> MVP = 1 famille par user. Multi-familles complet en V1.5. Simplifie modèle data et UI.</td>
+          </tr>
+          <tr>
+            <td><strong>Calendrier</strong></td>
+            <td><span class="status-v15">V1.5</span></td>
+            <td class="priority-should">SHOULD</td>
+            <td><span class="source">Audit ✓</span></td>
+            <td>L'Audit et le User Flow plaçaient Calendrier en V1.5. <strong>Confirmé.</strong> Les anniversaires apparaissent dans Dashboard/Notifs, pas besoin d'un calendrier dédié pour MVP.</td>
+          </tr>
+          <tr>
+            <td><strong>Fil d'activité</strong></td>
+            <td><span class="status-v15">V1.5</span></td>
+            <td class="priority-could">COULD</td>
+            <td><span class="source">Audit ✓</span></td>
+            <td>L'Audit plaçait le fil d'activité en V1.5. <strong>Confirmé.</strong> Le Dashboard affiche les événements à venir, pas besoin d'un feed temps réel pour MVP.</td>
+          </tr>
+          <tr>
+            <td><strong>Web Public (Landing + Pricing)</strong></td>
+            <td><span class="status-out">HORS SCOPE</span></td>
+            <td>—</td>
+            <td><span class="source">Audit ✓</span></td>
+            <td>MVP = mobile-only. Le site marketing et la page pricing sont hors scope technique MVP mobile. Peuvent être faits en parallèle (marketing) mais pas dans le backlog dev.</td>
+          </tr>
+          <tr>
+            <td><strong>Web App Connectée</strong></td>
+            <td><span class="status-v2">V2</span></td>
+            <td class="priority-could">COULD</td>
+            <td><span class="source">Audit ✓</span></td>
+            <td>L'Audit plaçait la Web App en V2. <strong>Confirmé.</strong> Focus mobile-first. Le backend GraphQL permettra d'ajouter un client web plus tard.</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h2 class="section-title">✅ Périmètre MVP Gelé</h2>
+      
+      <h3 style="color:var(--feuille);font-size:14px;margin:16px 0 8px">Écrans MVP (18 écrans)</h3>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Section</th>
+            <th>Écrans</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Onboarding</strong></td>
+            <td>Splash, Onboarding 1/2/3</td>
+            <td>4 écrans — Intro + CTA</td>
+          </tr>
+          <tr>
+            <td><strong>Auth</strong></td>
+            <td>Login, Register, Confirmation Email, Créer Famille, Rejoindre Famille</td>
+            <td>5 écrans — Email/password only (pas de social login, pas de forgot password)</td>
+          </tr>
+          <tr>
+            <td><strong>Dashboard</strong></td>
+            <td>Dashboard Principal, Centre Notifications</td>
+            <td>2 écrans — Stats + événements à venir + notifs</td>
+          </tr>
+          <tr>
+            <td><strong>Arbre</strong></td>
+            <td>Vue Arbre, Popup Membre</td>
+            <td>2 écrans — Navigation + détail rapide</td>
+          </tr>
+          <tr>
+            <td><strong>Profils</strong></td>
+            <td>Mon Profil, Profil Membre, Modifier Profil</td>
+            <td>3 écrans — CRUD profil</td>
+          </tr>
+          <tr>
+            <td><strong>Features</strong></td>
+            <td>Invitation (code texte), Ajouter Membre, Réglages</td>
+            <td>3 écrans — Pas de QR code</td>
+          </tr>
+          <tr>
+            <td><strong>États</strong></td>
+            <td>Empty States (arbre, notifs, calendrier), Loading, Error</td>
+            <td>États UX — Intégrés dans maquette v2.1</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3 style="color:var(--feuille);font-size:14px;margin:16px 0 8px">User Stories MVP (17 US)</h3>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>User Story</th>
+            <th>Priorité</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>US-001</td><td>Inscription email/password</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-002</td><td>Confirmation email (code 4 chiffres)</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-003</td><td>Connexion email/password</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-010</td><td>Créer une famille (admin fondateur)</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-011</td><td>Rejoindre une famille (code invitation)</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-020</td><td>Voir l'arbre généalogique</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-021</td><td>Ajouter un membre à l'arbre</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-022</td><td>Voir le profil d'un membre depuis l'arbre</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-030</td><td>Voir et modifier mon profil</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-031</td><td>Voir le profil d'un autre membre</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-040</td><td>Recevoir des notifications d'anniversaire</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-041</td><td>Configurer mes préférences de notification</td><td class="priority-should">SHOULD</td></tr>
+          <tr><td>US-050</td><td>Inviter des proches (code texte + partage)</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-060</td><td>Comprendre quoi faire (empty states)</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-070</td><td>Être informé des erreurs réseau</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-080</td><td>Voir le dashboard avec stats et événements</td><td class="priority-must">MUST</td></tr>
+          <tr><td>US-090</td><td>Se déconnecter</td><td class="priority-must">MUST</td></tr>
+        </tbody>
+      </table>
+      
+      <div class="decision-box">
+        <strong>✓ US supprimées du MVP :</strong> US-004 (Social Login) → reportée V1.5. QR Code retiré de US-050.
+      </div>
+      
+      <h3 style="color:var(--feuille);font-size:14px;margin:16px 0 8px">Entités BDD MVP (8 tables)</h3>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Table</th>
+            <th>Description</th>
+            <th>Scope</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>User</strong></td><td>Compte utilisateur (email, password_hash, name)</td><td>MVP</td></tr>
+          <tr><td><strong>Family</strong></td><td>Famille (name, code, tier, created_by)</td><td>MVP</td></tr>
+          <tr><td><strong>UserFamily</strong></td><td>Relation User-Family (role: ADMIN/MEMBER)</td><td>MVP</td></tr>
+          <tr><td><strong>Member</strong></td><td>Membre de l'arbre (infos, photo, linked_user_id)</td><td>MVP</td></tr>
+          <tr><td><strong>Relationship</strong></td><td>Liens entre membres (type: PARENT/CHILD/SPOUSE)</td><td>MVP</td></tr>
+          <tr><td><strong>Event</strong></td><td>Événements (BIRTHDAY, WEDDING, DEATH)</td><td>MVP</td></tr>
+          <tr><td><strong>Invitation</strong></td><td>Codes d'invitation (code, expires_at, used_by)</td><td>MVP</td></tr>
+          <tr><td><strong>Notification</strong></td><td>Notifications push (type, content, read_at)</td><td>MVP</td></tr>
+        </tbody>
+      </table>
+      
+      <div class="conflict-note">
+        <strong>Tables reportées :</strong> AuthProvider (Social Login → V1.5), Photo (Galerie → V1.5), AuditLog (Historique → V1.5)
+      </div>
+      
+      <h2 class="section-title">🚫 Explicitement HORS MVP</h2>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Élément</th>
+            <th>Phase</th>
+            <th>Raison</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Forgot Password</td><td><span class="status-v15">V1.5</span></td><td>Email support suffit pour MVP</td></tr>
+          <tr><td>Social Login (Google/Apple)</td><td><span class="status-v15">V1.5</span></td><td>Complexité OAuth, config stores</td></tr>
+          <tr><td>QR Code Invitation</td><td><span class="status-v15">V1.5</span></td><td>Code texte + partage suffisent</td></tr>
+          <tr><td>Multi-familles</td><td><span class="status-v15">V1.5</span></td><td>1 famille/user simplifie le modèle</td></tr>
+          <tr><td>Calendrier dédié</td><td><span class="status-v15">V1.5</span></td><td>Dashboard + Notifs couvrent les besoins</td></tr>
+          <tr><td>Fil d'activité</td><td><span class="status-v15">V1.5</span></td><td>Pas de feed temps réel</td></tr>
+          <tr><td>Galerie Photos</td><td><span class="status-v15">V1.5</span></td><td>Photo profil uniquement en MVP</td></tr>
+          <tr><td>Web Public (Landing/Pricing)</td><td><span class="status-out">Marketing</span></td><td>Hors backlog dev mobile</td></tr>
+          <tr><td>Web App Connectée</td><td><span class="status-v2">V2</span></td><td>Mobile-first, web plus tard</td></tr>
+          <tr><td>Mode Sombre</td><td><span class="status-v2">V2</span></td><td>Theme clair uniquement</td></tr>
+          <tr><td>Export GEDCOM/PDF</td><td><span class="status-v2">V2</span></td><td>Feature avancée</td></tr>
+          <tr><td>Chat Familial</td><td><span class="status-v2">V2</span></td><td>Complexité temps réel</td></tr>
+        </tbody>
+      </table>
+      
+      <h2 class="section-title">📝 Signature & Validation</h2>
+      
+      <div style="background:var(--ivoire);padding:16px;border-radius:8px;margin-top:16px">
+        <p style="font-size:12px"><strong>Document validé par :</strong> Steve-Landry KOUOKAM NONO</p>
+        <p style="font-size:12px"><strong>Date de gel :</strong> 11 Avril 2026</p>
+        <p style="font-size:12px"><strong>Version :</strong> 1.0 — Source of Truth</p>
+        <p style="font-size:11px;margin-top:12px;color:var(--terre)"><em>Ce document fait foi pour le Paquet 2 (Architecture Technique). Toute modification du scope MVP doit passer par une mise à jour versionnée de ce document.</em></p>
+      </div>
+    </div>
+    
+    <div class="footer">
+      FamilyRoots — MVP Scope Freeze v1.0 — Steve-Landry KOUOKAM NONO — HETIC Mastère Data & IA
+    </div>
+  </div>
+</body>
+</html>

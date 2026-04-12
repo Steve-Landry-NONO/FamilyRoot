@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FamilyRoots - Design System</title>
+  <style>
+    :root {
+      /* Palette FamilyRoots */
+      --foret: #2D5016;
+      --feuille: #4A7023;
+      --olive: #6B8E23;
+      --terre: #8B4513;
+      --sable: #D4A574;
+      --ivoire: #FFF8E7;
+      --creme: #F5F5DC;
+      
+      /* Semantic */
+      --success: #4CAF50;
+      --warning: #FF9800;
+      --error: #F44336;
+      --info: #2196F3;
+      
+      /* Neutrals */
+      --gray-50: #FAFAFA;
+      --gray-100: #F5F5F5;
+      --gray-200: #EEEEEE;
+      --gray-300: #E0E0E0;
+      --gray-400: #BDBDBD;
+      --gray-500: #9E9E9E;
+      --gray-600: #757575;
+      --gray-700: #616161;
+      --gray-800: #424242;
+      --gray-900: #212121;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--gray-100); color: var(--gray-900); line-height: 1.6; }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    
+    .header {
+      background: linear-gradient(135deg, var(--foret) 0%, var(--feuille) 100%);
+      color: white;
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .header h1 { font-size: 32px; margin-bottom: 8px; }
+    .header p { color: var(--sable); font-size: 16px; }
+    .badge { display: inline-block; background: var(--sable); color: var(--terre); padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-top: 16px; }
+    
+    .section {
+      background: white;
+      border-radius: 16px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .section-header {
+      background: var(--foret);
+      color: white;
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-header h2 { font-size: 20px; }
+    .section-icon { font-size: 28px; }
+    .section-body { padding: 28px; }
+    
+    .subsection { 
+      color: var(--feuille); 
+      font-size: 16px; 
+      margin: 28px 0 16px; 
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .subsection:first-of-type { margin-top: 0; }
+    
+    /* Color Swatches */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .color-swatch {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .color-preview {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 12px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    .color-info {
+      padding: 12px;
+      background: white;
+    }
+    .color-name { font-weight: 600; font-size: 13px; color: var(--gray-800); }
+    .color-hex { font-size: 11px; color: var(--gray-500); font-family: monospace; }
+    .color-flutter { font-size: 10px; color: var(--gray-400); font-family: monospace; }
+    
+    /* Typography */
+    .type-specimen {
+      padding: 20px;
+      background: var(--gray-50);
+      border-radius: 12px;
+      margin: 12px 0;
+    }
+    .type-name { font-size: 11px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .type-h1 { font-size: 32px; font-weight: 700; color: var(--gray-900); }
+    .type-h2 { font-size: 24px; font-weight: 600; color: var(--gray-900); }
+    .type-h3 { font-size: 20px; font-weight: 600; color: var(--gray-800); }
+    .type-body { font-size: 16px; font-weight: 400; color: var(--gray-700); }
+    .type-body-sm { font-size: 14px; font-weight: 400; color: var(--gray-600); }
+    .type-caption { font-size: 12px; font-weight: 400; color: var(--gray-500); }
+    .type-label { font-size: 14px; font-weight: 600; color: var(--gray-700); text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* Spacing */
+    .spacing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 16px;
+    }
+    .spacing-item {
+      text-align: center;
+    }
+    .spacing-box {
+      background: var(--feuille);
+      margin: 0 auto 8px;
+      border-radius: 4px;
+    }
+    .spacing-label { font-size: 12px; font-weight: 600; color: var(--gray-700); }
+    .spacing-value { font-size: 10px; color: var(--gray-500); }
+    
+    /* Components */
+    .component-showcase {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin: 16px 0;
+      align-items: flex-start;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: var(--foret);
+      color: white;
+    }
+    .btn-primary:hover { background: var(--feuille); }
+    .btn-secondary {
+      background: white;
+      color: var(--foret);
+      border: 2px solid var(--foret);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--foret);
+      border: 2px solid var(--sable);
+    }
+    .btn-text {
+      background: transparent;
+      color: var(--foret);
+      padding: 14px 16px;
+    }
+    .btn-sm { padding: 10px 20px; font-size: 14px; border-radius: 8px; }
+    .btn-lg { padding: 18px 36px; font-size: 18px; border-radius: 16px; }
+    .btn-disabled {
+      background: var(--gray-300);
+      color: var(--gray-500);
+      cursor: not-allowed;
+    }
+    
+    .input-field {
+      width: 100%;
+      max-width: 320px;
+      padding: 16px;
+      border: 2px solid var(--gray-300);
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: var(--foret);
+      box-shadow: 0 0 0 4px rgba(45, 80, 22, 0.1);
+    }
+    .input-field::placeholder { color: var(--gray-400); }
+    .input-error { border-color: var(--error); }
+    
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      max-width: 280px;
+    }
+    .card-elevated {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--feuille);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .avatar-sm { width: 32px; height: 32px; font-size: 12px; }
+    .avatar-lg { width: 64px; height: 64px; font-size: 24px; }
+    .avatar-xl { width: 96px; height: 96px; font-size: 36px; }
+    
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 14px;
+      background: var(--ivoire);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--terre);
+      gap: 6px;
+    }
+    .chip-success { background: #E8F5E9; color: #2E7D32; }
+    .chip-warning { background: #FFF3E0; color: #E65100; }
+    .chip-error { background: #FFEBEE; color: #C62828; }
+    
+    .badge-notif {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      background: var(--error);
+      color: white;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    
+    /* Code blocks */
+    pre {
+      background: #1E1E1E;
+      color: #D4D4D4;
+      padding: 20px;
+      border-radius: 12px;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      margin: 16px 0;
+    }
+    .code-comment { color: #6A9955; }
+    .code-keyword { color: #569CD6; }
+    .code-string { color: #CE9178; }
+    .code-type { color: #4EC9B0; }
+    .code-number { color: #B5CEA8; }
+    .code-property { color: #9CDCFE; }
+    
+    /* Icons */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 16px;
+    }
+    .icon-item {
+      text-align: center;
+      padding: 16px;
+      background: var(--gray-50);
+      border-radius: 12px;
+    }
+    .icon-preview {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    .icon-name { font-size: 11px; color: var(--gray-600); }
+    
+    /* Member node */
+    .member-node {
+      width: 72px;
+      text-align: center;
+    }
+    .member-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--feuille);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 20px;
+      margin: 0 auto 8px;
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .member-avatar-me { border-color: var(--foret); box-shadow: 0 0 0 3px var(--sable); }
+    .member-avatar-deceased { opacity: 0.6; }
+    .member-name { font-size: 11px; font-weight: 500; color: var(--gray-700); }
+    
+    /* Toast */
+    .toast {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .toast-success { background: #2E7D32; color: white; }
+    .toast-error { background: #C62828; color: white; }
+    .toast-info { background: var(--foret); color: white; }
+    
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 16px 0;
+    }
+    th {
+      background: var(--feuille);
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    tr:nth-child(even) { background: var(--gray-50); }
+    
+    .footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: var(--gray-500);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- HEADER -->
+    <div class="header">
+      <h1>🎨 Design System</h1>
+      <p>FamilyRoots — Guidelines UI/UX pour Flutter</p>
+      <span class="badge">Version 1.0 — Avril 2026</span>
+    </div>
+    
+    <!-- ==================== SECTION: COLORS ==================== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">🎨</span>
+        <h2>1. Palette de Couleurs</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">🌲 Couleurs Primaires (Nature)</h3>
+        <div class="color-grid">
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #2D5016;">Forêt</div>
+            <div class="color-info">
+              <div class="color-name">Forêt</div>
+              <div class="color-hex">#2D5016</div>
+              <div class="color-flutter">Color(0xFF2D5016)</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #4A7023;">Feuille</div>
+            <div class="color-info">
+              <div class="color-name">Feuille</div>
+              <div class="color-hex">#4A7023</div>
+              <div class="color-flutter">Color(0xFF4A7023)</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #6B8E23;">Olive</div>
+            <div class="color-info">
+              <div class="color-name">Olive</div>
+              <div class="color-hex">#6B8E23</div>
+              <div class="color-flutter">Color(0xFF6B8E23)</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #8B4513;">Terre</div>
+            <div class="color-info">
+              <div class="color-name">Terre</div>
+              <div class="color-hex">#8B4513</div>
+              <div class="color-flutter">Color(0xFF8B4513)</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #D4A574; color: #8B4513;">Sable</div>
+            <div class="color-info">
+              <div class="color-name">Sable</div>
+              <div class="color-hex">#D4A574</div>
+              <div class="color-flutter">Color(0xFFD4A574)</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #FFF8E7; color: #8B4513;">Ivoire</div>
+            <div class="color-info">
+              <div class="color-name">Ivoire</div>
+              <div class="color-hex">#FFF8E7</div>
+              <div class="color-flutter">Color(0xFFFFF8E7)</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #F5F5DC; color: #8B4513;">Crème</div>
+            <div class="color-info">
+              <div class="color-name">Crème</div>
+              <div class="color-hex">#F5F5DC</div>
+              <div class="color-flutter">Color(0xFFF5F5DC)</div>
+            </div>
+          </div>
+        </div>
+        
+        <h3 class="subsection">✅ Couleurs Sémantiques</h3>
+        <div class="color-grid">
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #4CAF50;">Success</div>
+            <div class="color-info">
+              <div class="color-name">Success</div>
+              <div class="color-hex">#4CAF50</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #FF9800;">Warning</div>
+            <div class="color-info">
+              <div class="color-name">Warning</div>
+              <div class="color-hex">#FF9800</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #F44336;">Error</div>
+            <div class="color-info">
+              <div class="color-name">Error</div>
+              <div class="color-hex">#F44336</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #2196F3;">Info</div>
+            <div class="color-info">
+              <div class="color-name">Info</div>
+              <div class="color-hex">#2196F3</div>
+            </div>
+          </div>
+        </div>
+        
+        <h3 class="subsection">⚫ Neutres</h3>
+        <div class="color-grid">
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #212121;">900</div>
+            <div class="color-info">
+              <div class="color-name">Gray 900</div>
+              <div class="color-hex">#212121</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #616161;">700</div>
+            <div class="color-info">
+              <div class="color-name">Gray 700</div>
+              <div class="color-hex">#616161</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #9E9E9E;">500</div>
+            <div class="color-info">
+              <div class="color-name">Gray 500</div>
+              <div class="color-hex">#9E9E9E</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #E0E0E0; color: #616161;">300</div>
+            <div class="color-info">
+              <div class="color-name">Gray 300</div>
+              <div class="color-hex">#E0E0E0</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-preview" style="background: #F5F5F5; color: #616161;">100</div>
+            <div class="color-info">
+              <div class="color-name">Gray 100</div>
+              <div class="color-hex">#F5F5F5</div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION: TYPOGRAPHY ==================== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">✏️</span>
+        <h2>2. Typographie</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">📝 Police</h3>
+        <p style="margin-bottom: 16px;">
+          <strong>Primary:</strong> Inter (Google Fonts)<br>
+          <strong>Fallback:</strong> SF Pro (iOS), Roboto (Android), system-ui
+        </p>
+        
+        <h3 class="subsection">📐 Échelle typographique</h3>
+        
+        <div class="type-specimen">
+          <div class="type-name">Heading 1 — 32px / Bold</div>
+          <div class="type-h1">Ma Famille</div>
+        </div>
+        
+        <div class="type-specimen">
+          <div class="type-name">Heading 2 — 24px / SemiBold</div>
+          <div class="type-h2">Arbre Généalogique</div>
+        </div>
+        
+        <div class="type-specimen">
+          <div class="type-name">Heading 3 — 20px / SemiBold</div>
+          <div class="type-h3">Événements à venir</div>
+        </div>
+        
+        <div class="type-specimen">
+          <div class="type-name">Body — 16px / Regular</div>
+          <div class="type-body">Bienvenue dans FamilyRoots ! Construisez votre arbre généalogique et connectez votre famille.</div>
+        </div>
+        
+        <div class="type-specimen">
+          <div class="type-name">Body Small — 14px / Regular</div>
+          <div class="type-body-sm">Membre depuis le 15 mars 2026</div>
+        </div>
+        
+        <div class="type-specimen">
+          <div class="type-name">Caption — 12px / Regular</div>
+          <div class="type-caption">Il y a 2 heures</div>
+        </div>
+        
+        <div class="type-specimen">
+          <div class="type-name">Label — 14px / SemiBold / Uppercase</div>
+          <div class="type-label">Anniversaire</div>
+        </div>
+        
+        <h3 class="subsection">💻 Code Flutter</h3>
+        <pre>
+<span class="code-keyword">class</span> <span class="code-type">AppTextStyles</span> {
+  <span class="code-keyword">static const</span> h1 = <span class="code-type">TextStyle</span>(
+    fontSize: <span class="code-number">32</span>,
+    fontWeight: <span class="code-type">FontWeight</span>.w700,
+    color: <span class="code-type">AppColors</span>.gray900,
+  );
+  
+  <span class="code-keyword">static const</span> h2 = <span class="code-type">TextStyle</span>(
+    fontSize: <span class="code-number">24</span>,
+    fontWeight: <span class="code-type">FontWeight</span>.w600,
+  );
+  
+  <span class="code-keyword">static const</span> body = <span class="code-type">TextStyle</span>(
+    fontSize: <span class="code-number">16</span>,
+    fontWeight: <span class="code-type">FontWeight</span>.w400,
+    height: <span class="code-number">1.5</span>,
+  );
+  
+  <span class="code-keyword">static const</span> caption = <span class="code-type">TextStyle</span>(
+    fontSize: <span class="code-number">12</span>,
+    color: <span class="code-type">AppColors</span>.gray500,
+  );
+}
+        </pre>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION: SPACING ==================== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">📏</span>
+        <h2>3. Espacements</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">📐 Échelle (base 4px)</h3>
+        
+        <div class="spacing-grid">
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 4px; height: 4px;"></div>
+            <div class="spacing-label">xs</div>
+            <div class="spacing-value">4px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 8px; height: 8px;"></div>
+            <div class="spacing-label">sm</div>
+            <div class="spacing-value">8px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 12px; height: 12px;"></div>
+            <div class="spacing-label">md</div>
+            <div class="spacing-value">12px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 16px; height: 16px;"></div>
+            <div class="spacing-label">lg</div>
+            <div class="spacing-value">16px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 24px; height: 24px;"></div>
+            <div class="spacing-label">xl</div>
+            <div class="spacing-value">24px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 32px; height: 32px;"></div>
+            <div class="spacing-label">2xl</div>
+            <div class="spacing-value">32px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 48px; height: 48px;"></div>
+            <div class="spacing-label">3xl</div>
+            <div class="spacing-value">48px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 64px; height: 64px;"></div>
+            <div class="spacing-label">4xl</div>
+            <div class="spacing-value">64px</div>
+          </div>
+        </div>
+        
+        <h3 class="subsection">📱 Marges écran</h3>
+        <table>
+          <tr>
+            <th>Usage</th>
+            <th>Valeur</th>
+            <th>Constante</th>
+          </tr>
+          <tr>
+            <td>Padding horizontal écran</td>
+            <td>20px</td>
+            <td><code>AppSpacing.screenPadding</code></td>
+          </tr>
+          <tr>
+            <td>Safe area top</td>
+            <td>Dynamic + 16px</td>
+            <td><code>MediaQuery.of(context).padding.top + 16</code></td>
+          </tr>
+          <tr>
+            <td>Gap entre sections</td>
+            <td>24px</td>
+            <td><code>AppSpacing.sectionGap</code></td>
+          </tr>
+          <tr>
+            <td>Gap entre éléments liste</td>
+            <td>12px</td>
+            <td><code>AppSpacing.listGap</code></td>
+          </tr>
+        </table>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION: COMPONENTS ==================== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">🧩</span>
+        <h2>4. Composants</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">🔘 Boutons</h3>
+        
+        <div class="component-showcase">
+          <button class="btn btn-primary">Primary</button>
+          <button class="btn btn-secondary">Secondary</button>
+          <button class="btn btn-outline">Outline</button>
+          <button class="btn btn-text">Text</button>
+          <button class="btn btn-primary btn-disabled">Disabled</button>
+        </div>
+        
+        <div class="component-showcase">
+          <button class="btn btn-primary btn-sm">Small</button>
+          <button class="btn btn-primary">Default</button>
+          <button class="btn btn-primary btn-lg">Large</button>
+        </div>
+        
+        <h3 class="subsection">📝 Champs de saisie</h3>
+        
+        <div class="component-showcase">
+          <input type="text" class="input-field" placeholder="Email" />
+          <input type="text" class="input-field input-error" placeholder="Erreur" />
+        </div>
+        
+        <h3 class="subsection">👤 Avatars</h3>
+        
+        <div class="component-showcase">
+          <div class="avatar avatar-sm">SL</div>
+          <div class="avatar">SL</div>
+          <div class="avatar avatar-lg">SL</div>
+          <div class="avatar avatar-xl">SL</div>
+        </div>
+        
+        <h3 class="subsection">🏷️ Chips & Badges</h3>
+        
+        <div class="component-showcase">
+          <span class="chip">Default</span>
+          <span class="chip chip-success">✓ Confirmé</span>
+          <span class="chip chip-warning">⏳ En attente</span>
+          <span class="chip chip-error">✕ Expiré</span>
+          <span class="badge-notif">3</span>
+          <span class="badge-notif">99+</span>
+        </div>
+        
+        <h3 class="subsection">🌳 Nœud Membre (Arbre)</h3>
+        
+        <div class="component-showcase" style="gap: 24px;">
+          <div class="member-node">
+            <div class="member-avatar">SL</div>
+            <div class="member-name">Steve L.</div>
+          </div>
+          <div class="member-node">
+            <div class="member-avatar member-avatar-me">Moi</div>
+            <div class="member-name">Moi</div>
+          </div>
+          <div class="member-node">
+            <div class="member-avatar member-avatar-deceased">JD</div>
+            <div class="member-name">Jean D. †</div>
+          </div>
+        </div>
+        
+        <h3 class="subsection">📢 Toasts</h3>
+        
+        <div class="component-showcase" style="flex-direction: column;">
+          <div class="toast toast-success">✓ Membre ajouté avec succès</div>
+          <div class="toast toast-error">✕ Code d'invitation expiré</div>
+          <div class="toast toast-info">📋 Code copié dans le presse-papiers</div>
+        </div>
+        
+        <h3 class="subsection">🃏 Cards</h3>
+        
+        <div class="component-showcase">
+          <div class="card">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+              <div class="avatar">ML</div>
+              <div>
+                <div style="font-weight: 600;">Marie Lambert</div>
+                <div style="font-size: 12px; color: var(--gray-500);">Mère</div>
+              </div>
+            </div>
+            <div style="font-size: 13px; color: var(--gray-600);">Née le 15 juin 1965</div>
+          </div>
+          
+          <div class="card card-elevated">
+            <div style="font-weight: 600; margin-bottom: 8px;">🎂 Anniversaire</div>
+            <div style="font-size: 14px; color: var(--gray-700);">Papa fête ses 60 ans dans 3 jours</div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION: ICONS ==================== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">🔣</span>
+        <h2>5. Iconographie</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">📦 Bibliothèque</h3>
+        <p style="margin-bottom: 16px;">
+          <strong>Package:</strong> <code>lucide_icons</code> (cohérent avec les maquettes)<br>
+          <strong>Taille par défaut:</strong> 24px<br>
+          <strong>Stroke:</strong> 2px
+        </p>
+        
+        <h3 class="subsection">🎯 Icônes principales</h3>
+        
+        <div class="icon-grid">
+          <div class="icon-item">
+            <div class="icon-preview">🏠</div>
+            <div class="icon-name">home</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-preview">🌳</div>
+            <div class="icon-name">git-branch</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-preview">🔔</div>
+            <div class="icon-name">bell</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-preview">👤</div>
+            <div class="icon-name">user</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-preview">➕</div>
+            <div class="icon-name">plus</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-preview">✏️</div>
+            <div class="icon-name">edit</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-preview">📤</div>
+            <div class="icon-name">share</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-preview">⚙️</div>
+            <div class="icon-name">settings</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-preview">🎂</div>
+            <div class="icon-name">cake</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-preview">📋</div>
+            <div class="icon-name">clipboard</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-preview">✓</div>
+            <div class="icon-name">check</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-preview">✕</div>
+            <div class="icon-name">x</div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION: ELEVATION ==================== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">📦</span>
+        <h2>6. Élévation & Ombres</h2>
+      </div>
+      <div class="section-body">
+        
+        <table>
+          <tr>
+            <th>Niveau</th>
+            <th>Usage</th>
+            <th>Box Shadow</th>
+          </tr>
+          <tr>
+            <td><strong>elevation-0</strong></td>
+            <td>Éléments plats</td>
+            <td><code>none</code></td>
+          </tr>
+          <tr>
+            <td><strong>elevation-1</strong></td>
+            <td>Cards, inputs focus</td>
+            <td><code>0 2px 8px rgba(0,0,0,0.08)</code></td>
+          </tr>
+          <tr>
+            <td><strong>elevation-2</strong></td>
+            <td>Modals, dropdowns</td>
+            <td><code>0 4px 16px rgba(0,0,0,0.12)</code></td>
+          </tr>
+          <tr>
+            <td><strong>elevation-3</strong></td>
+            <td>Bottom sheets, FAB</td>
+            <td><code>0 8px 24px rgba(0,0,0,0.16)</code></td>
+          </tr>
+        </table>
+        
+        <h3 class="subsection">💻 Code Flutter</h3>
+        <pre>
+<span class="code-keyword">class</span> <span class="code-type">AppShadows</span> {
+  <span class="code-keyword">static final</span> elevation1 = [
+    <span class="code-type">BoxShadow</span>(
+      color: <span class="code-type">Colors</span>.black.withOpacity(<span class="code-number">0.08</span>),
+      blurRadius: <span class="code-number">8</span>,
+      offset: <span class="code-keyword">const</span> <span class="code-type">Offset</span>(<span class="code-number">0</span>, <span class="code-number">2</span>),
+    ),
+  ];
+  
+  <span class="code-keyword">static final</span> elevation2 = [
+    <span class="code-type">BoxShadow</span>(
+      color: <span class="code-type">Colors</span>.black.withOpacity(<span class="code-number">0.12</span>),
+      blurRadius: <span class="code-number">16</span>,
+      offset: <span class="code-keyword">const</span> <span class="code-type">Offset</span>(<span class="code-number">0</span>, <span class="code-number">4</span>),
+    ),
+  ];
+}
+        </pre>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION: RADIUS ==================== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">⭕</span>
+        <h2>7. Border Radius</h2>
+      </div>
+      <div class="section-body">
+        
+        <table>
+          <tr>
+            <th>Token</th>
+            <th>Valeur</th>
+            <th>Usage</th>
+          </tr>
+          <tr>
+            <td><code>radius-sm</code></td>
+            <td>4px</td>
+            <td>Chips, badges</td>
+          </tr>
+          <tr>
+            <td><code>radius-md</code></td>
+            <td>8px</td>
+            <td>Boutons small, inputs small</td>
+          </tr>
+          <tr>
+            <td><code>radius-lg</code></td>
+            <td>12px</td>
+            <td>Boutons, inputs, cards</td>
+          </tr>
+          <tr>
+            <td><code>radius-xl</code></td>
+            <td>16px</td>
+            <td>Sections, modals</td>
+          </tr>
+          <tr>
+            <td><code>radius-2xl</code></td>
+            <td>24px</td>
+            <td>Bottom sheets</td>
+          </tr>
+          <tr>
+            <td><code>radius-full</code></td>
+            <td>9999px</td>
+            <td>Avatars, pills</td>
+          </tr>
+        </table>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION: ANIMATIONS ==================== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">✨</span>
+        <h2>8. Animations</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">⏱️ Durées</h3>
+        <table>
+          <tr>
+            <th>Token</th>
+            <th>Durée</th>
+            <th>Usage</th>
+          </tr>
+          <tr>
+            <td><code>duration-fast</code></td>
+            <td>150ms</td>
+            <td>Hover, focus</td>
+          </tr>
+          <tr>
+            <td><code>duration-normal</code></td>
+            <td>250ms</td>
+            <td>Transitions standard</td>
+          </tr>
+          <tr>
+            <td><code>duration-slow</code></td>
+            <td>400ms</td>
+            <td>Apparitions, modals</td>
+          </tr>
+        </table>
+        
+        <h3 class="subsection">📈 Courbes (Easing)</h3>
+        <table>
+          <tr>
+            <th>Token</th>
+            <th>Curve Flutter</th>
+            <th>Usage</th>
+          </tr>
+          <tr>
+            <td><code>ease-out</code></td>
+            <td><code>Curves.easeOut</code></td>
+            <td>Entrées, apparitions</td>
+          </tr>
+          <tr>
+            <td><code>ease-in</code></td>
+            <td><code>Curves.easeIn</code></td>
+            <td>Sorties, disparitions</td>
+          </tr>
+          <tr>
+            <td><code>ease-in-out</code></td>
+            <td><code>Curves.easeInOut</code></td>
+            <td>Transitions réversibles</td>
+          </tr>
+          <tr>
+            <td><code>spring</code></td>
+            <td><code>Curves.elasticOut</code></td>
+            <td>Feedback tactile, boutons</td>
+          </tr>
+        </table>
+        
+      </div>
+    </div>
+    
+    <!-- FOOTER -->
+    <div class="footer">
+      FamilyRoots — Design System v1.0 — Steve-Landry KOUOKAM NONO — HETIC Mastère Data & IA — Avril 2026
+    </div>
+    
+  </div>
+</body>
+</html>

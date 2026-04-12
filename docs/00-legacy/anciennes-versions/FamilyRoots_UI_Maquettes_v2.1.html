@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FamilyRoots - UI/UX Maquettes Complètes v2.1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --foret: #2D5016;
+      --feuille: #4A7023;
+      --olive: #6B8E23;
+      --terre: #8B4513;
+      --bois: #5D4037;
+      --sable: #D4A574;
+      --creme: #F5F5DC;
+      --ivoire: #FFF8E7;
+      --blanc: #FFFFFF;
+      --succes: #4CAF50;
+      --warning: #FF9800;
+      --erreur: #F44336;
+      --info: #2196F3;
+      --naissance: #E91E63;
+      --mariage: #9C27B0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Nunito', sans-serif; background: var(--creme); color: var(--bois); line-height: 1.6; }
+    
+    /* HEADER */
+    .main-header { background: linear-gradient(135deg, var(--foret) 0%, var(--feuille) 100%); padding: 40px; text-align: center; position: relative; overflow: hidden; }
+    .main-header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); animation: pulse 15s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+    .logo-tree { width: 80px; height: 80px; margin: 0 auto 16px; position: relative; }
+    .logo-foliage { position: absolute; border-radius: 50%; }
+    .lf-1 { width: 40px; height: 40px; background: var(--feuille); top: 6px; left: 20px; }
+    .lf-2 { width: 30px; height: 30px; background: var(--olive); top: 12px; left: 5px; }
+    .lf-3 { width: 30px; height: 30px; background: var(--olive); top: 12px; right: 5px; }
+    .logo-dot { position: absolute; background: rgba(255,255,255,0.9); border-radius: 50%; }
+    .ld-1 { width: 8px; height: 8px; top: 22px; left: 36px; }
+    .ld-2 { width: 6px; height: 6px; top: 18px; left: 24px; }
+    .ld-3 { width: 6px; height: 6px; top: 19px; right: 24px; }
+    .logo-trunk { position: absolute; width: 8px; height: 24px; background: var(--sable); bottom: 6px; left: 36px; border-radius: 3px; }
+    .main-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--blanc); margin-bottom: 6px; position: relative; z-index: 1; }
+    .main-subtitle { font-size: 14px; color: var(--sable); margin-bottom: 16px; position: relative; z-index: 1; }
+    .version-badge { display: inline-block; background: var(--sable); color: var(--bois); padding: 5px 14px; border-radius: 16px; font-size: 11px; font-weight: 600; position: relative; z-index: 1; }
+    .header-stats { display: flex; justify-content: center; gap: 32px; margin-top: 20px; position: relative; z-index: 1; flex-wrap: wrap; }
+    .header-stat { text-align: center; }
+    .header-stat-value { font-size: 28px; font-weight: 700; color: var(--blanc); }
+    .header-stat-label { font-size: 10px; color: var(--sable); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* NAV */
+    .nav-container { background: var(--blanc); border-bottom: 2px solid var(--sable); position: sticky; top: 0; z-index: 100; }
+    .nav-tabs { display: flex; overflow-x: auto; max-width: 1400px; margin: 0 auto; }
+    .nav-tab { padding: 14px 20px; font-size: 12px; font-weight: 600; color: var(--bois); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+    .nav-tab:hover { color: var(--foret); background: var(--ivoire); }
+    .nav-tab.active { color: var(--foret); border-bottom-color: var(--foret); }
+    .nav-tab-count { background: var(--foret); color: var(--blanc); font-size: 9px; padding: 2px 6px; border-radius: 8px; }
+
+    /* SECTIONS */
+    .section { display: none; padding: 40px 24px; max-width: 1400px; margin: 0 auto; }
+    .section.active { display: block; }
+    .section-header { text-align: center; margin-bottom: 32px; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--foret); margin-bottom: 6px; }
+    .section-desc { font-size: 14px; color: var(--terre); max-width: 500px; margin: 0 auto; }
+    .subsection { margin-bottom: 40px; }
+    .subsection-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--foret); margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--sable); display: inline-block; }
+
+    /* PHONE */
+    .phones-row { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+    .phone-container { display: flex; flex-direction: column; align-items: center; }
+    .phone { width: 240px; height: 500px; background: var(--ivoire); border-radius: 28px; border: 3px solid var(--foret); position: relative; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 40px rgba(45,80,22,0.2); }
+    .phone-notch { width: 80px; height: 22px; background: var(--foret); border-radius: 0 0 12px 12px; position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 10; }
+    .phone-status { height: 38px; background: var(--foret); padding: 0 16px; display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 6px; }
+    .phone-time { color: var(--blanc); font-size: 10px; font-weight: 600; }
+    .phone-icons { color: var(--blanc); font-size: 9px; }
+    .phone-content { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+    .phone-label { text-align: center; margin-top: 12px; font-size: 12px; font-weight: 600; color: var(--foret); }
+    .phone-sublabel { text-align: center; font-size: 10px; color: var(--terre); margin-top: 2px; }
+
+    /* SPLASH */
+    .splash-screen { flex: 1; background: linear-gradient(180deg, var(--foret) 0%, var(--feuille) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .splash-logo { width: 70px; height: 70px; position: relative; margin-bottom: 14px; }
+    .splash-name { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--blanc); font-weight: 600; }
+    .splash-tagline { font-size: 11px; color: var(--sable); margin-top: 5px; }
+    .splash-loader { width: 28px; height: 28px; border: 3px solid rgba(255,255,255,0.2); border-top-color: var(--sable); border-radius: 50%; margin-top: 32px; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes shimmer { 0% { background-position: -200px 0; } 100% { background-position: 200px 0; } }
+
+    /* ONBOARDING */
+    .onboarding-screen { flex: 1; background: var(--ivoire); display: flex; flex-direction: column; align-items: center; padding: 40px 16px 16px; }
+    .onboarding-illustration { width: 120px; height: 120px; background: var(--creme); border-radius: 50%; border: 2px solid var(--sable); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .onboarding-illustration svg { width: 70px; height: 70px; }
+    .onboarding-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--foret); text-align: center; margin-bottom: 8px; }
+    .onboarding-desc { font-size: 12px; color: var(--bois); text-align: center; line-height: 1.5; margin-bottom: 20px; padding: 0 8px; }
+    .onboarding-dots { display: flex; gap: 6px; margin-bottom: 16px; }
+    .onboarding-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sable); }
+    .onboarding-dot.active { width: 18px; border-radius: 3px; background: var(--foret); }
+    .btn-primary { width: 100%; padding: 12px 18px; background: var(--foret); color: var(--blanc); border: none; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Nunito', sans-serif; }
+    .btn-secondary { width: 100%; padding: 10px 18px; background: transparent; color: var(--foret); border: 2px solid var(--foret); border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 8px; font-family: 'Nunito', sans-serif; }
+    .btn-text { background: none; border: none; color: var(--terre); font-size: 11px; cursor: pointer; margin-top: 10px; font-family: 'Nunito', sans-serif; }
+
+    /* AUTH */
+    .auth-screen { flex: 1; background: var(--ivoire); display: flex; flex-direction: column; }
+    .auth-header { background: var(--foret); padding: 18px; text-align: center; border-radius: 0 0 22px 22px; }
+    .auth-logo { width: 44px; height: 44px; margin: 0 auto 8px; position: relative; }
+    .auth-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--blanc); }
+    .auth-subtitle { font-size: 11px; color: var(--sable); margin-top: 3px; }
+    .auth-form { flex: 1; padding: 20px 16px; }
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 11px; color: var(--bois); margin-bottom: 5px; font-weight: 600; }
+    .form-input { width: 100%; height: 44px; background: var(--blanc); border: 1.5px solid var(--sable); border-radius: 10px; padding: 0 12px; font-size: 13px; color: var(--bois); font-family: 'Nunito', sans-serif; }
+    .form-input::placeholder { color: var(--terre); opacity: 0.6; }
+    .form-input:focus { outline: none; border-color: var(--foret); }
+    .form-hint { font-size: 10px; color: var(--terre); margin-top: 3px; }
+    .form-row { display: flex; gap: 8px; }
+    .form-row .form-group { flex: 1; }
+    .auth-divider { display: flex; align-items: center; margin: 16px 0; gap: 10px; }
+    .auth-divider-line { flex: 1; height: 1px; background: var(--sable); }
+    .auth-divider-text { font-size: 10px; color: var(--terre); }
+    .social-btn { width: 100%; height: 40px; background: var(--blanc); border: 1.5px solid var(--sable); border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; color: var(--bois); cursor: pointer; margin-bottom: 8px; font-family: 'Nunito', sans-serif; }
+    .social-btn svg { width: 16px; height: 16px; }
+    .auth-footer { text-align: center; padding: 14px; font-size: 11px; color: var(--bois); }
+    .auth-footer a { color: var(--foret); font-weight: 600; text-decoration: none; }
+    .forgot-link { display: block; text-align: right; font-size: 11px; color: var(--foret); margin-top: -6px; margin-bottom: 14px; }
+
+    /* DASHBOARD */
+    .dashboard-header { background: var(--foret); padding: 12px 16px 16px; border-radius: 0 0 20px 20px; }
+    .dashboard-header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .dashboard-greeting { color: var(--sable); font-size: 10px; }
+    .dashboard-name { color: var(--blanc); font-size: 15px; font-weight: 600; font-family: 'Playfair Display', serif; }
+    .dashboard-avatar { width: 36px; height: 36px; background: var(--sable); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--bois); font-weight: 700; font-size: 12px; }
+    .family-card { background: rgba(255,255,255,0.15); border-radius: 10px; padding: 10px; display: flex; align-items: center; gap: 10px; }
+    .family-icon { width: 32px; height: 32px; background: var(--feuille); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .family-icon svg { width: 18px; height: 18px; }
+    .family-info { flex: 1; }
+    .family-name { color: var(--blanc); font-size: 12px; font-weight: 600; }
+    .family-members { color: var(--sable); font-size: 9px; }
+    .family-arrow { color: var(--sable); font-size: 16px; }
+    .dashboard-content { flex: 1; padding: 12px; overflow-y: auto; }
+    .section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .section-header-row h3 { color: var(--foret); font-size: 12px; font-weight: 600; }
+    .section-header-row a { color: var(--terre); font-size: 10px; text-decoration: none; }
+    .quick-actions { display: flex; gap: 6px; margin-bottom: 16px; }
+    .quick-btn { flex: 1; background: var(--creme); border-radius: 10px; padding: 10px 4px; text-align: center; border: 1px solid var(--sable); }
+    .quick-btn svg { width: 18px; height: 18px; margin: 0 auto 4px; display: block; }
+    .quick-btn span { font-size: 8px; color: var(--bois); }
+    .event-card { background: var(--blanc); border-radius: 10px; padding: 10px; margin-bottom: 8px; border: 1px solid var(--sable); display: flex; gap: 10px; align-items: center; }
+    .event-date { width: 34px; height: 40px; background: var(--foret); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .event-day { color: var(--blanc); font-size: 14px; font-weight: 700; }
+    .event-month { color: var(--sable); font-size: 7px; text-transform: uppercase; }
+    .event-info { flex: 1; }
+    .event-type { font-size: 8px; color: var(--terre); }
+    .event-title { font-size: 11px; color: var(--foret); font-weight: 600; }
+    .event-desc { font-size: 9px; color: var(--bois); }
+    .event-badge { padding: 3px 7px; border-radius: 8px; font-size: 8px; font-weight: 600; }
+    .badge-birthday { background: #E8F5E9; color: var(--foret); }
+    .badge-wedding { background: #F3E5F5; color: var(--mariage); }
+    .badge-birth { background: #FCE4EC; color: var(--naissance); }
+    .tab-bar { height: 50px; background: var(--blanc); border-top: 1px solid var(--sable); display: flex; justify-content: space-around; align-items: center; }
+    .tab-item { display: flex; flex-direction: column; align-items: center; gap: 2px; opacity: 0.5; position: relative; }
+    .tab-item.active { opacity: 1; }
+    .tab-item svg { width: 18px; height: 18px; }
+    .tab-item span { font-size: 8px; color: var(--bois); }
+    .tab-item.active span { color: var(--foret); font-weight: 600; }
+    .notif-badge { position: absolute; top: -3px; right: -3px; width: 12px; height: 12px; background: var(--naissance); border-radius: 50%; color: var(--blanc); font-size: 7px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+
+    /* PAGE HEADER */
+    .page-header { background: var(--foret); padding: 12px 16px; }
+    .page-header-content { display: flex; justify-content: space-between; align-items: center; }
+    .page-header-back { color: var(--blanc); font-size: 16px; cursor: pointer; }
+    .page-title { color: var(--blanc); font-size: 14px; font-weight: 600; font-family: 'Playfair Display', serif; }
+    .page-action { color: var(--sable); font-size: 10px; cursor: pointer; }
+
+    /* ACTIVITY */
+    .activity-content { flex: 1; padding: 12px; overflow-y: auto; }
+    .date-label { font-size: 9px; color: var(--terre); margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--sable); }
+    .activity-item { display: flex; gap: 8px; margin-bottom: 10px; align-items: flex-start; }
+    .activity-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; flex-shrink: 0; }
+    .activity-text { font-size: 10px; color: var(--bois); line-height: 1.4; }
+    .activity-text strong { color: var(--foret); }
+    .activity-time { font-size: 8px; color: var(--terre); margin-top: 2px; }
+
+    /* NOTIFICATIONS */
+    .notification-card { background: var(--blanc); border-radius: 10px; padding: 10px; margin-bottom: 8px; border: 1px solid var(--sable); display: flex; gap: 10px; align-items: flex-start; }
+    .notification-card.unread { border-left: 3px solid; }
+    .notification-card.read { background: var(--ivoire); opacity: 0.7; }
+    .notif-icon { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .notif-icon svg { width: 14px; height: 14px; }
+    .notif-content { flex: 1; }
+    .notif-title { font-size: 11px; color: var(--foret); font-weight: 600; margin-bottom: 2px; }
+    .notif-text { font-size: 10px; color: var(--bois); line-height: 1.4; }
+    .notif-text strong { color: var(--foret); }
+    .notif-time { font-size: 8px; color: var(--terre); margin-top: 4px; }
+
+    /* PROFILE */
+    .profile-header { background: var(--foret); padding: 18px; text-align: center; border-radius: 0 0 24px 24px; }
+    .profile-avatar-large { width: 70px; height: 70px; background: var(--sable); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: var(--bois); border: 3px solid var(--blanc); }
+    .profile-name { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--blanc); font-weight: 600; }
+    .profile-relation { font-size: 11px; color: var(--sable); margin-top: 3px; }
+    .profile-content { flex: 1; padding: 14px; overflow-y: auto; }
+    .profile-section { background: var(--blanc); border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid var(--sable); }
+    .profile-section-title { font-size: 11px; color: var(--foret); font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+    .profile-section-title svg { width: 12px; height: 12px; }
+    .profile-info-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--creme); }
+    .profile-info-row:last-child { border: none; }
+    .profile-info-label { font-size: 10px; color: var(--terre); }
+    .profile-info-value { font-size: 10px; color: var(--bois); font-weight: 500; }
+    .profile-family-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--creme); }
+    .profile-family-item:last-child { border: none; }
+    .profile-family-avatar { width: 28px; height: 28px; background: var(--creme); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: var(--bois); }
+    .profile-family-info { flex: 1; }
+    .profile-family-name { font-size: 11px; color: var(--foret); font-weight: 500; }
+    .profile-family-relation { font-size: 9px; color: var(--terre); }
+
+    /* TREE */
+    .tree-container { flex: 1; background: var(--creme); position: relative; overflow: hidden; }
+    .tree-node { position: absolute; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+    .tree-node-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--foret); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; background: var(--blanc); }
+    .tree-node-name { font-size: 8px; color: var(--bois); margin-top: 3px; text-align: center; max-width: 50px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tree-node.selected .tree-node-avatar { border-color: var(--naissance); box-shadow: 0 0 0 3px rgba(233,30,99,0.2); }
+    .tree-line { position: absolute; background: var(--sable); }
+    .tree-controls { position: absolute; bottom: 12px; right: 12px; display: flex; flex-direction: column; gap: 6px; }
+    .tree-control-btn { width: 32px; height: 32px; background: var(--blanc); border: 1px solid var(--sable); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .tree-control-btn svg { width: 16px; height: 16px; }
+    .tree-legend { position: absolute; top: 12px; left: 12px; background: var(--blanc); border-radius: 8px; padding: 8px; font-size: 8px; border: 1px solid var(--sable); }
+    .tree-legend-item { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; }
+    .tree-legend-item:last-child { margin: 0; }
+    .tree-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* ADD MEMBER */
+    .add-member-form { flex: 1; padding: 14px; overflow-y: auto; }
+    .photo-upload { width: 70px; height: 70px; background: var(--creme); border: 2px dashed var(--sable); border-radius: 50%; margin: 0 auto 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+    .photo-upload svg { width: 20px; height: 20px; color: var(--terre); }
+    .photo-upload span { font-size: 8px; color: var(--terre); margin-top: 3px; }
+    .relation-selector { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .relation-chip { padding: 6px 12px; background: var(--blanc); border: 1.5px solid var(--sable); border-radius: 16px; font-size: 10px; color: var(--bois); cursor: pointer; }
+    .relation-chip.selected { background: var(--foret); border-color: var(--foret); color: var(--blanc); }
+
+    /* INVITATION */
+    .invitation-content { flex: 1; padding: 18px; display: flex; flex-direction: column; align-items: center; }
+    .invitation-icon { width: 70px; height: 70px; background: var(--creme); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .invitation-icon svg { width: 34px; height: 34px; color: var(--foret); }
+    .invitation-title { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--foret); margin-bottom: 6px; }
+    .invitation-desc { font-size: 11px; color: var(--bois); text-align: center; margin-bottom: 20px; }
+    .invitation-code-box { background: var(--blanc); border: 2px dashed var(--foret); border-radius: 12px; padding: 14px 20px; margin-bottom: 16px; }
+    .invitation-code-label { font-size: 9px; color: var(--terre); text-align: center; margin-bottom: 4px; }
+    .invitation-code { font-size: 22px; font-weight: 700; color: var(--foret); letter-spacing: 2px; text-align: center; font-family: 'Nunito', sans-serif; }
+    .invitation-actions { width: 100%; }
+    .invitation-share-row { display: flex; gap: 8px; margin-top: 14px; }
+    .share-btn { flex: 1; height: 40px; background: var(--blanc); border: 1px solid var(--sable); border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 10px; color: var(--bois); cursor: pointer; }
+    .share-btn svg { width: 14px; height: 14px; }
+
+    /* CALENDAR */
+    .calendar-month-header { background: var(--blanc); padding: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--sable); }
+    .calendar-month { font-family: 'Playfair Display', serif; font-size: 14px; color: var(--foret); font-weight: 600; }
+    .calendar-nav { display: flex; gap: 10px; }
+    .calendar-nav-btn { width: 26px; height: 26px; background: var(--creme); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .calendar-nav-btn svg { width: 12px; height: 12px; color: var(--bois); }
+    .calendar-grid { padding: 8px; }
+    .calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-bottom: 6px; }
+    .calendar-weekday { font-size: 9px; color: var(--terre); font-weight: 600; }
+    .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+    .calendar-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: var(--bois); border-radius: 6px; cursor: pointer; position: relative; }
+    .calendar-day:hover { background: var(--creme); }
+    .calendar-day.today { background: var(--foret); color: var(--blanc); }
+    .calendar-day.other-month { color: var(--sable); }
+    .calendar-day-dot { position: absolute; bottom: 2px; width: 3px; height: 3px; border-radius: 50%; }
+    .calendar-events { flex: 1; padding: 12px; overflow-y: auto; }
+    .calendar-events-title { font-size: 11px; color: var(--foret); font-weight: 600; margin-bottom: 8px; }
+
+    /* SETTINGS */
+    .settings-content { flex: 1; padding: 12px; overflow-y: auto; }
+    .settings-section { background: var(--blanc); border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--sable); overflow: hidden; }
+    .settings-section-title { font-size: 10px; color: var(--terre); text-transform: uppercase; padding: 10px 12px 6px; letter-spacing: 0.5px; }
+    .settings-item { display: flex; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--creme); cursor: pointer; }
+    .settings-item:last-child { border: none; }
+    .settings-item-icon { width: 28px; height: 28px; background: var(--creme); border-radius: 7px; display: flex; align-items: center; justify-content: center; margin-right: 10px; }
+    .settings-item-icon svg { width: 14px; height: 14px; color: var(--bois); }
+    .settings-item-content { flex: 1; }
+    .settings-item-title { font-size: 12px; color: var(--bois); }
+    .settings-item-subtitle { font-size: 9px; color: var(--terre); margin-top: 1px; }
+    .settings-item-arrow { color: var(--sable); font-size: 14px; }
+    .settings-toggle { width: 40px; height: 22px; background: var(--sable); border-radius: 11px; position: relative; cursor: pointer; }
+    .settings-toggle.on { background: var(--foret); }
+    .settings-toggle::after { content: ''; position: absolute; width: 18px; height: 18px; background: var(--blanc); border-radius: 50%; top: 2px; left: 2px; transition: transform 0.2s; }
+    .settings-toggle.on::after { transform: translateX(18px); }
+    .settings-logout { color: var(--erreur); }
+
+    /* MULTI-FAMILY */
+    .families-list { flex: 1; padding: 12px; overflow-y: auto; }
+    .family-item { background: var(--blanc); border-radius: 12px; padding: 12px; margin-bottom: 8px; border: 1px solid var(--sable); display: flex; align-items: center; gap: 10px; }
+    .family-item.current { border-color: var(--foret); border-width: 2px; }
+    .family-item-icon { width: 40px; height: 40px; background: var(--creme); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .family-item-icon svg { width: 22px; height: 22px; color: var(--foret); }
+    .family-item-info { flex: 1; }
+    .family-item-name { font-size: 13px; color: var(--foret); font-weight: 600; }
+    .family-item-members { font-size: 10px; color: var(--terre); }
+    .family-item-role { font-size: 8px; padding: 3px 7px; background: var(--creme); border-radius: 6px; color: var(--bois); }
+    .family-item-role.admin { background: var(--foret); color: var(--blanc); }
+    .add-family-btn { background: var(--creme); border: 2px dashed var(--sable); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+    .add-family-btn svg { width: 24px; height: 24px; color: var(--terre); margin-bottom: 6px; }
+    .add-family-btn span { font-size: 11px; color: var(--terre); }
+
+    /* BROWSER */
+    .browser { width: 100%; max-width: 900px; background: var(--blanc); border-radius: 10px; border: 1px solid var(--sable); overflow: hidden; box-shadow: 0 20px 40px rgba(45,80,22,0.15); margin: 0 auto 24px; }
+    .browser-bar { height: 30px; background: var(--creme); border-bottom: 1px solid var(--sable); display: flex; align-items: center; padding: 0 10px; gap: 5px; }
+    .browser-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .dot-red { background: #E63946; }
+    .dot-yellow { background: #FF9800; }
+    .dot-green { background: #4CAF50; }
+    .browser-url { flex: 1; height: 18px; background: var(--ivoire); border-radius: 9px; margin-left: 8px; padding: 0 10px; font-size: 9px; color: var(--terre); display: flex; align-items: center; }
+    .browser-content { min-height: 420px; }
+
+    /* WEB HEADER */
+    .web-header { height: 48px; background: var(--foret); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
+    .web-logo { display: flex; align-items: center; gap: 8px; }
+    .web-logo-icon { width: 24px; height: 24px; position: relative; }
+    .wl-f { position: absolute; border-radius: 50%; }
+    .wl-f1 { width: 12px; height: 12px; background: var(--feuille); top: 3px; left: 6px; }
+    .wl-f2 { width: 9px; height: 9px; background: var(--olive); top: 1px; left: 1px; }
+    .wl-f3 { width: 9px; height: 9px; background: var(--olive); top: 1px; right: 1px; }
+    .wl-dot { position: absolute; width: 3px; height: 3px; background: rgba(255,255,255,0.9); border-radius: 50%; top: 6px; left: 10px; }
+    .wl-trunk { position: absolute; width: 2px; height: 5px; background: var(--sable); bottom: 0; left: 11px; border-radius: 1px; }
+    .web-logo-text { color: var(--blanc); font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 600; }
+    .web-nav { display: flex; gap: 16px; align-items: center; }
+    .web-nav a { color: var(--sable); font-size: 11px; text-decoration: none; }
+    .web-btn-login { padding: 6px 14px; background: transparent; border: 1.5px solid var(--sable); color: var(--sable); border-radius: 14px; font-size: 10px; cursor: pointer; font-family: 'Nunito', sans-serif; }
+    .web-btn-signup { padding: 6px 14px; background: var(--sable); border: none; color: var(--bois); border-radius: 14px; font-size: 10px; font-weight: 600; cursor: pointer; margin-left: 5px; font-family: 'Nunito', sans-serif; }
+
+    /* HERO */
+    .hero-section { display: flex; align-items: center; padding: 36px 32px; gap: 32px; background: var(--ivoire); }
+    .hero-text { flex: 1; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--foret); font-weight: 600; line-height: 1.2; margin-bottom: 12px; }
+    .hero-desc { font-size: 13px; color: var(--bois); line-height: 1.6; margin-bottom: 18px; }
+    .hero-btns { display: flex; gap: 10px; }
+    .btn-hero-primary { padding: 11px 22px; background: var(--foret); color: var(--blanc); border: none; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Nunito', sans-serif; }
+    .btn-hero-secondary { padding: 11px 22px; background: transparent; color: var(--foret); border: 2px solid var(--foret); border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Nunito', sans-serif; }
+    .hero-visual { width: 160px; height: 160px; position: relative; }
+    .hv-f { position: absolute; border-radius: 50%; }
+    .hv-f1 { width: 70px; height: 70px; background: var(--foret); top: 15px; left: 45px; }
+    .hv-f2 { width: 48px; height: 48px; background: var(--feuille); top: 40px; left: 18px; }
+    .hv-f3 { width: 48px; height: 48px; background: var(--feuille); top: 40px; right: 18px; }
+    .hv-f4 { width: 35px; height: 35px; background: var(--olive); top: 6px; left: 26px; }
+    .hv-f5 { width: 35px; height: 35px; background: var(--olive); top: 6px; right: 26px; }
+    .hv-dot { position: absolute; background: rgba(255,255,255,0.9); border-radius: 50%; }
+    .hv-d1 { width: 10px; height: 10px; top: 40px; left: 75px; }
+    .hv-d2 { width: 7px; height: 7px; top: 34px; left: 55px; }
+    .hv-d3 { width: 7px; height: 7px; top: 36px; right: 55px; }
+    .hv-trunk { position: absolute; width: 10px; height: 40px; background: var(--bois); bottom: 6px; left: 75px; border-radius: 4px; }
+
+    /* FEATURES */
+    .features-row { display: flex; gap: 14px; padding: 0 32px 32px; background: var(--ivoire); }
+    .feature-card { flex: 1; background: var(--blanc); border-radius: 12px; padding: 18px; border: 1px solid var(--sable); }
+    .feature-icon { width: 40px; height: 40px; background: var(--creme); border-radius: 9px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+    .feature-icon svg { width: 20px; height: 20px; }
+    .feature-title { font-size: 13px; color: var(--foret); font-weight: 600; margin-bottom: 5px; }
+    .feature-desc { font-size: 11px; color: var(--terre); line-height: 1.5; }
+
+    /* WEB DASHBOARD */
+    .app-layout { display: flex; min-height: 420px; }
+    .sidebar { width: 180px; background: var(--foret); padding: 16px 0; display: flex; flex-direction: column; }
+    .sidebar-logo { display: flex; align-items: center; gap: 7px; padding: 0 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.15); }
+    .nav-section { padding: 14px 0; }
+    .nav-label { font-size: 8px; color: var(--sable); text-transform: uppercase; padding: 0 16px; margin-bottom: 7px; letter-spacing: 0.5px; }
+    .nav-item { display: flex; align-items: center; gap: 9px; padding: 9px 16px; color: rgba(255,255,255,0.7); font-size: 11px; cursor: pointer; transition: all 0.2s; }
+    .nav-item:hover { background: rgba(255,255,255,0.1); color: var(--blanc); }
+    .nav-item.active { background: rgba(255,255,255,0.15); color: var(--blanc); border-left: 3px solid var(--sable); }
+    .nav-item svg { width: 15px; height: 15px; opacity: 0.8; }
+    .nav-item.active svg { opacity: 1; }
+    .nav-badge { margin-left: auto; background: var(--naissance); color: var(--blanc); font-size: 8px; padding: 2px 5px; border-radius: 7px; }
+    .sidebar-footer { margin-top: auto; padding: 14px 16px; border-top: 1px solid rgba(255,255,255,0.15); }
+    .user-info { display: flex; align-items: center; gap: 9px; }
+    .user-avatar { width: 28px; height: 28px; background: var(--sable); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--bois); font-size: 10px; font-weight: 700; }
+    .user-name { color: var(--blanc); font-size: 11px; font-weight: 600; }
+    .user-role { color: var(--sable); font-size: 9px; }
+    .main-area { flex: 1; background: var(--ivoire); display: flex; flex-direction: column; }
+    .top-bar { height: 48px; background: var(--blanc); border-bottom: 1px solid var(--sable); display: flex; align-items: center; justify-content: space-between; padding: 0 18px; }
+    .top-title { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--foret); font-weight: 600; }
+    .top-actions { display: flex; gap: 9px; align-items: center; }
+    .search-box { width: 160px; height: 28px; background: var(--ivoire); border: 1px solid var(--sable); border-radius: 14px; padding: 0 10px; font-size: 10px; display: flex; align-items: center; gap: 5px; color: var(--terre); }
+    .search-box svg { width: 11px; height: 11px; opacity: 0.6; }
+    .notif-btn { width: 28px; height: 28px; background: var(--creme); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+    .notif-btn svg { width: 13px; height: 13px; }
+    .notif-dot { position: absolute; top: 2px; right: 2px; width: 6px; height: 6px; background: var(--naissance); border-radius: 50%; border: 1px solid var(--blanc); }
+    .dashboard-area { flex: 1; padding: 18px; overflow-y: auto; }
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+    .stat-card { background: var(--blanc); border-radius: 10px; padding: 14px; border: 1px solid var(--sable); }
+    .stat-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+    .stat-icon svg { width: 16px; height: 16px; }
+    .stat-value { font-size: 22px; color: var(--foret); font-weight: 700; margin-bottom: 2px; }
+    .stat-label { font-size: 10px; color: var(--terre); }
+    .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .panel { background: var(--blanc); border-radius: 10px; border: 1px solid var(--sable); overflow: hidden; }
+    .panel-header { padding: 12px 14px; border-bottom: 1px solid var(--sable); display: flex; justify-content: space-between; align-items: center; }
+    .panel-title { font-size: 12px; color: var(--foret); font-weight: 600; }
+    .panel-link { font-size: 10px; color: var(--terre); text-decoration: none; }
+    .panel-content { padding: 12px 14px; }
+    .panel-event-row { display: flex; gap: 9px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--creme); }
+    .panel-event-row:last-child { border: none; }
+    .panel-activity-row { display: flex; gap: 9px; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid var(--creme); }
+    .panel-activity-row:last-child { border: none; }
+
+    /* WEB AUTH */
+    .web-auth-layout { display: flex; min-height: 420px; }
+    .web-auth-visual { width: 38%; background: linear-gradient(135deg, var(--foret) 0%, var(--feuille) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 36px; }
+    .web-auth-form { flex: 1; padding: 36px; display: flex; flex-direction: column; justify-content: center; }
+    .web-auth-title { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--foret); margin-bottom: 6px; }
+    .web-auth-subtitle { font-size: 13px; color: var(--terre); margin-bottom: 24px; }
+    .web-form-row { display: flex; gap: 12px; }
+    .web-form-row .form-group { flex: 1; }
+    .web-form-group { margin-bottom: 16px; }
+    .web-form-label { display: block; font-size: 12px; color: var(--bois); margin-bottom: 5px; font-weight: 600; }
+    .web-form-input { width: 100%; height: 40px; background: var(--ivoire); border: 1.5px solid var(--sable); border-radius: 9px; padding: 0 12px; font-size: 13px; color: var(--bois); font-family: 'Nunito', sans-serif; }
+    .web-form-input:focus { outline: none; border-color: var(--foret); }
+    .web-btn-submit { width: 100%; padding: 12px; background: var(--foret); color: var(--blanc); border: none; border-radius: 9px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 6px; font-family: 'Nunito', sans-serif; }
+    .web-auth-footer { text-align: center; margin-top: 18px; font-size: 12px; color: var(--bois); }
+    .web-auth-footer a { color: var(--foret); font-weight: 600; text-decoration: none; }
+
+    /* WEB TREE */
+    .web-tree-toolbar { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); background: var(--blanc); border-radius: 9px; padding: 7px 14px; display: flex; gap: 14px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid var(--sable); z-index: 10; }
+    .toolbar-btn { background: none; border: none; display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--bois); cursor: pointer; padding: 5px 9px; border-radius: 5px; font-family: 'Nunito', sans-serif; }
+    .toolbar-btn:hover { background: var(--creme); }
+    .toolbar-btn svg { width: 14px; height: 14px; }
+    .web-tree-node { position: absolute; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+    .web-tree-node-avatar { width: 52px; height: 52px; border-radius: 50%; border: 3px solid var(--foret); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; background: var(--blanc); transition: all 0.2s; }
+    .web-tree-node:hover .web-tree-node-avatar { transform: scale(1.1); box-shadow: 0 4px 10px rgba(45,80,22,0.2); }
+    .web-tree-node-name { font-size: 10px; color: var(--bois); margin-top: 5px; text-align: center; font-weight: 500; }
+    .web-tree-node-relation { font-size: 8px; color: var(--terre); }
+    .web-tree-line { position: absolute; background: var(--sable); }
+    .web-tree-controls { position: absolute; bottom: 14px; right: 14px; display: flex; gap: 7px; }
+    .web-tree-control-btn { width: 36px; height: 36px; background: var(--blanc); border: 1px solid var(--sable); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .web-tree-control-btn svg { width: 16px; height: 16px; color: var(--bois); }
+
+    /* PRICING */
+    .pricing-section { padding: 36px; background: var(--ivoire); }
+    .pricing-title { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--foret); text-align: center; margin-bottom: 6px; }
+    .pricing-subtitle { font-size: 13px; color: var(--terre); text-align: center; margin-bottom: 28px; }
+    .pricing-cards { display: flex; gap: 18px; justify-content: center; }
+    .pricing-card { width: 200px; background: var(--blanc); border-radius: 14px; border: 1px solid var(--sable); padding: 22px; text-align: center; }
+    .pricing-card.featured { border-color: var(--foret); border-width: 2px; transform: scale(1.05); box-shadow: 0 8px 24px rgba(45,80,22,0.15); }
+    .pricing-card-badge { display: inline-block; background: var(--foret); color: var(--blanc); font-size: 9px; padding: 3px 10px; border-radius: 8px; margin-bottom: 10px; font-weight: 600; }
+    .pricing-card-name { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--foret); margin-bottom: 6px; }
+    .pricing-card-price { font-size: 28px; font-weight: 700; color: var(--foret); margin-bottom: 3px; }
+    .pricing-card-price span { font-size: 12px; font-weight: 400; color: var(--terre); }
+    .pricing-card-desc { font-size: 11px; color: var(--terre); margin-bottom: 18px; }
+    .pricing-card-features { text-align: left; margin-bottom: 18px; }
+    .pricing-feature { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--bois); margin-bottom: 6px; }
+    .pricing-feature svg { width: 12px; height: 12px; color: var(--succes); }
+    .pricing-btn { width: 100%; padding: 10px; border-radius: 9px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Nunito', sans-serif; }
+    .pricing-btn-primary { background: var(--foret); color: var(--blanc); border: none; }
+    .pricing-btn-secondary { background: transparent; color: var(--foret); border: 2px solid var(--foret); }
+
+    /* MEMBERS GRID */
+    .members-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .members-search { width: 240px; height: 34px; background: var(--blanc); border: 1px solid var(--sable); border-radius: 9px; padding: 0 12px; display: flex; align-items: center; gap: 7px; }
+    .members-search input { flex: 1; border: none; background: transparent; font-size: 12px; color: var(--bois); font-family: 'Nunito', sans-serif; }
+    .members-search input::placeholder { color: var(--terre); }
+    .members-search input:focus { outline: none; }
+    .members-search svg { width: 14px; height: 14px; color: var(--terre); }
+    .members-filters { display: flex; gap: 8px; }
+    .filter-btn { padding: 7px 12px; background: var(--blanc); border: 1px solid var(--sable); border-radius: 7px; font-size: 11px; color: var(--bois); cursor: pointer; display: flex; align-items: center; gap: 5px; font-family: 'Nunito', sans-serif; }
+    .filter-btn.active { background: var(--foret); border-color: var(--foret); color: var(--blanc); }
+    .members-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .member-card { background: var(--blanc); border-radius: 10px; border: 1px solid var(--sable); padding: 14px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .member-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(45,80,22,0.1); }
+    .member-card-avatar { width: 50px; height: 50px; background: var(--creme); border-radius: 50%; margin: 0 auto 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; color: var(--bois); }
+    .member-card-name { font-size: 12px; color: var(--foret); font-weight: 600; margin-bottom: 2px; }
+    .member-card-relation { font-size: 9px; color: var(--terre); }
+
+    /* FOOTER */
+    .main-footer { background: var(--foret); padding: 32px; text-align: center; color: var(--blanc); }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 6px; }
+    .footer-tagline { color: var(--sable); font-size: 12px; margin-bottom: 14px; }
+    .footer-credit { font-size: 10px; color: rgba(255,255,255,0.6); }
+    .footer-credit strong { color: var(--sable); }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .phones-row { gap: 16px; }
+      .phone { width: 220px; height: 460px; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .content-grid { grid-template-columns: 1fr; }
+      .pricing-cards { flex-direction: column; align-items: center; }
+      .pricing-card.featured { transform: none; }
+      .members-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 700px) {
+      .main-header { padding: 30px 16px; }
+      .main-title { font-size: 28px; }
+      .nav-tab { padding: 12px 14px; font-size: 11px; }
+      .section { padding: 30px 14px; }
+      .section-title { font-size: 24px; }
+      .hero-section { flex-direction: column; text-align: center; }
+      .hero-btns { justify-content: center; }
+      .features-row { flex-direction: column; }
+      .web-nav { display: none; }
+      .app-layout { flex-direction: column; }
+      .sidebar { width: 100%; flex-direction: row; padding: 8px; overflow-x: auto; }
+      .sidebar-logo, .sidebar-footer, .nav-label { display: none; }
+      .nav-section { display: flex; padding: 0; gap: 6px; }
+      .nav-item { padding: 7px 10px; white-space: nowrap; }
+      .web-auth-layout { flex-direction: column; }
+      .web-auth-visual { width: 100%; padding: 26px; }
+      .members-toolbar { flex-direction: column; gap: 10px; align-items: stretch; }
+      .members-search { width: 100%; }
+      .members-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="logo-tree">
+      <div class="logo-foliage lf-1"></div>
+      <div class="logo-foliage lf-2"></div>
+      <div class="logo-foliage lf-3"></div>
+      <div class="logo-dot ld-1"></div>
+      <div class="logo-dot ld-2"></div>
+      <div class="logo-dot ld-3"></div>
+      <div class="logo-trunk"></div>
+    </div>
+    <h1 class="main-title">FamilyRoots</h1>
+    <p class="main-subtitle">Maquettes UI/UX Complètes — Mobile & Web Desktop</p>
+    <span class="version-badge">Version 2.1 — 32+ Écrans</span>
+    <div class="header-stats">
+      <div class="header-stat"><div class="header-stat-value">32+</div><div class="header-stat-label">Écrans</div></div>
+      <div class="header-stat"><div class="header-stat-value">2</div><div class="header-stat-label">Plateformes</div></div>
+      <div class="header-stat"><div class="header-stat-value">9</div><div class="header-stat-label">Sections</div></div>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav class="nav-container">
+    <div class="nav-tabs">
+      <div class="nav-tab active" onclick="showSection('onboarding')">Onboarding <span class="nav-tab-count">4</span></div>
+      <div class="nav-tab" onclick="showSection('auth')">Authentification <span class="nav-tab-count">6</span></div>
+      <div class="nav-tab" onclick="showSection('states')">États & Flux <span class="nav-tab-count">5</span></div>
+      <div class="nav-tab" onclick="showSection('dashboard')">Dashboard <span class="nav-tab-count">3</span></div>
+      <div class="nav-tab" onclick="showSection('tree')">Arbre <span class="nav-tab-count">2</span></div>
+      <div class="nav-tab" onclick="showSection('profiles')">Profils <span class="nav-tab-count">3</span></div>
+      <div class="nav-tab" onclick="showSection('features')">Fonctionnalités <span class="nav-tab-count">5</span></div>
+      <div class="nav-tab" onclick="showSection('web-public')">Web Public <span class="nav-tab-count">3</span></div>
+      <div class="nav-tab" onclick="showSection('web-app')">Web App <span class="nav-tab-count">4</span></div>
+    </div>
+  </nav>
+
+  <!-- SECTION: ONBOARDING -->
+  <section id="onboarding" class="section active">
+    <div class="section-header">
+      <h2 class="section-title">Onboarding & Splash</h2>
+      <p class="section-desc">Écrans de bienvenue et d'introduction</p>
+    </div>
+    <div class="phones-row">
+      <!-- Splash -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="splash-screen">
+              <div class="splash-logo">
+                <div class="logo-foliage" style="width:36px;height:36px;background:var(--feuille);top:5px;left:17px"></div>
+                <div class="logo-foliage" style="width:26px;height:26px;background:var(--olive);top:10px;left:4px"></div>
+                <div class="logo-foliage" style="width:26px;height:26px;background:var(--olive);top:10px;right:4px"></div>
+                <div class="logo-dot" style="width:7px;height:7px;top:20px;left:32px"></div>
+                <div class="logo-trunk" style="width:6px;height:20px;bottom:5px;left:32px"></div>
+              </div>
+              <div class="splash-name">FamilyRoots</div>
+              <div class="splash-tagline">Vos racines, votre histoire</div>
+              <div class="splash-loader"></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Splash Screen</div>
+        <div class="phone-sublabel">Chargement</div>
+      </div>
+      <!-- Onboarding 1 -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="onboarding-screen">
+              <div class="onboarding-illustration">
+                <svg viewBox="0 0 100 100" fill="none">
+                  <circle cx="50" cy="22" r="12" fill="#2D5016"/>
+                  <circle cx="30" cy="48" r="9" fill="#4A7023"/>
+                  <circle cx="70" cy="48" r="9" fill="#4A7023"/>
+                  <circle cx="18" cy="74" r="7" fill="#6B8E23"/>
+                  <circle cx="42" cy="74" r="7" fill="#6B8E23"/>
+                  <circle cx="58" cy="74" r="7" fill="#6B8E23"/>
+                  <circle cx="82" cy="74" r="7" fill="#6B8E23"/>
+                  <line x1="50" y1="32" x2="30" y2="40" stroke="#5D4037" stroke-width="2"/>
+                  <line x1="50" y1="32" x2="70" y2="40" stroke="#5D4037" stroke-width="2"/>
+                  <line x1="30" y1="56" x2="18" y2="68" stroke="#5D4037" stroke-width="1.5"/>
+                  <line x1="30" y1="56" x2="42" y2="68" stroke="#5D4037" stroke-width="1.5"/>
+                  <line x1="70" y1="56" x2="58" y2="68" stroke="#5D4037" stroke-width="1.5"/>
+                  <line x1="70" y1="56" x2="82" y2="68" stroke="#5D4037" stroke-width="1.5"/>
+                </svg>
+              </div>
+              <h3 class="onboarding-title">Construisez votre arbre</h3>
+              <p class="onboarding-desc">Créez votre arbre généalogique et invitez vos proches à le compléter.</p>
+              <div class="onboarding-dots"><div class="onboarding-dot active"></div><div class="onboarding-dot"></div><div class="onboarding-dot"></div></div>
+              <button class="btn-primary">Suivant</button>
+              <button class="btn-text">Passer</button>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Onboarding 1/3</div>
+        <div class="phone-sublabel">Arbre collaboratif</div>
+      </div>
+      <!-- Onboarding 2 -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="onboarding-screen">
+              <div class="onboarding-illustration">
+                <svg viewBox="0 0 100 100" fill="none">
+                  <rect x="20" y="15" width="60" height="55" rx="7" fill="#2D5016"/>
+                  <rect x="28" y="24" width="44" height="7" rx="2" fill="#D4A574"/>
+                  <circle cx="38" cy="46" r="7" fill="#FFF8E7"/>
+                  <circle cx="62" cy="46" r="7" fill="#FFF8E7"/>
+                  <rect x="32" y="58" width="36" height="5" rx="2" fill="#4A7023"/>
+                  <circle cx="75" cy="20" r="11" fill="#E91E63"/>
+                  <text x="75" y="24" text-anchor="middle" fill="#fff" style="font-size:10px;font-weight:bold">3</text>
+                </svg>
+              </div>
+              <h3 class="onboarding-title">Ne manquez rien</h3>
+              <p class="onboarding-desc">Recevez des notifications pour les anniversaires et événements familiaux.</p>
+              <div class="onboarding-dots"><div class="onboarding-dot"></div><div class="onboarding-dot active"></div><div class="onboarding-dot"></div></div>
+              <button class="btn-primary">Suivant</button>
+              <button class="btn-text">Passer</button>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Onboarding 2/3</div>
+        <div class="phone-sublabel">Notifications</div>
+      </div>
+      <!-- Onboarding 3 -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="onboarding-screen">
+              <div class="onboarding-illustration">
+                <svg viewBox="0 0 100 100" fill="none">
+                  <circle cx="50" cy="50" r="34" fill="none" stroke="#D4A574" stroke-width="2" stroke-dasharray="5 3"/>
+                  <circle cx="50" cy="20" r="9" fill="#8B4513"/>
+                  <circle cx="76" cy="36" r="9" fill="#D2691E"/>
+                  <circle cx="70" cy="70" r="9" fill="#CD853F"/>
+                  <circle cx="30" cy="70" r="9" fill="#DEB887"/>
+                  <circle cx="24" cy="36" r="9" fill="#F4A460"/>
+                  <path d="M50 40 C45 35,38 38,38 45 C38 52,50 58,50 58 C50 58,62 52,62 45 C62 38,55 35,50 40" fill="#E63946"/>
+                </svg>
+              </div>
+              <h3 class="onboarding-title">Une famille unie</h3>
+              <p class="onboarding-desc">Partagez photos, souvenirs et histoires avec vos proches.</p>
+              <div class="onboarding-dots"><div class="onboarding-dot"></div><div class="onboarding-dot"></div><div class="onboarding-dot active"></div></div>
+              <button class="btn-primary">Commencer</button>
+              <button class="btn-secondary">J'ai déjà un compte</button>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Onboarding 3/3</div>
+        <div class="phone-sublabel">Connexion</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: AUTH -->
+  <section id="auth" class="section">
+    <div class="section-header">
+      <h2 class="section-title">Authentification</h2>
+      <p class="section-desc">Connexion, inscription et récupération</p>
+    </div>
+    <div class="phones-row">
+      <!-- Login -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="auth-screen">
+              <div class="auth-header">
+                <div class="auth-logo">
+                  <div class="logo-foliage" style="width:24px;height:24px;background:var(--feuille);top:3px;left:10px"></div>
+                  <div class="logo-foliage" style="width:18px;height:18px;background:var(--olive);top:7px;left:1px"></div>
+                  <div class="logo-foliage" style="width:18px;height:18px;background:var(--olive);top:7px;right:1px"></div>
+                  <div class="logo-dot" style="width:4px;height:4px;top:12px;left:20px"></div>
+                  <div class="logo-trunk" style="width:4px;height:12px;bottom:3px;left:20px"></div>
+                </div>
+                <div class="auth-title">Connexion</div>
+                <div class="auth-subtitle">Retrouvez votre famille</div>
+              </div>
+              <div class="auth-form">
+                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="votre@email.com"></div>
+                <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" class="form-input" placeholder="••••••••"></div>
+                <a href="#" class="forgot-link">Mot de passe oublié ?</a>
+                <button class="btn-primary">Se connecter</button>
+                <div class="auth-divider"><div class="auth-divider-line"></div><span class="auth-divider-text">ou</span><div class="auth-divider-line"></div></div>
+                <button class="social-btn"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> Google</button>
+                <button class="social-btn"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="#000" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg> Apple</button>
+              </div>
+              <div class="auth-footer">Pas de compte ? <a href="#">S'inscrire</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Connexion</div>
+        <div class="phone-sublabel">Login</div>
+      </div>
+      <!-- Register -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="auth-screen">
+              <div class="auth-header">
+                <div class="auth-logo">
+                  <div class="logo-foliage" style="width:24px;height:24px;background:var(--feuille);top:3px;left:10px"></div>
+                  <div class="logo-foliage" style="width:18px;height:18px;background:var(--olive);top:7px;left:1px"></div>
+                  <div class="logo-foliage" style="width:18px;height:18px;background:var(--olive);top:7px;right:1px"></div>
+                  <div class="logo-dot" style="width:4px;height:4px;top:12px;left:20px"></div>
+                  <div class="logo-trunk" style="width:4px;height:12px;bottom:3px;left:20px"></div>
+                </div>
+                <div class="auth-title">Inscription</div>
+                <div class="auth-subtitle">Créez votre compte</div>
+              </div>
+              <div class="auth-form">
+                <div class="form-row">
+                  <div class="form-group"><label class="form-label">Prénom</label><input type="text" class="form-input" placeholder="Steve"></div>
+                  <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" placeholder="Kouokam"></div>
+                </div>
+                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="votre@email.com"></div>
+                <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" class="form-input" placeholder="••••••••"><div class="form-hint">Min. 8 caractères, 1 majuscule, 1 chiffre</div></div>
+                <button class="btn-primary">Créer mon compte</button>
+              </div>
+              <div class="auth-footer">Déjà un compte ? <a href="#">Connexion</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Inscription</div>
+        <div class="phone-sublabel">Register</div>
+      </div>
+      <!-- Join Family -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="auth-screen">
+              <div class="auth-header">
+                <div class="auth-logo">
+                  <div class="logo-foliage" style="width:24px;height:24px;background:var(--feuille);top:3px;left:10px"></div>
+                  <div class="logo-foliage" style="width:18px;height:18px;background:var(--olive);top:7px;left:1px"></div>
+                  <div class="logo-foliage" style="width:18px;height:18px;background:var(--olive);top:7px;right:1px"></div>
+                  <div class="logo-dot" style="width:4px;height:4px;top:12px;left:20px"></div>
+                  <div class="logo-trunk" style="width:4px;height:12px;bottom:3px;left:20px"></div>
+                </div>
+                <div class="auth-title">Rejoindre</div>
+                <div class="auth-subtitle">Code d'invitation</div>
+              </div>
+              <div class="auth-form" style="text-align:center;padding-top:30px">
+                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="1.5" style="margin-bottom:20px"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+                <p style="font-size:12px;color:var(--bois);margin-bottom:20px">Un membre vous a envoyé un code d'invitation</p>
+                <div class="form-group" style="text-align:left"><label class="form-label">Code famille</label><input type="text" class="form-input" placeholder="FAM-XXXXXX" style="text-align:center;font-size:16px;letter-spacing:2px;font-weight:600"></div>
+                <button class="btn-primary" style="margin-top:8px">Rejoindre</button>
+                <button class="btn-text">Scanner un QR Code</button>
+              </div>
+              <div class="auth-footer">Créer ma famille ? <a href="#">Commencer</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Rejoindre</div>
+        <div class="phone-sublabel">Code invitation</div>
+      </div>
+      <!-- Forgot Password -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="auth-screen">
+              <div class="auth-header">
+                <div class="auth-logo">
+                  <div class="logo-foliage" style="width:24px;height:24px;background:var(--feuille);top:3px;left:10px"></div>
+                  <div class="logo-foliage" style="width:18px;height:18px;background:var(--olive);top:7px;left:1px"></div>
+                  <div class="logo-foliage" style="width:18px;height:18px;background:var(--olive);top:7px;right:1px"></div>
+                  <div class="logo-dot" style="width:4px;height:4px;top:12px;left:20px"></div>
+                  <div class="logo-trunk" style="width:4px;height:12px;bottom:3px;left:20px"></div>
+                </div>
+                <div class="auth-title">Mot de passe</div>
+                <div class="auth-subtitle">Réinitialisation</div>
+              </div>
+              <div class="auth-form" style="padding-top:26px">
+                <div style="text-align:center;margin-bottom:20px"><svg width="44px" height="44px" viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+                <p style="font-size:12px;color:var(--bois);text-align:center;margin-bottom:20px">Entrez votre email pour recevoir un lien de réinitialisation</p>
+                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="votre@email.com"></div>
+                <button class="btn-primary">Envoyer le lien</button>
+                <button class="btn-text">Retour à la connexion</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Mot de passe</div>
+        <div class="phone-sublabel">Reset</div>
+      </div>
+      <!-- Create Family -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="auth-screen">
+              <div class="auth-header">
+                <div class="auth-logo">
+                  <div class="logo-foliage" style="width:24px;height:24px;background:var(--feuille);top:3px;left:10px"></div>
+                  <div class="logo-foliage" style="width:18px;height:18px;background:var(--olive);top:7px;left:1px"></div>
+                  <div class="logo-foliage" style="width:18px;height:18px;background:var(--olive);top:7px;right:1px"></div>
+                  <div class="logo-dot" style="width:4px;height:4px;top:12px;left:20px"></div>
+                  <div class="logo-trunk" style="width:4px;height:12px;bottom:3px;left:20px"></div>
+                </div>
+                <div class="auth-title">Créer ma famille</div>
+                <div class="auth-subtitle">Vous êtes l'admin fondateur</div>
+              </div>
+              <div class="auth-form">
+                <div style="text-align:center;margin-bottom:16px"><svg width="44px" height="44px" viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="1.5"><path d="M12 5v14M5 12h14"/><circle cx="12" cy="5" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></div>
+                <div class="form-group"><label class="form-label">Nom de votre famille</label><input type="text" class="form-input" placeholder="Ex: Famille KOUOKAM"></div>
+                <div class="form-group"><label class="form-label">Votre rôle dans la famille</label>
+                  <select class="form-input" style="appearance:auto"><option>Je suis le/la chef(fe) de famille</option><option>Je suis un parent</option><option>Je suis un enfant adulte</option><option>Autre</option></select>
+                </div>
+                <div class="form-group"><label class="form-label">Origine géographique (optionnel)</label><input type="text" class="form-input" placeholder="Ex: Bafoussam, Cameroun"></div>
+                <button class="btn-primary" style="margin-top:10px">Créer ma famille</button>
+                <button class="btn-text">J'ai un code d'invitation</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Créer famille</div>
+        <div class="phone-sublabel">Admin fondateur</div>
+      </div>
+      <!-- Email Confirmation -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="auth-screen">
+              <div class="auth-header">
+                <div class="auth-logo">
+                  <div class="logo-foliage" style="width:24px;height:24px;background:var(--feuille);top:3px;left:10px"></div>
+                  <div class="logo-foliage" style="width:18px;height:18px;background:var(--olive);top:7px;left:1px"></div>
+                  <div class="logo-foliage" style="width:18px;height:18px;background:var(--olive);top:7px;right:1px"></div>
+                  <div class="logo-dot" style="width:4px;height:4px;top:12px;left:20px"></div>
+                  <div class="logo-trunk" style="width:4px;height:12px;bottom:3px;left:20px"></div>
+                </div>
+                <div class="auth-title">Vérifiez votre email</div>
+                <div class="auth-subtitle">Confirmation requise</div>
+              </div>
+              <div class="auth-form" style="text-align:center;padding-top:20px">
+                <div style="width:70px;height:70px;background:var(--creme);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center"><svg width="34px" height="34px" viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/><circle cx="18" cy="16" r="4" fill="#4CAF50" stroke="none"/><path d="M16 16l1.5 1.5 3-3" stroke="#fff" stroke-width="1.5"/></svg></div>
+                <p style="font-size:13px;color:var(--bois);margin-bottom:8px">Nous avons envoyé un email à</p>
+                <p style="font-size:14px;color:var(--foret);font-weight:600;margin-bottom:16px">steve@email.com</p>
+                <p style="font-size:11px;color:var(--terre);margin-bottom:20px;line-height:1.5">Cliquez sur le lien dans l'email pour activer votre compte. Vérifiez vos spams si nécessaire.</p>
+                <div style="background:var(--creme);border-radius:10px;padding:14px;margin-bottom:16px">
+                  <p style="font-size:10px;color:var(--terre);margin-bottom:8px">Ou entrez le code reçu :</p>
+                  <div style="display:flex;gap:6px;justify-content:center">
+                    <input type="text" maxlength="1" style="width:36px;height:44px;text-align:center;font-size:18px;font-weight:700;border:2px solid var(--sable);border-radius:8px;color:var(--foret)" value="4">
+                    <input type="text" maxlength="1" style="width:36px;height:44px;text-align:center;font-size:18px;font-weight:700;border:2px solid var(--sable);border-radius:8px;color:var(--foret)" value="7">
+                    <input type="text" maxlength="1" style="width:36px;height:44px;text-align:center;font-size:18px;font-weight:700;border:2px solid var(--foret);border-radius:8px;color:var(--foret)">
+                    <input type="text" maxlength="1" style="width:36px;height:44px;text-align:center;font-size:18px;font-weight:700;border:2px solid var(--sable);border-radius:8px;color:var(--foret)">
+                  </div>
+                </div>
+                <button class="btn-primary">Vérifier le code</button>
+                <button class="btn-text">Renvoyer l'email</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Confirmation</div>
+        <div class="phone-sublabel">Vérification email</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: STATES -->
+  <section id="states" class="section">
+    <div class="section-header">
+      <h2 class="section-title">États & Flux</h2>
+      <p class="section-desc">Empty states, chargement, erreurs et confirmations</p>
+    </div>
+    <div class="phones-row">
+      <!-- Empty State: Tree -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Arbre familial</div><span></span></div></div>
+            <div style="flex:1;background:var(--creme);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center">
+              <div style="width:100px;height:100px;background:var(--ivoire);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;border:2px dashed var(--sable)">
+                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#D4A574" stroke-width="1.5"><path d="M12 5v14M5 12h14"/><circle cx="12" cy="5" r="2" stroke-dasharray="3 2"/><circle cx="5" cy="12" r="2" stroke-dasharray="3 2"/><circle cx="19" cy="12" r="2" stroke-dasharray="3 2"/><circle cx="12" cy="19" r="2" stroke-dasharray="3 2"/></svg>
+              </div>
+              <h3 style="font-family:'Playfair Display',serif;font-size:16px;color:var(--foret);margin-bottom:6px">Votre arbre est vide</h3>
+              <p style="font-size:11px;color:var(--terre);margin-bottom:20px;line-height:1.5">Commencez par vous ajouter, puis invitez vos proches à compléter l'arbre ensemble.</p>
+              <button class="btn-primary" style="width:auto;padding:10px 24px">M'ajouter à l'arbre</button>
+              <button class="btn-text">Inviter un proche</button>
+            </div>
+            <div class="tab-bar">
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/></svg><span>Accueil</span></div>
+              <div class="tab-item active"><svg viewBox="0 0 24 24" fill="#2D5016"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/></svg><span>Arbre</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg><span>Alertes</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span>Profil</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Empty State</div>
+        <div class="phone-sublabel">Arbre vide</div>
+      </div>
+      <!-- Empty State: Notifications -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Notifications</div><span></span></div></div>
+            <div style="flex:1;background:var(--ivoire);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center">
+              <div style="width:100px;height:100px;background:var(--creme);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#D4A574" stroke-width="1.5"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/><path d="M8 8l8 8M16 8l-8 8" stroke="#D4A574" stroke-width="1"/></svg>
+              </div>
+              <h3 style="font-family:'Playfair Display',serif;font-size:16px;color:var(--foret);margin-bottom:6px">Aucune notification</h3>
+              <p style="font-size:11px;color:var(--terre);margin-bottom:16px;line-height:1.5">Vous recevrez des alertes pour les anniversaires, événements et activités de votre famille.</p>
+              <div style="background:var(--blanc);border-radius:10px;padding:12px;border:1px solid var(--sable);width:100%">
+                <p style="font-size:10px;color:var(--terre);margin-bottom:8px">💡 Astuce</p>
+                <p style="font-size:10px;color:var(--bois)">Ajoutez des dates de naissance pour recevoir des rappels d'anniversaire.</p>
+              </div>
+            </div>
+            <div class="tab-bar">
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/></svg><span>Accueil</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/></svg><span>Arbre</span></div>
+              <div class="tab-item active"><svg viewBox="0 0 24 24" fill="#2D5016"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg><span>Alertes</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span>Profil</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Empty State</div>
+        <div class="phone-sublabel">Notifications vides</div>
+      </div>
+      <!-- Empty State: Calendar -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Calendrier</div><span></span></div></div>
+            <div style="flex:1;background:var(--ivoire);display:flex;flex-direction:column">
+              <div class="calendar-month-header" style="background:var(--blanc);padding:12px;display:flex;justify-content:center;border-bottom:1px solid var(--sable)">
+                <div class="calendar-month" style="font-family:'Playfair Display',serif;font-size:14px;color:var(--foret)">Avril 2026</div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center">
+                <div style="width:80px;height:80px;background:var(--creme);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:14px">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D4A574" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/><circle cx="12" cy="15" r="2" stroke-dasharray="2 2"/></svg>
+                </div>
+                <h3 style="font-family:'Playfair Display',serif;font-size:15px;color:var(--foret);margin-bottom:6px">Aucun événement</h3>
+                <p style="font-size:10px;color:var(--terre);margin-bottom:16px;line-height:1.5">Les anniversaires et dates importantes de votre famille apparaîtront ici.</p>
+                <button class="btn-primary" style="width:auto;padding:9px 20px;font-size:11px">Ajouter des dates</button>
+              </div>
+            </div>
+            <div class="tab-bar">
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/></svg><span>Accueil</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/></svg><span>Arbre</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg><span>Alertes</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span>Profil</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Empty State</div>
+        <div class="phone-sublabel">Calendrier vide</div>
+      </div>
+      <!-- Loading State -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="dashboard-header" style="opacity:0.7">
+              <div class="dashboard-header-top">
+                <div><div class="dashboard-greeting">Bonjour,</div><div class="dashboard-name">Steve-Landry</div></div>
+                <div class="dashboard-avatar">SL</div>
+              </div>
+            </div>
+            <div style="flex:1;background:var(--ivoire);padding:12px">
+              <div style="margin-bottom:16px">
+                <div style="height:12px;width:100px;background:linear-gradient(90deg,var(--creme) 25%,var(--sable) 50%,var(--creme) 75%);border-radius:6px;margin-bottom:10px;animation:shimmer 1.5s infinite"></div>
+                <div style="display:flex;gap:6px">
+                  <div style="flex:1;height:60px;background:linear-gradient(90deg,var(--creme) 25%,var(--sable) 50%,var(--creme) 75%);border-radius:10px;animation:shimmer 1.5s infinite"></div>
+                  <div style="flex:1;height:60px;background:linear-gradient(90deg,var(--creme) 25%,var(--sable) 50%,var(--creme) 75%);border-radius:10px;animation:shimmer 1.5s infinite;animation-delay:0.2s"></div>
+                  <div style="flex:1;height:60px;background:linear-gradient(90deg,var(--creme) 25%,var(--sable) 50%,var(--creme) 75%);border-radius:10px;animation:shimmer 1.5s infinite;animation-delay:0.4s"></div>
+                </div>
+              </div>
+              <div style="height:12px;width:120px;background:linear-gradient(90deg,var(--creme) 25%,var(--sable) 50%,var(--creme) 75%);border-radius:6px;margin-bottom:10px;animation:shimmer 1.5s infinite"></div>
+              <div style="background:var(--blanc);border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid var(--sable)">
+                <div style="display:flex;gap:10px;align-items:center">
+                  <div style="width:34px;height:40px;background:linear-gradient(90deg,var(--creme) 25%,var(--sable) 50%,var(--creme) 75%);border-radius:8px;animation:shimmer 1.5s infinite"></div>
+                  <div style="flex:1">
+                    <div style="height:8px;width:60%;background:linear-gradient(90deg,var(--creme) 25%,var(--sable) 50%,var(--creme) 75%);border-radius:4px;margin-bottom:6px;animation:shimmer 1.5s infinite"></div>
+                    <div style="height:8px;width:80%;background:linear-gradient(90deg,var(--creme) 25%,var(--sable) 50%,var(--creme) 75%);border-radius:4px;animation:shimmer 1.5s infinite"></div>
+                  </div>
+                </div>
+              </div>
+              <div style="background:var(--blanc);border-radius:10px;padding:12px;border:1px solid var(--sable)">
+                <div style="display:flex;gap:10px;align-items:center">
+                  <div style="width:34px;height:40px;background:linear-gradient(90deg,var(--creme) 25%,var(--sable) 50%,var(--creme) 75%);border-radius:8px;animation:shimmer 1.5s infinite;animation-delay:0.3s"></div>
+                  <div style="flex:1">
+                    <div style="height:8px;width:50%;background:linear-gradient(90deg,var(--creme) 25%,var(--sable) 50%,var(--creme) 75%);border-radius:4px;margin-bottom:6px;animation:shimmer 1.5s infinite;animation-delay:0.3s"></div>
+                    <div style="height:8px;width:70%;background:linear-gradient(90deg,var(--creme) 25%,var(--sable) 50%,var(--creme) 75%);border-radius:4px;animation:shimmer 1.5s infinite;animation-delay:0.3s"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-bar">
+              <div class="tab-item active"><svg viewBox="0 0 24 24" fill="#2D5016"><path d="M3 12l9-9 9 9v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1v-9z"/></svg><span>Accueil</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/></svg><span>Arbre</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg><span>Alertes</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span>Profil</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Loading State</div>
+        <div class="phone-sublabel">Skeleton screen</div>
+      </div>
+      <!-- Error State -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Arbre familial</div><span></span></div></div>
+            <div style="flex:1;background:var(--ivoire);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center">
+              <div style="width:90px;height:90px;background:#FFEBEE;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+                <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="#F44336" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+              </div>
+              <h3 style="font-family:'Playfair Display',serif;font-size:16px;color:var(--erreur);margin-bottom:6px">Connexion perdue</h3>
+              <p style="font-size:11px;color:var(--terre);margin-bottom:20px;line-height:1.5">Impossible de charger les données. Vérifiez votre connexion internet et réessayez.</p>
+              <button class="btn-primary" style="width:auto;padding:10px 24px;display:flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> Réessayer</button>
+              <button class="btn-text">Mode hors-ligne</button>
+            </div>
+            <div class="tab-bar">
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/></svg><span>Accueil</span></div>
+              <div class="tab-item active"><svg viewBox="0 0 24 24" fill="#2D5016"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/></svg><span>Arbre</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg><span>Alertes</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span>Profil</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Error State</div>
+        <div class="phone-sublabel">Erreur réseau</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: DASHBOARD -->
+  <section id="dashboard" class="section">
+    <div class="section-header">
+      <h2 class="section-title">Dashboard Mobile</h2>
+      <p class="section-desc">Tableau de bord, activité et notifications</p>
+    </div>
+    <div class="phones-row">
+      <!-- Dashboard Main -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="dashboard-header">
+              <div class="dashboard-header-top">
+                <div><div class="dashboard-greeting">Bonjour,</div><div class="dashboard-name">Steve-Landry</div></div>
+                <div class="dashboard-avatar">SL</div>
+              </div>
+              <div class="family-card">
+                <div class="family-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 5v14M5 12h14"/><circle cx="12" cy="5" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></div>
+                <div class="family-info"><div class="family-name">Famille KOUOKAM</div><div class="family-members">47 membres • 4 générations</div></div>
+                <span class="family-arrow">›</span>
+              </div>
+            </div>
+            <div class="dashboard-content">
+              <div class="section-header-row"><h3>Actions rapides</h3></div>
+              <div class="quick-actions">
+                <div class="quick-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/><path d="M16 4l2 2-2 2"/></svg><span>Ajouter</span></div>
+                <div class="quick-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Inviter</span></div>
+                <div class="quick-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg><span>Calendrier</span></div>
+                <div class="quick-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="M21 21l-4-4"/></svg><span>Rechercher</span></div>
+              </div>
+              <div class="section-header-row"><h3>Événements à venir</h3><a href="#">Voir tout</a></div>
+              <div class="event-card">
+                <div class="event-date"><span class="event-day">12</span><span class="event-month">Avr</span></div>
+                <div class="event-info"><div class="event-type">Anniversaire</div><div class="event-title">Célia KOUOKAM</div><div class="event-desc">Ta cousine fête ses 25 ans</div></div>
+                <span class="event-badge badge-birthday">3j</span>
+              </div>
+              <div class="event-card">
+                <div class="event-date"><span class="event-day">18</span><span class="event-month">Avr</span></div>
+                <div class="event-info"><div class="event-type">Noces de coton</div><div class="event-title">Loïc & Lindsay</div><div class="event-desc">1 an de mariage</div></div>
+                <span class="event-badge badge-wedding">9j</span>
+              </div>
+            </div>
+            <div class="tab-bar">
+              <div class="tab-item active"><svg viewBox="0 0 24 24" fill="#2D5016"><path d="M3 12l9-9 9 9v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1v-9z"/></svg><span>Accueil</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/></svg><span>Arbre</span></div>
+              <div class="tab-item" style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg><span>Alertes</span><div class="notif-badge">3</div></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span>Profil</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Dashboard</div>
+        <div class="phone-sublabel">Écran principal</div>
+      </div>
+      <!-- Activity Feed -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Activité récente</div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="M21 21l-4-4"/></svg></div></div>
+            <div class="activity-content">
+              <div class="date-label">Aujourd'hui</div>
+              <div class="activity-item"><div class="activity-avatar" style="background:#FCE4EC;color:#E91E63">MK</div><div><div class="activity-text"><strong>Marie</strong> a ajouté une photo de <strong>Malik</strong></div><div class="activity-time">Il y a 2 heures</div></div></div>
+              <div class="activity-item"><div class="activity-avatar" style="background:#E8F5E9;color:#2D5016">JD</div><div><div class="activity-text"><strong>Jean DIALLO</strong> a rejoint la famille</div><div class="activity-time">Il y a 5 heures</div></div></div>
+              <div class="date-label" style="margin-top:12px">Hier</div>
+              <div class="activity-item"><div class="activity-avatar" style="background:#F3E5F5;color:#9C27B0">AK</div><div><div class="activity-text"><strong>Amadou</strong> a mis à jour sa date de naissance</div><div class="activity-time">Hier à 18:32</div></div></div>
+              <div class="activity-item"><div class="activity-avatar" style="background:#FFF8E7;color:#8B4513">FK</div><div><div class="activity-text"><strong>Fatima</strong> a ajouté <strong>3 photos</strong></div><div class="activity-time">Hier à 14:15</div></div></div>
+              <div class="date-label" style="margin-top:12px">Cette semaine</div>
+              <div class="activity-item"><div class="activity-avatar" style="background:#E3F2FD;color:#2196F3">PK</div><div><div class="activity-text"><strong>Pierre</strong> a complété son profil</div><div class="activity-time">Lundi à 09:20</div></div></div>
+            </div>
+            <div class="tab-bar">
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/></svg><span>Accueil</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/></svg><span>Arbre</span></div>
+              <div class="tab-item active"><svg viewBox="0 0 24 24" fill="#2D5016"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7l5-7v4h4l-5 7z"/></svg><span>Activité</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span>Profil</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Fil d'activité</div>
+        <div class="phone-sublabel">Timeline</div>
+      </div>
+      <!-- Notifications -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Notifications</div><div class="page-action">Tout lire</div></div></div>
+            <div class="activity-content" style="padding:10px">
+              <div class="notification-card unread" style="border-left-color:#E91E63"><div class="notif-icon" style="background:#FCE4EC"><svg viewBox="0 0 24 24" fill="#E91E63"><circle cx="12" cy="8" r="5"/><path d="M3 21c0-4.5 4-8 9-8s9 3.5 9 8"/></svg></div><div class="notif-content"><div class="notif-title">Nouveau membre !</div><div class="notif-text">Bienvenue à <strong>Malik DIALLO</strong></div><div class="notif-time">Il y a 2 heures</div></div></div>
+              <div class="notification-card unread" style="border-left-color:#4CAF50"><div class="notif-icon" style="background:#E8F5E9"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></div><div class="notif-content"><div class="notif-title">Rappel anniversaire</div><div class="notif-text"><strong>Célia</strong> fête ses 25 ans dans 3 jours</div><div class="notif-time">Il y a 1 jour</div></div></div>
+              <div class="notification-card unread" style="border-left-color:#9C27B0"><div class="notif-icon" style="background:#F3E5F5"><svg viewBox="0 0 24 24" fill="#9C27B0"><path d="M12 4C8 4 4 8 4 12c0 6 8 10 8 10s8-4 8-10c0-4-4-8-8-8z"/></svg></div><div class="notif-content"><div class="notif-title">Noces de coton</div><div class="notif-text"><strong>Loïc & Lindsay</strong> — 1 an de mariage</div><div class="notif-time">Il y a 2 jours</div></div></div>
+              <div class="notification-card read"><div class="notif-icon" style="background:#E3F2FD"><svg viewBox="0 0 24 24" fill="none" stroke="#2196F3" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="notif-content"><div class="notif-title">Invitation acceptée</div><div class="notif-text"><strong>Paul</strong> a accepté ton invitation</div><div class="notif-time">Il y a 3 jours</div></div></div>
+            </div>
+            <div class="tab-bar">
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/></svg><span>Accueil</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/></svg><span>Arbre</span></div>
+              <div class="tab-item active" style="position:relative"><svg viewBox="0 0 24 24" fill="#2D5016"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg><span>Alertes</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span>Profil</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Notifications</div>
+        <div class="phone-sublabel">Centre d'alertes</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: TREE -->
+  <section id="tree" class="section">
+    <div class="section-header">
+      <h2 class="section-title">Arbre Généalogique</h2>
+      <p class="section-desc">Visualisation interactive de la famille</p>
+    </div>
+    <div class="phones-row">
+      <!-- Tree View -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Arbre familial</div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="M21 21l-4-4"/></svg></div></div>
+            <div class="tree-container">
+              <div class="tree-legend">
+                <div class="tree-legend-item"><div class="tree-legend-dot" style="background:#2D5016"></div> Homme</div>
+                <div class="tree-legend-item"><div class="tree-legend-dot" style="background:#E91E63"></div> Femme</div>
+                <div class="tree-legend-item"><div class="tree-legend-dot" style="background:#9C27B0"></div> Couple</div>
+              </div>
+              <!-- Tree Lines -->
+              <div class="tree-line" style="width:2px;height:30px;top:70px;left:119px"></div>
+              <div class="tree-line" style="width:100px;height:2px;top:100px;left:70px"></div>
+              <div class="tree-line" style="width:2px;height:25px;top:100px;left:70px"></div>
+              <div class="tree-line" style="width:2px;height:25px;top:100px;left:168px"></div>
+              <div class="tree-line" style="width:2px;height:30px;top:185px;left:70px"></div>
+              <div class="tree-line" style="width:60px;height:2px;top:215px;left:40px"></div>
+              <div class="tree-line" style="width:2px;height:20px;top:215px;left:40px"></div>
+              <div class="tree-line" style="width:2px;height:20px;top:215px;left:100px"></div>
+              <!-- Tree Nodes -->
+              <div class="tree-node" style="top:30px;left:96px">
+                <div class="tree-node-avatar" style="border-color:#9C27B0;background:linear-gradient(135deg,#2D5016 50%,#E91E63 50%)">👴👵</div>
+                <div class="tree-node-name">Grands-parents</div>
+              </div>
+              <div class="tree-node" style="top:125px;left:47px">
+                <div class="tree-node-avatar" style="border-color:#2D5016">PK</div>
+                <div class="tree-node-name">Papa</div>
+              </div>
+              <div class="tree-node" style="top:125px;left:145px">
+                <div class="tree-node-avatar" style="border-color:#E91E63">MK</div>
+                <div class="tree-node-name">Maman</div>
+              </div>
+              <div class="tree-node selected" style="top:235px;left:17px">
+                <div class="tree-node-avatar" style="border-color:#2D5016">SL</div>
+                <div class="tree-node-name">Moi</div>
+              </div>
+              <div class="tree-node" style="top:235px;left:77px">
+                <div class="tree-node-avatar" style="border-color:#E91E63">CK</div>
+                <div class="tree-node-name">Sœur</div>
+              </div>
+              <div class="tree-node" style="top:235px;left:137px">
+                <div class="tree-node-avatar" style="border-color:#2D5016">LK</div>
+                <div class="tree-node-name">Frère</div>
+              </div>
+              <div class="tree-node" style="top:235px;left:190px">
+                <div class="tree-node-avatar" style="border-color:#E91E63;background:#ccc">+</div>
+                <div class="tree-node-name">Ajouter</div>
+              </div>
+              <div class="tree-controls">
+                <div class="tree-control-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+                <div class="tree-control-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+                <div class="tree-control-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></div>
+              </div>
+            </div>
+            <div class="tab-bar">
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/></svg><span>Accueil</span></div>
+              <div class="tab-item active"><svg viewBox="0 0 24 24" fill="#2D5016"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2" fill="#2D5016"/></svg><span>Arbre</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg><span>Alertes</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span>Profil</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Arbre généalogique</div>
+        <div class="phone-sublabel">Vue interactive</div>
+      </div>
+      <!-- Tree Node Detail -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Détail membre</div><div class="page-action">Modifier</div></div></div>
+            <div class="tree-container" style="height:180px">
+              <!-- Simplified tree showing context -->
+              <div class="tree-line" style="width:2px;height:25px;top:20px;left:119px"></div>
+              <div class="tree-line" style="width:80px;height:2px;top:45px;left:80px"></div>
+              <div class="tree-node" style="top:45px;left:57px"><div class="tree-node-avatar" style="width:32px;height:32px;font-size:10px;border-color:#2D5016">PK</div></div>
+              <div class="tree-node" style="top:45px;left:135px"><div class="tree-node-avatar" style="width:32px;height:32px;font-size:10px;border-color:#E91E63">MK</div></div>
+              <div class="tree-line" style="width:2px;height:25px;top:85px;left:70px"></div>
+              <div class="tree-node selected" style="top:110px;left:47px"><div class="tree-node-avatar" style="border-color:#E91E63">CK</div><div class="tree-node-name">Célia</div></div>
+            </div>
+            <div style="padding:12px;background:var(--ivoire);flex:1;overflow-y:auto">
+              <div style="text-align:center;margin-bottom:12px">
+                <div style="width:60px;height:60px;background:var(--sable);border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:var(--bois);border:2px solid var(--foret)">CK</div>
+                <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--foret)">Célia KOUOKAM</div>
+                <div style="font-size:10px;color:var(--terre)">Ta cousine</div>
+              </div>
+              <div class="profile-section">
+                <div class="profile-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Informations</div>
+                <div class="profile-info-row"><span class="profile-info-label">Naissance</span><span class="profile-info-value">12 avril 2001</span></div>
+                <div class="profile-info-row"><span class="profile-info-label">Lieu</span><span class="profile-info-value">Douala, Cameroun</span></div>
+                <div class="profile-info-row"><span class="profile-info-label">Profession</span><span class="profile-info-value">Étudiante</span></div>
+              </div>
+              <button class="btn-primary" style="margin-top:8px">Voir le profil complet</button>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Détail nœud</div>
+        <div class="phone-sublabel">Info membre</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: PROFILES -->
+  <section id="profiles" class="section">
+    <div class="section-header">
+      <h2 class="section-title">Profils</h2>
+      <p class="section-desc">Profil utilisateur et membres de la famille</p>
+    </div>
+    <div class="phones-row">
+      <!-- My Profile -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="profile-header">
+              <div class="profile-avatar-large">SL</div>
+              <div class="profile-name">Steve-Landry KOUOKAM</div>
+              <div class="profile-relation">Moi • Admin famille</div>
+            </div>
+            <div class="profile-content">
+              <div class="profile-section">
+                <div class="profile-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> État civil</div>
+                <div class="profile-info-row"><span class="profile-info-label">Naissance</span><span class="profile-info-value">16 sept. 1999</span></div>
+                <div class="profile-info-row"><span class="profile-info-label">Lieu</span><span class="profile-info-value">Douala, Cameroun</span></div>
+                <div class="profile-info-row"><span class="profile-info-label">Statut</span><span class="profile-info-value">Célibataire</span></div>
+              </div>
+              <div class="profile-section">
+                <div class="profile-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg> Famille proche</div>
+                <div class="profile-family-item"><div class="profile-family-avatar">PK</div><div class="profile-family-info"><div class="profile-family-name">Pierre KOUOKAM</div><div class="profile-family-relation">Père</div></div></div>
+                <div class="profile-family-item"><div class="profile-family-avatar">MK</div><div class="profile-family-info"><div class="profile-family-name">Marie KOUOKAM</div><div class="profile-family-relation">Mère</div></div></div>
+                <div class="profile-family-item"><div class="profile-family-avatar">CK</div><div class="profile-family-info"><div class="profile-family-name">Célia KOUOKAM</div><div class="profile-family-relation">Sœur</div></div></div>
+              </div>
+            </div>
+            <div class="tab-bar">
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/></svg><span>Accueil</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/></svg><span>Arbre</span></div>
+              <div class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg><span>Alertes</span></div>
+              <div class="tab-item active"><svg viewBox="0 0 24 24" fill="#2D5016"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span>Profil</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Mon profil</div>
+        <div class="phone-sublabel">Compte utilisateur</div>
+      </div>
+      <!-- Member Profile -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Profil membre</div><div class="page-action">Modifier</div></div></div>
+            <div style="background:var(--foret);padding:16px;text-align:center;border-radius:0 0 20px 20px">
+              <div style="width:60px;height:60px;background:var(--sable);border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:var(--bois);border:2px solid var(--blanc)">GP</div>
+              <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--blanc)">Grand-père KOUOKAM</div>
+              <div style="font-size:10px;color:var(--sable)">Ton grand-père paternel</div>
+            </div>
+            <div class="profile-content">
+              <div class="profile-section">
+                <div class="profile-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> État civil</div>
+                <div class="profile-info-row"><span class="profile-info-label">Naissance</span><span class="profile-info-value">5 mars 1942</span></div>
+                <div class="profile-info-row"><span class="profile-info-label">Décès</span><span class="profile-info-value">12 déc. 2018</span></div>
+                <div class="profile-info-row"><span class="profile-info-label">Lieu</span><span class="profile-info-value">Bafoussam</span></div>
+                <div class="profile-info-row"><span class="profile-info-label">Profession</span><span class="profile-info-value">Agriculteur</span></div>
+              </div>
+              <div class="profile-section">
+                <div class="profile-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Notes</div>
+                <p style="font-size:10px;color:var(--bois);line-height:1.5">Chef de famille respecté. A fondé la ferme familiale en 1965. Père de 8 enfants.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Profil membre</div>
+        <div class="phone-sublabel">Grand-père</div>
+      </div>
+      <!-- Edit Profile -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Modifier profil</div><div class="page-action" style="color:#4CAF50">Sauver</div></div></div>
+            <div class="add-member-form">
+              <div class="photo-upload"><svg viewBox="0 0 24 24" fill="none" stroke="#8B4513" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo</span></div>
+              <div class="form-row">
+                <div class="form-group"><label class="form-label">Prénom</label><input type="text" class="form-input" value="Steve-Landry"></div>
+                <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" value="KOUOKAM"></div>
+              </div>
+              <div class="form-group"><label class="form-label">Date de naissance</label><input type="date" class="form-input" value="1999-09-16"></div>
+              <div class="form-group"><label class="form-label">Lieu de naissance</label><input type="text" class="form-input" value="Douala, Cameroun"></div>
+              <div class="form-group"><label class="form-label">Profession</label><input type="text" class="form-input" value="Data Analyst"></div>
+              <div class="form-group"><label class="form-label">Bio</label><textarea class="form-input" style="height:70px;padding:10px;resize:none" placeholder="Quelques mots sur vous..."></textarea></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Modifier profil</div>
+        <div class="phone-sublabel">Édition</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: FEATURES -->
+  <section id="features" class="section">
+    <div class="section-header">
+      <h2 class="section-title">Fonctionnalités</h2>
+      <p class="section-desc">Calendrier, invitations, réglages et multi-familles</p>
+    </div>
+    <div class="phones-row">
+      <!-- Calendar -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Calendrier</div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
+            <div style="flex:1;display:flex;flex-direction:column;background:var(--ivoire)">
+              <div class="calendar-month-header">
+                <div class="calendar-nav"><div class="calendar-nav-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+                <div class="calendar-month">Avril 2026</div>
+                <div class="calendar-nav"><div class="calendar-nav-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+              </div>
+              <div class="calendar-grid">
+                <div class="calendar-weekdays"><span class="calendar-weekday">L</span><span class="calendar-weekday">M</span><span class="calendar-weekday">M</span><span class="calendar-weekday">J</span><span class="calendar-weekday">V</span><span class="calendar-weekday">S</span><span class="calendar-weekday">D</span></div>
+                <div class="calendar-days">
+                  <div class="calendar-day other-month">30</div><div class="calendar-day other-month">31</div><div class="calendar-day">1</div><div class="calendar-day">2</div><div class="calendar-day">3</div><div class="calendar-day">4</div><div class="calendar-day">5</div>
+                  <div class="calendar-day">6</div><div class="calendar-day">7</div><div class="calendar-day">8</div><div class="calendar-day">9</div><div class="calendar-day">10</div><div class="calendar-day today">11</div><div class="calendar-day" style="position:relative">12<div class="calendar-day-dot" style="background:#4CAF50"></div></div>
+                  <div class="calendar-day">13</div><div class="calendar-day">14</div><div class="calendar-day">15</div><div class="calendar-day">16</div><div class="calendar-day">17</div><div class="calendar-day" style="position:relative">18<div class="calendar-day-dot" style="background:#9C27B0"></div></div><div class="calendar-day">19</div>
+                  <div class="calendar-day">20</div><div class="calendar-day">21</div><div class="calendar-day">22</div><div class="calendar-day">23</div><div class="calendar-day">24</div><div class="calendar-day">25</div><div class="calendar-day">26</div>
+                  <div class="calendar-day">27</div><div class="calendar-day">28</div><div class="calendar-day">29</div><div class="calendar-day">30</div><div class="calendar-day other-month">1</div><div class="calendar-day other-month">2</div><div class="calendar-day other-month">3</div>
+                </div>
+              </div>
+              <div class="calendar-events">
+                <div class="calendar-events-title">Événements ce mois</div>
+                <div class="event-card"><div class="event-date"><span class="event-day">12</span><span class="event-month">Avr</span></div><div class="event-info"><div class="event-type">Anniversaire</div><div class="event-title">Célia KOUOKAM</div><div class="event-desc">25 ans</div></div><span class="event-badge badge-birthday">Demain</span></div>
+                <div class="event-card"><div class="event-date" style="background:#9C27B0"><span class="event-day">18</span><span class="event-month">Avr</span></div><div class="event-info"><div class="event-type">Noces de coton</div><div class="event-title">Loïc & Lindsay</div><div class="event-desc">1 an de mariage</div></div><span class="event-badge badge-wedding">7j</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Calendrier</div>
+        <div class="phone-sublabel">Événements</div>
+      </div>
+      <!-- Invitation -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Inviter</div><span></span></div></div>
+            <div class="invitation-content" style="background:var(--ivoire)">
+              <div class="invitation-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
+              <div class="invitation-title">Inviter un proche</div>
+              <div class="invitation-desc">Partagez ce code pour inviter quelqu'un à rejoindre votre famille</div>
+              <div class="invitation-code-box">
+                <div class="invitation-code-label">Code d'invitation</div>
+                <div class="invitation-code">FAM-K7X9P2</div>
+              </div>
+              <div class="invitation-actions">
+                <button class="btn-primary">Copier le code</button>
+                <div class="invitation-share-row">
+                  <div class="share-btn"><svg viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.789l4.89-1.562A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.487 0-4.786-.804-6.66-2.168l-.377-.264-3.908 1.248 1.202-3.793-.291-.411A9.941 9.941 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg> WhatsApp</div>
+                  <div class="share-btn"><svg viewBox="0 0 24 24" fill="#0088cc"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.099.154.232.17.325.015.093.034.306.019.472z"/></svg> Telegram</div>
+                </div>
+                <div class="invitation-share-row">
+                  <div class="share-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M7 12h10M7 17h10"/></svg> QR Code</div>
+                  <div class="share-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Partager</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Invitation</div>
+        <div class="phone-sublabel">Code famille</div>
+      </div>
+      <!-- Add Member -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Ajouter membre</div><span></span></div></div>
+            <div class="add-member-form" style="background:var(--ivoire)">
+              <div class="photo-upload"><svg viewBox="0 0 24 24" fill="none" stroke="#8B4513" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Photo</span></div>
+              <div class="form-group"><label class="form-label">Relation avec vous</label></div>
+              <div class="relation-selector">
+                <div class="relation-chip">Père</div>
+                <div class="relation-chip">Mère</div>
+                <div class="relation-chip selected">Frère</div>
+                <div class="relation-chip">Sœur</div>
+                <div class="relation-chip">Conjoint(e)</div>
+                <div class="relation-chip">Enfant</div>
+                <div class="relation-chip">Oncle</div>
+                <div class="relation-chip">Tante</div>
+                <div class="relation-chip">Cousin(e)</div>
+                <div class="relation-chip">Autre...</div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label class="form-label">Prénom</label><input type="text" class="form-input" placeholder="Prénom"></div>
+                <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" placeholder="Nom"></div>
+              </div>
+              <div class="form-group"><label class="form-label">Date de naissance</label><input type="date" class="form-input"></div>
+              <button class="btn-primary" style="margin-top:12px">Ajouter à l'arbre</button>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Ajouter membre</div>
+        <div class="phone-sublabel">Nouveau</div>
+      </div>
+      <!-- Settings -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Réglages</div><span></span></div></div>
+            <div class="settings-content" style="background:var(--ivoire)">
+              <div class="settings-section">
+                <div class="settings-section-title">Compte</div>
+                <div class="settings-item"><div class="settings-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div><div class="settings-item-content"><div class="settings-item-title">Profil</div><div class="settings-item-subtitle">Modifier vos informations</div></div><span class="settings-item-arrow">›</span></div>
+                <div class="settings-item"><div class="settings-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div><div class="settings-item-content"><div class="settings-item-title">Sécurité</div><div class="settings-item-subtitle">Mot de passe, 2FA</div></div><span class="settings-item-arrow">›</span></div>
+              </div>
+              <div class="settings-section">
+                <div class="settings-section-title">Notifications</div>
+                <div class="settings-item"><div class="settings-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg></div><div class="settings-item-content"><div class="settings-item-title">Push</div></div><div class="settings-toggle on"></div></div>
+                <div class="settings-item"><div class="settings-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div><div class="settings-item-content"><div class="settings-item-title">Email</div></div><div class="settings-toggle"></div></div>
+                <div class="settings-item"><div class="settings-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></div><div class="settings-item-content"><div class="settings-item-title">Rappels</div><div class="settings-item-subtitle">7 jours avant</div></div><span class="settings-item-arrow">›</span></div>
+              </div>
+              <div class="settings-section">
+                <div class="settings-section-title">App</div>
+                <div class="settings-item"><div class="settings-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div><div class="settings-item-content"><div class="settings-item-title">Thème</div><div class="settings-item-subtitle">Clair</div></div><span class="settings-item-arrow">›</span></div>
+                <div class="settings-item"><div class="settings-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div class="settings-item-content"><div class="settings-item-title">Version</div><div class="settings-item-subtitle">2.0.0</div></div></div>
+              </div>
+              <div class="settings-section">
+                <div class="settings-item"><div class="settings-item-icon" style="background:#FFEBEE"><svg viewBox="0 0 24 24" fill="none" stroke="#F44336" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></div><div class="settings-item-content"><div class="settings-item-title settings-logout">Déconnexion</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Réglages</div>
+        <div class="phone-sublabel">Settings</div>
+      </div>
+      <!-- Multi-family -->
+      <div class="phone-container">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span class="phone-time">09:41</span><span class="phone-icons">5G 100%</span></div>
+          <div class="phone-content">
+            <div class="page-header"><div class="page-header-content"><span class="page-header-back">‹</span><div class="page-title">Mes familles</div><span></span></div></div>
+            <div class="families-list" style="background:var(--ivoire)">
+              <div class="family-item current">
+                <div class="family-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><path d="M12 5v14M5 12h14"/><circle cx="12" cy="5" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></div>
+                <div class="family-item-info"><div class="family-item-name">Famille KOUOKAM</div><div class="family-item-members">47 membres • Admin</div></div>
+                <span class="family-item-role admin">Admin</span>
+              </div>
+              <div class="family-item">
+                <div class="family-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><path d="M12 5v14M5 12h14"/><circle cx="12" cy="5" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></div>
+                <div class="family-item-info"><div class="family-item-name">Famille NONO</div><div class="family-item-members">23 membres</div></div>
+                <span class="family-item-role">Membre</span>
+              </div>
+              <div class="family-item">
+                <div class="family-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><path d="M12 5v14M5 12h14"/><circle cx="12" cy="5" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></div>
+                <div class="family-item-info"><div class="family-item-name">Famille DIALLO</div><div class="family-item-members">12 membres</div></div>
+                <span class="family-item-role">Membre</span>
+              </div>
+              <div class="add-family-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#8B4513" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                <span>Créer ou rejoindre une famille</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Multi-familles</div>
+        <div class="phone-sublabel">Gestion</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: WEB PUBLIC -->
+  <section id="web-public" class="section">
+    <div class="section-header">
+      <h2 class="section-title">Web Public</h2>
+      <p class="section-desc">Landing page, pricing et authentification web</p>
+    </div>
+    
+    <!-- Landing Page -->
+    <div class="subsection">
+      <h3 class="subsection-title">🏠 Landing Page</h3>
+      <div class="browser">
+        <div class="browser-bar"><div class="browser-dot dot-red"></div><div class="browser-dot dot-yellow"></div><div class="browser-dot dot-green"></div><div class="browser-url">familyroots.app</div></div>
+        <div class="browser-content">
+          <div class="web-header">
+            <div class="web-logo"><div class="web-logo-icon"><div class="wl-f wl-f1"></div><div class="wl-f wl-f2"></div><div class="wl-f wl-f3"></div><div class="wl-dot"></div><div class="wl-trunk"></div></div><span class="web-logo-text">FamilyRoots</span></div>
+            <div class="web-nav"><a href="#">Fonctionnalités</a><a href="#">Tarifs</a><a href="#">À propos</a><button class="web-btn-login">Connexion</button><button class="web-btn-signup">S'inscrire</button></div>
+          </div>
+          <div class="hero-section">
+            <div class="hero-text">
+              <h1 class="hero-title">Cultivez vos racines,<br>partagez votre histoire</h1>
+              <p class="hero-desc">FamilyRoots est l'application collaborative pour créer votre arbre généalogique en famille. Invitez vos proches, partagez vos souvenirs et ne manquez plus aucun événement.</p>
+              <div class="hero-btns"><button class="btn-hero-primary">Commencer gratuitement</button><button class="btn-hero-secondary">Voir la démo</button></div>
+            </div>
+            <div class="hero-visual"><div class="hv-f hv-f1"></div><div class="hv-f hv-f2"></div><div class="hv-f hv-f3"></div><div class="hv-f hv-f4"></div><div class="hv-f hv-f5"></div><div class="hv-dot hv-d1"></div><div class="hv-dot hv-d2"></div><div class="hv-dot hv-d3"></div><div class="hv-trunk"></div></div>
+          </div>
+          <div class="features-row">
+            <div class="feature-card"><div class="feature-icon" style="background:#E8F5E9"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><path d="M12 5v14M5 12h14"/><circle cx="12" cy="5" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></div><div class="feature-title">Arbre collaboratif</div><div class="feature-desc">Créez et complétez votre arbre en famille, chacun peut contribuer</div></div>
+            <div class="feature-card"><div class="feature-icon" style="background:#FCE4EC"><svg viewBox="0 0 24 24" fill="none" stroke="#E91E63" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div><div class="feature-title">Notifications</div><div class="feature-desc">Ne manquez plus aucun anniversaire ou événement familial</div></div>
+            <div class="feature-card"><div class="feature-icon" style="background:#F3E5F5"><svg viewBox="0 0 24 24" fill="none" stroke="#9C27B0" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><div class="feature-title">Multi-familles</div><div class="feature-desc">Gérez plusieurs familles depuis un seul compte</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="subsection">
+      <h3 class="subsection-title">💰 Tarifs</h3>
+      <div class="browser">
+        <div class="browser-bar"><div class="browser-dot dot-red"></div><div class="browser-dot dot-yellow"></div><div class="browser-dot dot-green"></div><div class="browser-url">familyroots.app/pricing</div></div>
+        <div class="browser-content">
+          <div class="web-header">
+            <div class="web-logo"><div class="web-logo-icon"><div class="wl-f wl-f1"></div><div class="wl-f wl-f2"></div><div class="wl-f wl-f3"></div><div class="wl-dot"></div><div class="wl-trunk"></div></div><span class="web-logo-text">FamilyRoots</span></div>
+            <div class="web-nav"><a href="#">Fonctionnalités</a><a href="#" style="color:#fff;font-weight:600">Tarifs</a><a href="#">À propos</a><button class="web-btn-login">Connexion</button><button class="web-btn-signup">S'inscrire</button></div>
+          </div>
+          <div class="pricing-section">
+            <h2 class="pricing-title">Choisissez votre formule</h2>
+            <p class="pricing-subtitle">Un tarif par famille, pas par utilisateur</p>
+            <div class="pricing-cards">
+              <div class="pricing-card">
+                <div class="pricing-card-name">Gratuit</div>
+                <div class="pricing-card-price">0€</div>
+                <div class="pricing-card-desc">Pour démarrer</div>
+                <div class="pricing-card-features">
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Jusqu'à 15 membres</div>
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Arbre interactif</div>
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Notifications basiques</div>
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 1 famille</div>
+                </div>
+                <button class="pricing-btn pricing-btn-secondary">Commencer</button>
+              </div>
+              <div class="pricing-card featured">
+                <div class="pricing-card-badge">Populaire</div>
+                <div class="pricing-card-name">Famille</div>
+                <div class="pricing-card-price">4,99€ <span>/mois</span></div>
+                <div class="pricing-card-desc">Pour les familles actives</div>
+                <div class="pricing-card-features">
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Jusqu'à 100 membres</div>
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Photos illimitées</div>
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Rappels personnalisés</div>
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 3 familles max</div>
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Support prioritaire</div>
+                </div>
+                <button class="pricing-btn pricing-btn-primary">Essai gratuit 14j</button>
+              </div>
+              <div class="pricing-card">
+                <div class="pricing-card-name">Famille+</div>
+                <div class="pricing-card-price">9,99€ <span>/mois</span></div>
+                <div class="pricing-card-desc">Pour les grandes familles</div>
+                <div class="pricing-card-features">
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Membres illimités</div>
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Stockage illimité</div>
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Export PDF/GEDCOM</div>
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Familles illimitées</div>
+                  <div class="pricing-feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Support dédié 24/7</div>
+                </div>
+                <button class="pricing-btn pricing-btn-secondary">Choisir</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Web Auth -->
+    <div class="subsection">
+      <h3 class="subsection-title">🔐 Authentification Web</h3>
+      <div class="browser">
+        <div class="browser-bar"><div class="browser-dot dot-red"></div><div class="browser-dot dot-yellow"></div><div class="browser-dot dot-green"></div><div class="browser-url">familyroots.app/login</div></div>
+        <div class="browser-content">
+          <div class="web-auth-layout">
+            <div class="web-auth-visual">
+              <div class="hero-visual" style="width:140px;height:140px"><div class="hv-f hv-f1" style="width:60px;height:60px;top:12px;left:40px"></div><div class="hv-f hv-f2" style="width:42px;height:42px;top:35px;left:15px"></div><div class="hv-f hv-f3" style="width:42px;height:42px;top:35px;right:15px"></div><div class="hv-dot hv-d1" style="width:9px;height:9px;top:35px;left:65px"></div><div class="hv-trunk" style="width:9px;height:35px;bottom:5px;left:66px"></div></div>
+              <div style="font-family:'Playfair Display',serif;font-size:20px;color:#fff;margin-top:16px">FamilyRoots</div>
+              <div style="font-size:11px;color:var(--sable);margin-top:5px">Vos racines, votre histoire</div>
+            </div>
+            <div class="web-auth-form">
+              <h2 class="web-auth-title">Connexion</h2>
+              <p class="web-auth-subtitle">Retrouvez votre famille</p>
+              <div class="web-form-group"><label class="web-form-label">Email</label><input type="email" class="web-form-input" placeholder="votre@email.com"></div>
+              <div class="web-form-group"><label class="web-form-label">Mot de passe</label><input type="password" class="web-form-input" placeholder="••••••••"></div>
+              <div style="text-align:right;margin-bottom:14px"><a href="#" style="font-size:11px;color:var(--foret)">Mot de passe oublié ?</a></div>
+              <button class="web-btn-submit">Se connecter</button>
+              <div class="web-auth-footer">Pas encore de compte ? <a href="#">S'inscrire</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: WEB APP -->
+  <section id="web-app" class="section">
+    <div class="section-header">
+      <h2 class="section-title">Web App</h2>
+      <p class="section-desc">Application web connectée (dashboard, arbre, membres, profil)</p>
+    </div>
+
+    <!-- Web Dashboard -->
+    <div class="subsection">
+      <h3 class="subsection-title">📊 Dashboard</h3>
+      <div class="browser">
+        <div class="browser-bar"><div class="browser-dot dot-red"></div><div class="browser-dot dot-yellow"></div><div class="browser-dot dot-green"></div><div class="browser-url">app.familyroots.app/dashboard</div></div>
+        <div class="browser-content">
+          <div class="app-layout">
+            <div class="sidebar">
+              <div class="sidebar-logo"><div class="web-logo-icon"><div class="wl-f wl-f1"></div><div class="wl-f wl-f2"></div><div class="wl-f wl-f3"></div><div class="wl-dot"></div><div class="wl-trunk"></div></div><span class="web-logo-text">FamilyRoots</span></div>
+              <div class="nav-section">
+                <div class="nav-label">Principal</div>
+                <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/></svg> Accueil</div>
+                <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> Arbre</div>
+                <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Membres <span class="nav-badge">47</span></div>
+                <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg> Calendrier</div>
+              </div>
+              <div class="nav-section">
+                <div class="nav-label">Gestion</div>
+                <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg> Invitations</div>
+                <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg> Réglages</div>
+              </div>
+              <div class="sidebar-footer"><div class="user-info"><div class="user-avatar">SL</div><div><div class="user-name">Steve-Landry</div><div class="user-role">Admin</div></div></div></div>
+            </div>
+            <div class="main-area">
+              <div class="top-bar">
+                <div class="top-title">Tableau de bord</div>
+                <div class="top-actions"><div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="M21 21l-4-4"/></svg> Rechercher...</div><div class="notif-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg><div class="notif-dot"></div></div></div>
+              </div>
+              <div class="dashboard-area">
+                <div class="stats-row">
+                  <div class="stat-card"><div class="stat-icon" style="background:#E8F5E9"><svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><div class="stat-value">47</div><div class="stat-label">Membres</div></div>
+                  <div class="stat-card"><div class="stat-icon" style="background:#F3E5F5"><svg viewBox="0 0 24 24" fill="none" stroke="#9C27B0" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></div><div class="stat-value">4</div><div class="stat-label">Générations</div></div>
+                  <div class="stat-card"><div class="stat-icon" style="background:#FCE4EC"><svg viewBox="0 0 24 24" fill="none" stroke="#E91E63" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg></div><div class="stat-value">12</div><div class="stat-label">Événements</div></div>
+                  <div class="stat-card"><div class="stat-icon" style="background:#FFF8E7"><svg viewBox="0 0 24 24" fill="none" stroke="#8B4513" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div><div class="stat-value">156</div><div class="stat-label">Photos</div></div>
+                </div>
+                <div class="content-grid">
+                  <div class="panel">
+                    <div class="panel-header"><div class="panel-title">Événements à venir</div><a href="#" class="panel-link">Voir tout</a></div>
+                    <div class="panel-content">
+                      <div class="panel-event-row"><div class="event-date" style="width:30px;height:36px;font-size:12px"><span class="event-day" style="font-size:13px">12</span><span class="event-month">Avr</span></div><div class="event-info"><div class="event-title" style="font-size:11px">Célia KOUOKAM</div><div class="event-desc">Anniversaire - 25 ans</div></div><span class="event-badge badge-birthday">3j</span></div>
+                      <div class="panel-event-row"><div class="event-date" style="width:30px;height:36px;font-size:12px;background:#9C27B0"><span class="event-day" style="font-size:13px">18</span><span class="event-month">Avr</span></div><div class="event-info"><div class="event-title" style="font-size:11px">Loïc & Lindsay</div><div class="event-desc">Noces de coton</div></div><span class="event-badge badge-wedding">9j</span></div>
+                      <div class="panel-event-row"><div class="event-date" style="width:30px;height:36px;font-size:12px"><span class="event-day" style="font-size:13px">25</span><span class="event-month">Avr</span></div><div class="event-info"><div class="event-title" style="font-size:11px">Pierre KOUOKAM</div><div class="event-desc">Anniversaire - 58 ans</div></div><span class="event-badge badge-birthday">16j</span></div>
+                    </div>
+                  </div>
+                  <div class="panel">
+                    <div class="panel-header"><div class="panel-title">Activité récente</div><a href="#" class="panel-link">Voir tout</a></div>
+                    <div class="panel-content">
+                      <div class="panel-activity-row"><div class="activity-avatar" style="background:#FCE4EC;color:#E91E63;width:26px;height:26px;font-size:9px">MK</div><div><div class="activity-text" style="font-size:10px"><strong>Marie</strong> a ajouté une photo</div><div class="activity-time">Il y a 2h</div></div></div>
+                      <div class="panel-activity-row"><div class="activity-avatar" style="background:#E8F5E9;color:#2D5016;width:26px;height:26px;font-size:9px">JD</div><div><div class="activity-text" style="font-size:10px"><strong>Jean</strong> a rejoint la famille</div><div class="activity-time">Il y a 5h</div></div></div>
+                      <div class="panel-activity-row"><div class="activity-avatar" style="background:#F3E5F5;color:#9C27B0;width:26px;height:26px;font-size:9px">AK</div><div><div class="activity-text" style="font-size:10px"><strong>Amadou</strong> a mis à jour son profil</div><div class="activity-time">Hier</div></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Web Tree -->
+    <div class="subsection">
+      <h3 class="subsection-title">🌳 Arbre interactif</h3>
+      <div class="browser">
+        <div class="browser-bar"><div class="browser-dot dot-red"></div><div class="browser-dot dot-yellow"></div><div class="browser-dot dot-green"></div><div class="browser-url">app.familyroots.app/tree</div></div>
+        <div class="browser-content">
+          <div class="app-layout">
+            <div class="sidebar">
+              <div class="sidebar-logo"><div class="web-logo-icon"><div class="wl-f wl-f1"></div><div class="wl-f wl-f2"></div><div class="wl-f wl-f3"></div><div class="wl-dot"></div><div class="wl-trunk"></div></div><span class="web-logo-text">FamilyRoots</span></div>
+              <div class="nav-section">
+                <div class="nav-label">Principal</div>
+                <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/></svg> Accueil</div>
+                <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> Arbre</div>
+                <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Membres</div>
+                <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg> Calendrier</div>
+              </div>
+              <div class="sidebar-footer"><div class="user-info"><div class="user-avatar">SL</div><div><div class="user-name">Steve-Landry</div><div class="user-role">Admin</div></div></div></div>
+            </div>
+            <div class="main-area">
+              <div style="flex:1;background:var(--creme);position:relative">
+                <div class="web-tree-toolbar">
+                  <button class="toolbar-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/></svg> Ajouter</button>
+                  <button class="toolbar-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="M21 21l-4-4"/></svg> Rechercher</button>
+                  <button class="toolbar-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Exporter</button>
+                </div>
+                <!-- Tree Lines -->
+                <div class="web-tree-line" style="width:2px;height:40px;top:75px;left:360px"></div>
+                <div class="web-tree-line" style="width:200px;height:2px;top:115px;left:260px"></div>
+                <div class="web-tree-line" style="width:2px;height:35px;top:115px;left:260px"></div>
+                <div class="web-tree-line" style="width:2px;height:35px;top:115px;left:458px"></div>
+                <div class="web-tree-line" style="width:2px;height:40px;top:220px;left:260px"></div>
+                <div class="web-tree-line" style="width:160px;height:2px;top:260px;left:180px"></div>
+                <!-- Tree Nodes -->
+                <div class="web-tree-node" style="top:25px;left:334px"><div class="web-tree-node-avatar" style="border-color:#9C27B0;background:linear-gradient(135deg,#2D5016 50%,#E91E63 50%)">👴👵</div><div class="web-tree-node-name">Grands-parents</div></div>
+                <div class="web-tree-node" style="top:150px;left:234px"><div class="web-tree-node-avatar" style="border-color:#2D5016">PK</div><div class="web-tree-node-name">Pierre</div><div class="web-tree-node-relation">Père</div></div>
+                <div class="web-tree-node" style="top:150px;left:432px"><div class="web-tree-node-avatar" style="border-color:#E91E63">MK</div><div class="web-tree-node-name">Marie</div><div class="web-tree-node-relation">Mère</div></div>
+                <div class="web-tree-node" style="top:295px;left:154px"><div class="web-tree-node-avatar" style="border-color:#2D5016;box-shadow:0 0 0 3px rgba(233,30,99,0.3)">SL</div><div class="web-tree-node-name">Steve-Landry</div><div class="web-tree-node-relation">Moi</div></div>
+                <div class="web-tree-node" style="top:295px;left:254px"><div class="web-tree-node-avatar" style="border-color:#E91E63">CK</div><div class="web-tree-node-name">Célia</div><div class="web-tree-node-relation">Sœur</div></div>
+                <div class="web-tree-node" style="top:295px;left:354px"><div class="web-tree-node-avatar" style="border-color:#2D5016">LK</div><div class="web-tree-node-name">Loïc</div><div class="web-tree-node-relation">Frère</div></div>
+                <div class="web-tree-controls">
+                  <div class="web-tree-control-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+                  <div class="web-tree-control-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+                  <div class="web-tree-control-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Web Members -->
+    <div class="subsection">
+      <h3 class="subsection-title">👥 Liste des membres</h3>
+      <div class="browser">
+        <div class="browser-bar"><div class="browser-dot dot-red"></div><div class="browser-dot dot-yellow"></div><div class="browser-dot dot-green"></div><div class="browser-url">app.familyroots.app/members</div></div>
+        <div class="browser-content">
+          <div class="app-layout">
+            <div class="sidebar">
+              <div class="sidebar-logo"><div class="web-logo-icon"><div class="wl-f wl-f1"></div><div class="wl-f wl-f2"></div><div class="wl-f wl-f3"></div><div class="wl-dot"></div><div class="wl-trunk"></div></div><span class="web-logo-text">FamilyRoots</span></div>
+              <div class="nav-section">
+                <div class="nav-label">Principal</div>
+                <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/></svg> Accueil</div>
+                <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> Arbre</div>
+                <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Membres</div>
+                <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg> Calendrier</div>
+              </div>
+              <div class="sidebar-footer"><div class="user-info"><div class="user-avatar">SL</div><div><div class="user-name">Steve-Landry</div><div class="user-role">Admin</div></div></div></div>
+            </div>
+            <div class="main-area">
+              <div class="top-bar"><div class="top-title">Membres (47)</div><div class="top-actions"><button class="btn-hero-primary" style="padding:8px 16px;font-size:11px">+ Ajouter</button></div></div>
+              <div class="dashboard-area">
+                <div class="members-toolbar">
+                  <div class="members-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="M21 21l-4-4"/></svg><input type="text" placeholder="Rechercher un membre..."></div>
+                  <div class="members-filters"><button class="filter-btn active">Tous</button><button class="filter-btn">Génération 1</button><button class="filter-btn">Génération 2</button><button class="filter-btn">Génération 3</button></div>
+                </div>
+                <div class="members-grid">
+                  <div class="member-card"><div class="member-card-avatar" style="border:2px solid var(--foret)">PK</div><div class="member-card-name">Pierre KOUOKAM</div><div class="member-card-relation">Père</div></div>
+                  <div class="member-card"><div class="member-card-avatar" style="border:2px solid #E91E63">MK</div><div class="member-card-name">Marie KOUOKAM</div><div class="member-card-relation">Mère</div></div>
+                  <div class="member-card"><div class="member-card-avatar" style="border:2px solid var(--foret);background:var(--sable)">SL</div><div class="member-card-name">Steve-Landry</div><div class="member-card-relation">Moi</div></div>
+                  <div class="member-card"><div class="member-card-avatar" style="border:2px solid #E91E63">CK</div><div class="member-card-name">Célia KOUOKAM</div><div class="member-card-relation">Sœur</div></div>
+                  <div class="member-card"><div class="member-card-avatar" style="border:2px solid var(--foret)">LK</div><div class="member-card-name">Loïc KOUOKAM</div><div class="member-card-relation">Frère</div></div>
+                  <div class="member-card"><div class="member-card-avatar" style="border:2px solid #E91E63">LN</div><div class="member-card-name">Lindsay NONO</div><div class="member-card-relation">Belle-sœur</div></div>
+                  <div class="member-card"><div class="member-card-avatar" style="border:2px solid var(--foret)">JD</div><div class="member-card-name">Jean DIALLO</div><div class="member-card-relation">Oncle</div></div>
+                  <div class="member-card"><div class="member-card-avatar" style="border:2px solid #E91E63">FK</div><div class="member-card-name">Fatima KOUOKAM</div><div class="member-card-relation">Tante</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="main-footer">
+    <div class="footer-logo">🌳 FamilyRoots</div>
+    <div class="footer-tagline">Maquettes UI/UX Complètes — 32+ Écrans Mobile & Web</div>
+    <div class="footer-credit">Conçu pour <strong>Steve-Landry KOUOKAM NONO</strong> — Projet HETIC Mastère Data & IA</div>
+  </footer>
+
+  <script>
+    function showSection(sectionId) {
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      // Remove active from all tabs
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      // Show selected section
+      document.getElementById(sectionId).classList.add('active');
+      // Activate clicked tab
+      event.target.classList.add('active');
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

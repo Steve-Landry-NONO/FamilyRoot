@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FamilyRoots - API Spec GraphQL MVP</title>
+  <style>
+    :root {
+      --foret: #2D5016;
+      --feuille: #4A7023;
+      --olive: #6B8E23;
+      --terre: #8B4513;
+      --sable: #D4A574;
+      --ivoire: #FFF8E7;
+      --creme: #F5F5DC;
+      --succes: #4CAF50;
+      --warning: #FF9800;
+      --info: #2196F3;
+      --erreur: #F44336;
+      --code-bg: #1E1E1E;
+      --code-text: #D4D4D4;
+      --code-keyword: #569CD6;
+      --code-type: #4EC9B0;
+      --code-string: #CE9178;
+      --code-comment: #6A9955;
+      --code-enum: #B5CEA8;
+      --code-field: #9CDCFE;
+      --code-directive: #C586C0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--creme); color: var(--terre); line-height: 1.5; }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    
+    .header {
+      background: linear-gradient(135deg, var(--foret) 0%, var(--feuille) 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .header h1 { font-size: 26px; margin-bottom: 8px; }
+    .header p { color: var(--sable); font-size: 14px; }
+    .badge { display: inline-block; background: var(--sable); color: var(--terre); padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-top: 10px; }
+    
+    .toc {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .toc h2 { color: var(--foret); font-size: 16px; margin-bottom: 12px; }
+    .toc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .toc-item { font-size: 12px; padding: 6px 10px; background: var(--ivoire); border-radius: 6px; }
+    .toc-item a { color: var(--terre); text-decoration: none; }
+    .toc-item a:hover { color: var(--foret); }
+    
+    .section {
+      background: white;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .section-header {
+      background: var(--foret);
+      color: white;
+      padding: 16px 24px;
+    }
+    .section-header h2 { font-size: 18px; }
+    .section-body { padding: 24px; }
+    
+    .subsection { color: var(--feuille); font-size: 16px; margin: 24px 0 12px; font-weight: 600; border-bottom: 2px solid var(--sable); padding-bottom: 6px; }
+    .subsection:first-of-type { margin-top: 0; }
+    
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Monaco', 'Fira Code', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      margin: 12px 0;
+    }
+    .keyword { color: var(--code-keyword); }
+    .type { color: var(--code-type); }
+    .string { color: var(--code-string); }
+    .comment { color: var(--code-comment); font-style: italic; }
+    .enum-val { color: var(--code-enum); }
+    .field { color: var(--code-field); }
+    .directive { color: var(--code-directive); }
+    .required { color: var(--erreur); }
+    
+    .endpoint {
+      border: 1px solid var(--sable);
+      border-radius: 8px;
+      margin: 16px 0;
+      overflow: hidden;
+    }
+    .endpoint-header {
+      background: var(--ivoire);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--sable);
+    }
+    .endpoint-name { font-weight: 700; color: var(--foret); }
+    .endpoint-type {
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+    }
+    .type-query { background: var(--info); }
+    .type-mutation { background: var(--succes); }
+    .endpoint-body { padding: 16px; }
+    .endpoint-desc { font-size: 13px; color: #666; margin-bottom: 12px; }
+    
+    .params-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin: 12px 0;
+    }
+    .params-table th {
+      background: var(--feuille);
+      color: white;
+      padding: 8px;
+      text-align: left;
+    }
+    .params-table td {
+      padding: 8px;
+      border-bottom: 1px solid var(--sable);
+    }
+    .params-table tr:nth-child(even) { background: var(--ivoire); }
+    .param-name { font-family: monospace; color: var(--foret); font-weight: 600; }
+    .param-type { font-family: monospace; color: var(--info); }
+    .param-required { color: var(--erreur); font-weight: 600; }
+    
+    .error-box {
+      background: #FFEBEE;
+      border: 1px solid var(--erreur);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 12px 0;
+    }
+    .error-box h4 { color: var(--erreur); font-size: 12px; margin-bottom: 8px; }
+    .error-item { font-size: 11px; padding: 4px 0; font-family: monospace; }
+    
+    .auth-badge {
+      display: inline-block;
+      background: var(--warning);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+    
+    .info-box {
+      background: var(--ivoire);
+      border-left: 4px solid var(--foret);
+      padding: 12px 16px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 12px;
+    }
+    
+    .transaction-box {
+      background: #E3F2FD;
+      border: 1px solid var(--info);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 12px 0;
+    }
+    .transaction-box h4 { color: var(--info); font-size: 12px; margin-bottom: 8px; }
+    .transaction-step { font-size: 11px; padding: 3px 0; }
+    .transaction-step::before { content: "→ "; color: var(--info); }
+    
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 11px;
+      color: var(--terre);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📡 API Spec GraphQL MVP</h1>
+      <p>FamilyRoots — Spécification Technique de l'API</p>
+      <span class="badge">Version 1.0 — 11 Avril 2026</span>
+    </div>
+    
+    <!-- TABLE OF CONTENTS -->
+    <div class="toc">
+      <h2>📋 Table des matières</h2>
+      <div class="toc-grid">
+        <div class="toc-item"><a href="#types">1. Types GraphQL</a></div>
+        <div class="toc-item"><a href="#enums">2. Enums</a></div>
+        <div class="toc-item"><a href="#inputs">3. Input Types</a></div>
+        <div class="toc-item"><a href="#queries">4. Queries</a></div>
+        <div class="toc-item"><a href="#mutations">5. Mutations</a></div>
+        <div class="toc-item"><a href="#errors">6. Erreurs Métier</a></div>
+        <div class="toc-item"><a href="#auth">7. Auth & Guards</a></div>
+        <div class="toc-item"><a href="#transactions">8. Transactions</a></div>
+        <div class="toc-item"><a href="#conventions">9. Conventions</a></div>
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 1: TYPES ==================== -->
+    <div class="section" id="types">
+      <div class="section-header">
+        <h2>1. Types GraphQL</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">1.1 Profile</h3>
+        <pre>
+<span class="comment"># Profil applicatif de l'utilisateur connecté</span>
+<span class="keyword">type</span> <span class="type">Profile</span> {
+  <span class="field">id</span>: <span class="type">ID!</span>
+  <span class="field">email</span>: <span class="type">String!</span>
+  <span class="field">firstName</span>: <span class="type">String!</span>
+  <span class="field">lastName</span>: <span class="type">String!</span>
+  <span class="field">fullName</span>: <span class="type">String!</span>          <span class="comment"># Computed: firstName + lastName</span>
+  <span class="field">avatarUrl</span>: <span class="type">String</span>
+  <span class="field">createdAt</span>: <span class="type">DateTime!</span>
+  <span class="field">updatedAt</span>: <span class="type">DateTime!</span>
+  
+  <span class="comment"># Relations</span>
+  <span class="field">family</span>: <span class="type">Family</span>              <span class="comment"># MVP: 1 famille max</span>
+  <span class="field">linkedMember</span>: <span class="type">Member</span>        <span class="comment"># Membre "Moi" dans l'arbre</span>
+  <span class="field">notifications</span>(<span class="field">unreadOnly</span>: <span class="type">Boolean</span>): [<span class="type">Notification!</span>]!
+  <span class="field">unreadNotificationCount</span>: <span class="type">Int!</span>
+}
+        </pre>
+        
+        <h3 class="subsection">1.2 Family</h3>
+        <pre>
+<span class="comment"># Groupe familial</span>
+<span class="keyword">type</span> <span class="type">Family</span> {
+  <span class="field">id</span>: <span class="type">ID!</span>
+  <span class="field">name</span>: <span class="type">String!</span>
+  <span class="field">code</span>: <span class="type">String!</span>               <span class="comment"># FAM-XXXXXX (identifiant, PAS pour rejoindre)</span>
+  <span class="field">tier</span>: <span class="type">FamilyTier!</span>
+  <span class="field">createdAt</span>: <span class="type">DateTime!</span>
+  
+  <span class="comment"># Relations</span>
+  <span class="field">creator</span>: <span class="type">Profile!</span>
+  <span class="field">members</span>: [<span class="type">Member!</span>]!
+  <span class="field">memberCount</span>: <span class="type">Int!</span>
+  <span class="field">generationCount</span>: <span class="type">Int!</span>       <span class="comment"># Calculé depuis les relations</span>
+  <span class="field">upcomingEvents</span>(<span class="field">days</span>: <span class="type">Int</span> = 30): [<span class="type">Event!</span>]!
+}
+        </pre>
+        
+        <h3 class="subsection">1.3 Member</h3>
+        <pre>
+<span class="comment"># Membre de l'arbre généalogique</span>
+<span class="keyword">type</span> <span class="type">Member</span> {
+  <span class="field">id</span>: <span class="type">ID!</span>
+  <span class="field">firstName</span>: <span class="type">String!</span>
+  <span class="field">lastName</span>: <span class="type">String!</span>
+  <span class="field">fullName</span>: <span class="type">String!</span>
+  <span class="field">birthDate</span>: <span class="type">Date</span>
+  <span class="field">deathDate</span>: <span class="type">Date</span>
+  <span class="field">isAlive</span>: <span class="type">Boolean!</span>           <span class="comment"># Computed: deathDate == null</span>
+  <span class="field">age</span>: <span class="type">Int</span>                     <span class="comment"># Computed si birthDate connu</span>
+  <span class="field">gender</span>: <span class="type">Gender</span>
+  <span class="field">photoUrl</span>: <span class="type">String</span>
+  <span class="field">bio</span>: <span class="type">String</span>
+  <span class="field">birthPlace</span>: <span class="type">String</span>
+  <span class="field">createdAt</span>: <span class="type">DateTime!</span>
+  <span class="field">updatedAt</span>: <span class="type">DateTime!</span>
+  
+  <span class="comment"># Relations</span>
+  <span class="field">family</span>: <span class="type">Family!</span>
+  <span class="field">linkedProfile</span>: <span class="type">Profile</span>      <span class="comment"># Si ce membre a un compte</span>
+  <span class="field">parents</span>: [<span class="type">Member!</span>]!
+  <span class="field">children</span>: [<span class="type">Member!</span>]!
+  <span class="field">spouses</span>: [<span class="type">Member!</span>]!
+  <span class="field">siblings</span>: [<span class="type">Member!</span>]!         <span class="comment"># Calculé: mêmes parents</span>
+  <span class="field">relationships</span>: [<span class="type">Relationship!</span>]!
+}
+        </pre>
+        
+        <h3 class="subsection">1.4 Relationship</h3>
+        <pre>
+<span class="keyword">type</span> <span class="type">Relationship</span> {
+  <span class="field">id</span>: <span class="type">ID!</span>
+  <span class="field">type</span>: <span class="type">RelationshipType!</span>
+  <span class="field">member</span>: <span class="type">Member!</span>
+  <span class="field">relatedMember</span>: <span class="type">Member!</span>
+  <span class="field">createdAt</span>: <span class="type">DateTime!</span>
+}
+        </pre>
+        
+        <h3 class="subsection">1.5 Event</h3>
+        <pre>
+<span class="keyword">type</span> <span class="type">Event</span> {
+  <span class="field">id</span>: <span class="type">ID!</span>
+  <span class="field">type</span>: <span class="type">EventType!</span>
+  <span class="field">eventDate</span>: <span class="type">Date!</span>
+  <span class="field">reminderDays</span>: [<span class="type">Int!</span>]!        <span class="comment"># Ex: [7, 1, 0] pour J-7, J-1, J</span>
+  <span class="field">daysUntil</span>: <span class="type">Int!</span>             <span class="comment"># Computed: jours restants</span>
+  <span class="field">createdAt</span>: <span class="type">DateTime!</span>
+  
+  <span class="comment"># Relations</span>
+  <span class="field">family</span>: <span class="type">Family!</span>
+  <span class="field">member</span>: <span class="type">Member</span>               <span class="comment"># Membre concerné (si applicable)</span>
+}
+        </pre>
+        
+        <h3 class="subsection">1.6 Invitation</h3>
+        <pre>
+<span class="keyword">type</span> <span class="type">Invitation</span> {
+  <span class="field">id</span>: <span class="type">ID!</span>
+  <span class="field">code</span>: <span class="type">String!</span>               <span class="comment"># INV-XXXXXXXXXXXX (jeton pour rejoindre)</span>
+  <span class="field">expiresAt</span>: <span class="type">DateTime!</span>
+  <span class="field">isExpired</span>: <span class="type">Boolean!</span>         <span class="comment"># Computed</span>
+  <span class="field">isUsed</span>: <span class="type">Boolean!</span>            <span class="comment"># Computed: usedBy != null</span>
+  <span class="field">createdAt</span>: <span class="type">DateTime!</span>
+  
+  <span class="comment"># Relations</span>
+  <span class="field">family</span>: <span class="type">Family!</span>
+  <span class="field">creator</span>: <span class="type">Profile!</span>
+  <span class="field">usedBy</span>: <span class="type">Profile</span>
+  <span class="field">usedAt</span>: <span class="type">DateTime</span>
+}
+        </pre>
+        
+        <h3 class="subsection">1.7 Notification</h3>
+        <pre>
+<span class="keyword">type</span> <span class="type">Notification</span> {
+  <span class="field">id</span>: <span class="type">ID!</span>
+  <span class="field">type</span>: <span class="type">NotificationType!</span>
+  <span class="field">title</span>: <span class="type">String!</span>
+  <span class="field">content</span>: <span class="type">String</span>
+  <span class="field">metadata</span>: <span class="type">JSON</span>              <span class="comment"># { memberId, eventId, etc. }</span>
+  <span class="field">isRead</span>: <span class="type">Boolean!</span>            <span class="comment"># Computed: readAt != null</span>
+  <span class="field">readAt</span>: <span class="type">DateTime</span>
+  <span class="field">createdAt</span>: <span class="type">DateTime!</span>
+  
+  <span class="comment"># Relations</span>
+  <span class="field">profile</span>: <span class="type">Profile!</span>
+}
+        </pre>
+        
+        <h3 class="subsection">1.8 Types Auxiliaires</h3>
+        <pre>
+<span class="comment"># Données du dashboard</span>
+<span class="keyword">type</span> <span class="type">Dashboard</span> {
+  <span class="field">family</span>: <span class="type">Family!</span>
+  <span class="field">memberCount</span>: <span class="type">Int!</span>
+  <span class="field">generationCount</span>: <span class="type">Int!</span>
+  <span class="field">upcomingEvents</span>: [<span class="type">Event!</span>]!
+  <span class="field">recentActivity</span>: [<span class="type">Notification!</span>]!  <span class="comment"># Les 5 dernières</span>
+}
+
+<span class="comment"># Validation d'un code invitation</span>
+<span class="keyword">type</span> <span class="type">InvitationValidation</span> {
+  <span class="field">isValid</span>: <span class="type">Boolean!</span>
+  <span class="field">familyName</span>: <span class="type">String</span>          <span class="comment"># Si valide</span>
+  <span class="field">error</span>: <span class="type">InvitationError</span>      <span class="comment"># Si invalide</span>
+}
+
+<span class="keyword">enum</span> <span class="type">InvitationError</span> {
+  <span class="enum-val">NOT_FOUND</span>
+  <span class="enum-val">EXPIRED</span>
+  <span class="enum-val">ALREADY_USED</span>
+}
+
+<span class="comment"># Structure de l'arbre pour le rendu</span>
+<span class="keyword">type</span> <span class="type">FamilyTree</span> {
+  <span class="field">rootMembers</span>: [<span class="type">Member!</span>]!     <span class="comment"># Membres sans parents connus</span>
+  <span class="field">allMembers</span>: [<span class="type">Member!</span>]!
+  <span class="field">relationships</span>: [<span class="type">Relationship!</span>]!
+  <span class="field">currentUserMember</span>: <span class="type">Member</span>   <span class="comment"># Le membre "Moi"</span>
+}
+        </pre>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 2: ENUMS ==================== -->
+    <div class="section" id="enums">
+      <div class="section-header">
+        <h2>2. Enums</h2>
+      </div>
+      <div class="section-body">
+        <pre>
+<span class="keyword">enum</span> <span class="type">FamilyTier</span> {
+  <span class="enum-val">FREE</span>           <span class="comment"># 15 membres max</span>
+  <span class="enum-val">FAMILLE</span>        <span class="comment"># 100 membres max - 4.99€/mois</span>
+  <span class="enum-val">FAMILLE_PLUS</span>   <span class="comment"># Illimité - 9.99€/mois</span>
+}
+
+<span class="keyword">enum</span> <span class="type">UserRole</span> {
+  <span class="enum-val">ADMIN</span>          <span class="comment"># Peut inviter, modifier, supprimer</span>
+  <span class="enum-val">MEMBER</span>         <span class="comment"># Peut consulter, ajouter des membres</span>
+}
+
+<span class="keyword">enum</span> <span class="type">Gender</span> {
+  <span class="enum-val">MALE</span>
+  <span class="enum-val">FEMALE</span>
+  <span class="enum-val">OTHER</span>
+}
+
+<span class="keyword">enum</span> <span class="type">RelationshipType</span> {
+  <span class="enum-val">PARENT</span>         <span class="comment"># member est parent de relatedMember</span>
+  <span class="enum-val">CHILD</span>          <span class="comment"># member est enfant de relatedMember</span>
+  <span class="enum-val">SPOUSE</span>         <span class="comment"># Relation bidirectionnelle</span>
+}
+
+<span class="keyword">enum</span> <span class="type">EventType</span> {
+  <span class="enum-val">BIRTHDAY</span>
+  <span class="enum-val">WEDDING</span>
+  <span class="enum-val">DEATH</span>
+  <span class="enum-val">CUSTOM</span>
+}
+
+<span class="keyword">enum</span> <span class="type">NotificationType</span> {
+  <span class="enum-val">BIRTHDAY</span>               <span class="comment"># Anniversaire à venir</span>
+  <span class="enum-val">WEDDING</span>                <span class="comment"># Anniversaire de mariage</span>
+  <span class="enum-val">MEMBER_ADDED</span>           <span class="comment"># Nouveau membre ajouté</span>
+  <span class="enum-val">INVITATION_RECEIVED</span>    <span class="comment"># Quelqu'un a rejoint</span>
+  <span class="enum-val">FAMILY_JOINED</span>          <span class="comment"># Confirmation de join</span>
+}
+        </pre>
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 3: INPUTS ==================== -->
+    <div class="section" id="inputs">
+      <div class="section-header">
+        <h2>3. Input Types</h2>
+      </div>
+      <div class="section-body">
+        <pre>
+<span class="comment"># Création de famille</span>
+<span class="keyword">input</span> <span class="type">CreateFamilyInput</span> {
+  <span class="field">name</span>: <span class="type">String!</span>             <span class="comment"># Nom de la famille</span>
+  <span class="field">founderFirstName</span>: <span class="type">String!</span> <span class="comment"># Prénom du créateur (pour Member "Moi")</span>
+  <span class="field">founderLastName</span>: <span class="type">String!</span>
+  <span class="field">founderBirthDate</span>: <span class="type">Date</span>
+  <span class="field">founderGender</span>: <span class="type">Gender</span>
+}
+
+<span class="comment"># Mise à jour profil</span>
+<span class="keyword">input</span> <span class="type">UpdateProfileInput</span> {
+  <span class="field">firstName</span>: <span class="type">String</span>
+  <span class="field">lastName</span>: <span class="type">String</span>
+  <span class="field">avatarUrl</span>: <span class="type">String</span>
+}
+
+<span class="comment"># Ajout membre à l'arbre</span>
+<span class="keyword">input</span> <span class="type">AddMemberInput</span> {
+  <span class="field">firstName</span>: <span class="type">String!</span>
+  <span class="field">lastName</span>: <span class="type">String!</span>
+  <span class="field">birthDate</span>: <span class="type">Date</span>
+  <span class="field">deathDate</span>: <span class="type">Date</span>
+  <span class="field">gender</span>: <span class="type">Gender</span>
+  <span class="field">bio</span>: <span class="type">String</span>
+  <span class="field">birthPlace</span>: <span class="type">String</span>
+  <span class="field">photoUrl</span>: <span class="type">String</span>
+  <span class="field">relatedToMemberId</span>: <span class="type">ID!</span>    <span class="comment"># Membre existant à lier</span>
+  <span class="field">relationshipType</span>: <span class="type">RelationshipType!</span>  <span class="comment"># Relation avec ce membre</span>
+}
+
+<span class="comment"># Mise à jour membre</span>
+<span class="keyword">input</span> <span class="type">UpdateMemberInput</span> {
+  <span class="field">firstName</span>: <span class="type">String</span>
+  <span class="field">lastName</span>: <span class="type">String</span>
+  <span class="field">birthDate</span>: <span class="type">Date</span>
+  <span class="field">deathDate</span>: <span class="type">Date</span>
+  <span class="field">gender</span>: <span class="type">Gender</span>
+  <span class="field">bio</span>: <span class="type">String</span>
+  <span class="field">birthPlace</span>: <span class="type">String</span>
+  <span class="field">photoUrl</span>: <span class="type">String</span>
+}
+
+<span class="comment"># Création invitation</span>
+<span class="keyword">input</span> <span class="type">CreateInvitationInput</span> {
+  <span class="field">expiresInDays</span>: <span class="type">Int</span> = 7    <span class="comment"># Défaut: 7 jours</span>
+}
+        </pre>
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 4: QUERIES ==================== -->
+    <div class="section" id="queries">
+      <div class="section-header">
+        <h2>4. Queries</h2>
+      </div>
+      <div class="section-body">
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">me</span><span class="auth-badge">🔒 AUTH</span></span>
+            <span class="endpoint-type type-query">QUERY</span>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-desc">Retourne le profil de l'utilisateur connecté avec sa famille (si existante).</div>
+            <pre><span class="keyword">query</span> {
+  <span class="field">me</span>: <span class="type">Profile!</span>
+}</pre>
+          </div>
+        </div>
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">dashboard</span><span class="auth-badge">🔒 AUTH</span></span>
+            <span class="endpoint-type type-query">QUERY</span>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-desc">Retourne les données du dashboard pour la famille de l'utilisateur.</div>
+            <pre><span class="keyword">query</span> {
+  <span class="field">dashboard</span>: <span class="type">Dashboard!</span>
+}</pre>
+            <table class="params-table">
+              <tr><th>Retourne</th><th>Description</th></tr>
+              <tr><td class="param-type">Dashboard</td><td>Stats famille, événements à venir (30j), activité récente</td></tr>
+            </table>
+          </div>
+        </div>
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">familyTree</span><span class="auth-badge">🔒 AUTH</span></span>
+            <span class="endpoint-type type-query">QUERY</span>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-desc">Retourne l'arbre généalogique complet de la famille.</div>
+            <pre><span class="keyword">query</span> {
+  <span class="field">familyTree</span>: <span class="type">FamilyTree!</span>
+}</pre>
+            <div class="info-box">
+              <strong>Optimisation:</strong> Utilise DataLoader pour éviter le problème N+1 sur les relations membres → relationships → relatedMember.
+            </div>
+          </div>
+        </div>
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">member</span><span class="auth-badge">🔒 AUTH</span></span>
+            <span class="endpoint-type type-query">QUERY</span>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-desc">Retourne le détail d'un membre spécifique.</div>
+            <pre><span class="keyword">query</span> {
+  <span class="field">member</span>(<span class="field">id</span>: <span class="type">ID!</span>): <span class="type">Member!</span>
+}</pre>
+            <table class="params-table">
+              <tr><th>Param</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+              <tr><td class="param-name">id</td><td class="param-type">ID!</td><td class="param-required">Oui</td><td>ID du membre</td></tr>
+            </table>
+            <div class="error-box">
+              <h4>Erreurs possibles</h4>
+              <div class="error-item">MEMBER_NOT_FOUND — Membre inexistant</div>
+              <div class="error-item">FORBIDDEN — Membre n'appartient pas à la famille de l'utilisateur</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">validateInvitationCode</span></span>
+            <span class="endpoint-type type-query">QUERY</span>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-desc">Valide un code d'invitation AVANT inscription/join. Pas besoin d'être authentifié.</div>
+            <pre><span class="keyword">query</span> {
+  <span class="field">validateInvitationCode</span>(<span class="field">code</span>: <span class="type">String!</span>): <span class="type">InvitationValidation!</span>
+}</pre>
+            <table class="params-table">
+              <tr><th>Param</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+              <tr><td class="param-name">code</td><td class="param-type">String!</td><td class="param-required">Oui</td><td>Code INV-XXXXXXXXXXXX</td></tr>
+            </table>
+          </div>
+        </div>
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">notifications</span><span class="auth-badge">🔒 AUTH</span></span>
+            <span class="endpoint-type type-query">QUERY</span>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-desc">Liste les notifications de l'utilisateur avec pagination.</div>
+            <pre><span class="keyword">query</span> {
+  <span class="field">notifications</span>(
+    <span class="field">first</span>: <span class="type">Int</span> = 20
+    <span class="field">after</span>: <span class="type">String</span>
+    <span class="field">unreadOnly</span>: <span class="type">Boolean</span> = false
+  ): <span class="type">NotificationConnection!</span>
+}</pre>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 5: MUTATIONS ==================== -->
+    <div class="section" id="mutations">
+      <div class="section-header">
+        <h2>5. Mutations</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">5.1 Famille</h3>
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">createFamily</span><span class="auth-badge">🔒 AUTH</span></span>
+            <span class="endpoint-type type-mutation">MUTATION</span>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-desc">Crée une nouvelle famille. L'utilisateur devient admin et un membre "Moi" est créé.</div>
+            <pre><span class="keyword">mutation</span> {
+  <span class="field">createFamily</span>(<span class="field">input</span>: <span class="type">CreateFamilyInput!</span>): <span class="type">Family!</span>
+}</pre>
+            <div class="transaction-box">
+              <h4>Transaction atomique</h4>
+              <div class="transaction-step">INSERT family (code = FAM-XXXXXX généré)</div>
+              <div class="transaction-step">INSERT user_family (role = ADMIN)</div>
+              <div class="transaction-step">INSERT member (linked_profile_id = current user)</div>
+              <div class="transaction-step">INSERT event BIRTHDAY si birthDate fourni</div>
+            </div>
+            <div class="error-box">
+              <h4>Erreurs possibles</h4>
+              <div class="error-item">ALREADY_IN_FAMILY — MVP: l'utilisateur a déjà une famille</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">joinFamily</span><span class="auth-badge">🔒 AUTH</span></span>
+            <span class="endpoint-type type-mutation">MUTATION</span>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-desc">Rejoint une famille via un code d'invitation valide.</div>
+            <pre><span class="keyword">mutation</span> {
+  <span class="field">joinFamily</span>(
+    <span class="field">invitationCode</span>: <span class="type">String!</span>
+    <span class="field">firstName</span>: <span class="type">String!</span>
+    <span class="field">lastName</span>: <span class="type">String!</span>
+    <span class="field">birthDate</span>: <span class="type">Date</span>
+    <span class="field">gender</span>: <span class="type">Gender</span>
+  ): <span class="type">Family!</span>
+}</pre>
+            <div class="transaction-box">
+              <h4>Transaction atomique</h4>
+              <div class="transaction-step">VALIDATE invitation (exists, not used, not expired)</div>
+              <div class="transaction-step">CHECK user not already in family (MVP constraint)</div>
+              <div class="transaction-step">UPDATE invitation (used_by, used_at)</div>
+              <div class="transaction-step">INSERT user_family (role = MEMBER)</div>
+              <div class="transaction-step">INSERT member (linked_profile_id = current user)</div>
+              <div class="transaction-step">INSERT notification to admin (FAMILY_JOINED)</div>
+            </div>
+            <div class="error-box">
+              <h4>Erreurs possibles</h4>
+              <div class="error-item">INVITATION_NOT_FOUND — Code inexistant</div>
+              <div class="error-item">INVITATION_EXPIRED — Code expiré</div>
+              <div class="error-item">INVITATION_ALREADY_USED — Code déjà utilisé</div>
+              <div class="error-item">ALREADY_IN_FAMILY — MVP: l'utilisateur a déjà une famille</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">createInvitation</span><span class="auth-badge">🔒 AUTH</span></span>
+            <span class="endpoint-type type-mutation">MUTATION</span>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-desc">Crée un code d'invitation pour la famille (admin ou member peut inviter).</div>
+            <pre><span class="keyword">mutation</span> {
+  <span class="field">createInvitation</span>(<span class="field">input</span>: <span class="type">CreateInvitationInput</span>): <span class="type">Invitation!</span>
+}</pre>
+            <div class="info-box">
+              Génère un code INV-XXXXXXXXXXXX (12 chars alphanumériques). Expiration par défaut: 7 jours.
+            </div>
+          </div>
+        </div>
+        
+        <h3 class="subsection">5.2 Membres</h3>
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">addMember</span><span class="auth-badge">🔒 AUTH</span></span>
+            <span class="endpoint-type type-mutation">MUTATION</span>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-desc">Ajoute un nouveau membre à l'arbre avec une relation à un membre existant.</div>
+            <pre><span class="keyword">mutation</span> {
+  <span class="field">addMember</span>(<span class="field">input</span>: <span class="type">AddMemberInput!</span>): <span class="type">Member!</span>
+}</pre>
+            <div class="transaction-box">
+              <h4>Transaction atomique</h4>
+              <div class="transaction-step">CHECK relatedToMemberId appartient à la famille</div>
+              <div class="transaction-step">CHECK tier limit (FREE: 15, FAMILLE: 100)</div>
+              <div class="transaction-step">INSERT member</div>
+              <div class="transaction-step">INSERT relationship (member → relatedMember)</div>
+              <div class="transaction-step">IF SPOUSE: INSERT relationship inverse</div>
+              <div class="transaction-step">IF birthDate: INSERT event BIRTHDAY</div>
+              <div class="transaction-step">INSERT notification MEMBER_ADDED to all family users</div>
+            </div>
+            <div class="error-box">
+              <h4>Erreurs possibles</h4>
+              <div class="error-item">MEMBER_NOT_FOUND — relatedToMemberId inexistant</div>
+              <div class="error-item">FORBIDDEN — Membre pas dans la famille de l'utilisateur</div>
+              <div class="error-item">MEMBER_LIMIT_REACHED — Limite du tier atteinte</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">updateMember</span><span class="auth-badge">🔒 AUTH</span></span>
+            <span class="endpoint-type type-mutation">MUTATION</span>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-desc">Met à jour les informations d'un membre.</div>
+            <pre><span class="keyword">mutation</span> {
+  <span class="field">updateMember</span>(<span class="field">id</span>: <span class="type">ID!</span>, <span class="field">input</span>: <span class="type">UpdateMemberInput!</span>): <span class="type">Member!</span>
+}</pre>
+          </div>
+        </div>
+        
+        <h3 class="subsection">5.3 Profil</h3>
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">updateProfile</span><span class="auth-badge">🔒 AUTH</span></span>
+            <span class="endpoint-type type-mutation">MUTATION</span>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-desc">Met à jour le profil de l'utilisateur connecté.</div>
+            <pre><span class="keyword">mutation</span> {
+  <span class="field">updateProfile</span>(<span class="field">input</span>: <span class="type">UpdateProfileInput!</span>): <span class="type">Profile!</span>
+}</pre>
+            <div class="info-box">
+              Si l'utilisateur a un linkedMember, les champs firstName/lastName sont aussi mis à jour sur le membre.
+            </div>
+          </div>
+        </div>
+        
+        <h3 class="subsection">5.4 Notifications</h3>
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">markNotificationAsRead</span><span class="auth-badge">🔒 AUTH</span></span>
+            <span class="endpoint-type type-mutation">MUTATION</span>
+          </div>
+          <div class="endpoint-body">
+            <pre><span class="keyword">mutation</span> {
+  <span class="field">markNotificationAsRead</span>(<span class="field">id</span>: <span class="type">ID!</span>): <span class="type">Notification!</span>
+}</pre>
+          </div>
+        </div>
+        
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span><span class="endpoint-name">markAllNotificationsAsRead</span><span class="auth-badge">🔒 AUTH</span></span>
+            <span class="endpoint-type type-mutation">MUTATION</span>
+          </div>
+          <div class="endpoint-body">
+            <pre><span class="keyword">mutation</span> {
+  <span class="field">markAllNotificationsAsRead</span>: <span class="type">Int!</span>  <span class="comment"># Retourne le nombre marqué</span>
+}</pre>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 6: ERREURS ==================== -->
+    <div class="section" id="errors">
+      <div class="section-header">
+        <h2>6. Erreurs Métier Standardisées</h2>
+      </div>
+      <div class="section-body">
+        <pre>
+<span class="comment"># Format standard des erreurs GraphQL</span>
+{
+  "errors": [{
+    "message": "You are already in a family",
+    "extensions": {
+      "code": "<span class="enum-val">ALREADY_IN_FAMILY</span>",
+      "statusCode": 409
+    }
+  }]
+}
+        </pre>
+        
+        <table class="params-table">
+          <tr><th>Code</th><th>HTTP</th><th>Description</th><th>Mutations concernées</th></tr>
+          <tr><td class="param-name">UNAUTHENTICATED</td><td>401</td><td>Token manquant ou invalide</td><td>Toutes (🔒)</td></tr>
+          <tr><td class="param-name">FORBIDDEN</td><td>403</td><td>Accès non autorisé à la ressource</td><td>member, updateMember, addMember</td></tr>
+          <tr><td class="param-name">NOT_FOUND</td><td>404</td><td>Ressource introuvable (générique)</td><td>member, updateMember</td></tr>
+          <tr><td class="param-name">MEMBER_NOT_FOUND</td><td>404</td><td>Membre spécifique introuvable</td><td>addMember, updateMember</td></tr>
+          <tr><td class="param-name">INVITATION_NOT_FOUND</td><td>404</td><td>Code invitation inexistant</td><td>joinFamily, validateInvitationCode</td></tr>
+          <tr><td class="param-name">INVITATION_EXPIRED</td><td>410</td><td>Code invitation expiré</td><td>joinFamily</td></tr>
+          <tr><td class="param-name">INVITATION_ALREADY_USED</td><td>409</td><td>Code déjà utilisé</td><td>joinFamily</td></tr>
+          <tr><td class="param-name">ALREADY_IN_FAMILY</td><td>409</td><td>MVP: user déjà dans une famille</td><td>createFamily, joinFamily</td></tr>
+          <tr><td class="param-name">MEMBER_LIMIT_REACHED</td><td>402</td><td>Limite du tier atteinte</td><td>addMember</td></tr>
+          <tr><td class="param-name">VALIDATION_ERROR</td><td>400</td><td>Données invalides</td><td>Toutes mutations</td></tr>
+        </table>
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 7: AUTH ==================== -->
+    <div class="section" id="auth">
+      <div class="section-header">
+        <h2>7. Auth & Guards</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">7.1 Flow d'authentification</h3>
+        <div class="info-box">
+          <strong>Supabase Auth</strong> gère l'authentification. Le client mobile/web obtient un JWT via Supabase SDK.<br>
+          Le backend NestJS valide ce JWT et en extrait l'<code>auth_user_id</code>.
+        </div>
+        
+        <pre>
+<span class="comment"># Header requis pour les endpoints 🔒 AUTH</span>
+Authorization: Bearer &lt;supabase_jwt&gt;
+        </pre>
+        
+        <h3 class="subsection">7.2 SupabaseAuthGuard (NestJS)</h3>
+        <pre>
+<span class="directive">@Injectable</span>()
+<span class="keyword">export class</span> <span class="type">SupabaseAuthGuard</span> <span class="keyword">implements</span> <span class="type">CanActivate</span> {
+  <span class="keyword">async</span> canActivate(context: ExecutionContext): <span class="type">Promise&lt;boolean&gt;</span> {
+    <span class="keyword">const</span> request = GqlExecutionContext.create(context).getContext().req;
+    <span class="keyword">const</span> token = extractTokenFromHeader(request);
+    
+    <span class="keyword">if</span> (!token) <span class="keyword">throw new</span> UnauthorizedException(<span class="string">'UNAUTHENTICATED'</span>);
+    
+    <span class="comment">// Valide le JWT via Supabase</span>
+    <span class="keyword">const</span> { data: { user }, error } = <span class="keyword">await</span> supabase.auth.getUser(token);
+    
+    <span class="keyword">if</span> (error || !user) <span class="keyword">throw new</span> UnauthorizedException(<span class="string">'UNAUTHENTICATED'</span>);
+    
+    <span class="comment">// Récupère le Profile applicatif</span>
+    <span class="keyword">const</span> profile = <span class="keyword">await</span> prisma.profile.findUnique({
+      where: { authUserId: user.id }
+    });
+    
+    request.user = profile;  <span class="comment">// Injecté dans le contexte</span>
+    <span class="keyword">return true</span>;
+  }
+}
+        </pre>
+        
+        <h3 class="subsection">7.3 Decorator @CurrentUser()</h3>
+        <pre>
+<span class="keyword">export const</span> <span class="field">CurrentUser</span> = createParamDecorator(
+  (data: unknown, ctx: ExecutionContext): <span class="type">Profile</span> => {
+    <span class="keyword">const</span> gqlContext = GqlExecutionContext.create(ctx);
+    <span class="keyword">return</span> gqlContext.getContext().req.user;
+  }
+);
+
+<span class="comment">// Usage dans un resolver</span>
+<span class="directive">@Query</span>(() => Profile)
+<span class="directive">@UseGuards</span>(SupabaseAuthGuard)
+<span class="keyword">async</span> me(<span class="directive">@CurrentUser</span>() profile: <span class="type">Profile</span>): <span class="type">Promise&lt;Profile&gt;</span> {
+  <span class="keyword">return</span> profile;
+}
+        </pre>
+        
+        <h3 class="subsection">7.4 FamilyMemberGuard</h3>
+        <pre>
+<span class="comment">// Guard vérifiant que le user appartient à la famille concernée</span>
+<span class="directive">@Injectable</span>()
+<span class="keyword">export class</span> <span class="type">FamilyMemberGuard</span> <span class="keyword">implements</span> <span class="type">CanActivate</span> {
+  <span class="keyword">async</span> canActivate(context: ExecutionContext): <span class="type">Promise&lt;boolean&gt;</span> {
+    <span class="keyword">const</span> gqlContext = GqlExecutionContext.create(context);
+    <span class="keyword">const</span> { user } = gqlContext.getContext().req;
+    <span class="keyword">const</span> args = gqlContext.getArgs();
+    
+    <span class="comment">// Vérifie l'appartenance à la famille</span>
+    <span class="keyword">const</span> userFamily = <span class="keyword">await</span> prisma.userFamily.findFirst({
+      where: { profileId: user.id }
+    });
+    
+    <span class="keyword">if</span> (!userFamily) <span class="keyword">throw new</span> ForbiddenException(<span class="string">'NO_FAMILY'</span>);
+    
+    gqlContext.getContext().req.familyId = userFamily.familyId;
+    <span class="keyword">return true</span>;
+  }
+}
+        </pre>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 8: TRANSACTIONS ==================== -->
+    <div class="section" id="transactions">
+      <div class="section-header">
+        <h2>8. Résumé des Transactions</h2>
+      </div>
+      <div class="section-body">
+        
+        <table class="params-table">
+          <tr><th>Mutation</th><th>Tables modifiées</th><th>Rollback si erreur</th></tr>
+          <tr>
+            <td class="param-name">createFamily</td>
+            <td>family, user_family, member, event</td>
+            <td>Toutes les insertions annulées</td>
+          </tr>
+          <tr>
+            <td class="param-name">joinFamily</td>
+            <td>invitation (update), user_family, member, notification</td>
+            <td>Invitation non marquée used, pas d'ajout</td>
+          </tr>
+          <tr>
+            <td class="param-name">addMember</td>
+            <td>member, relationship (1 ou 2), event, notification (N)</td>
+            <td>Aucun membre créé, pas de notifs</td>
+          </tr>
+        </table>
+        
+        <div class="info-box">
+          <strong>Prisma $transaction:</strong> Toutes ces opérations utilisent <code>prisma.$transaction()</code> pour garantir l'atomicité.
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ==================== SECTION 9: CONVENTIONS ==================== -->
+    <div class="section" id="conventions">
+      <div class="section-header">
+        <h2>9. Conventions & Bonnes Pratiques</h2>
+      </div>
+      <div class="section-body">
+        
+        <h3 class="subsection">9.1 Naming</h3>
+        <table class="params-table">
+          <tr><th>Élément</th><th>Convention</th><th>Exemple</th></tr>
+          <tr><td>Types</td><td>PascalCase</td><td><code>Profile</code>, <code>FamilyTree</code></td></tr>
+          <tr><td>Fields</td><td>camelCase</td><td><code>firstName</code>, <code>linkedProfile</code></td></tr>
+          <tr><td>Enums</td><td>PascalCase (type), SCREAMING_SNAKE (valeurs)</td><td><code>EventType.BIRTHDAY</code></td></tr>
+          <tr><td>Inputs</td><td>PascalCase + suffixe Input</td><td><code>CreateFamilyInput</code></td></tr>
+          <tr><td>Queries</td><td>camelCase, nom descriptif</td><td><code>familyTree</code>, <code>validateInvitationCode</code></td></tr>
+          <tr><td>Mutations</td><td>camelCase, verbe + nom</td><td><code>createFamily</code>, <code>addMember</code></td></tr>
+        </table>
+        
+        <h3 class="subsection">9.2 Scalaires personnalisés</h3>
+        <pre>
+<span class="keyword">scalar</span> <span class="type">DateTime</span>    <span class="comment"># ISO 8601: 2026-04-11T14:30:00Z</span>
+<span class="keyword">scalar</span> <span class="type">Date</span>        <span class="comment"># YYYY-MM-DD: 2026-04-11</span>
+<span class="keyword">scalar</span> <span class="type">JSON</span>        <span class="comment"># Objet JSON arbitraire</span>
+        </pre>
+        
+        <h3 class="subsection">9.3 Pagination (pattern Relay)</h3>
+        <pre>
+<span class="keyword">type</span> <span class="type">NotificationConnection</span> {
+  <span class="field">edges</span>: [<span class="type">NotificationEdge!</span>]!
+  <span class="field">pageInfo</span>: <span class="type">PageInfo!</span>
+  <span class="field">totalCount</span>: <span class="type">Int!</span>
+}
+
+<span class="keyword">type</span> <span class="type">NotificationEdge</span> {
+  <span class="field">cursor</span>: <span class="type">String!</span>
+  <span class="field">node</span>: <span class="type">Notification!</span>
+}
+
+<span class="keyword">type</span> <span class="type">PageInfo</span> {
+  <span class="field">hasNextPage</span>: <span class="type">Boolean!</span>
+  <span class="field">hasPreviousPage</span>: <span class="type">Boolean!</span>
+  <span class="field">startCursor</span>: <span class="type">String</span>
+  <span class="field">endCursor</span>: <span class="type">String</span>
+}
+        </pre>
+        
+        <h3 class="subsection">9.4 Vocabulaire final</h3>
+        <div class="info-box">
+          <strong>Rappel (Patch v1.1):</strong><br>
+          • <code>Profile</code> = utilisateur connecté (jamais "User")<br>
+          • <code>Member</code> = personne dans l'arbre<br>
+          • <code>family.code</code> (FAM-) = identifiant public stable<br>
+          • <code>invitation.code</code> (INV-) = jeton temporaire pour rejoindre
+        </div>
+        
+      </div>
+    </div>
+    
+    <div class="footer">
+      FamilyRoots — API Spec GraphQL MVP v1.0 — Paquet 2 — Steve-Landry KOUOKAM NONO — HETIC Mastère Data & IA
+    </div>
+  </div>
+</body>
+</html>

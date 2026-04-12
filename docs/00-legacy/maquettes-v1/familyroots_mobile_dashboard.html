@@ -1,0 +1,360 @@
+<h2 class="sr-only">Maquettes mobile FamilyRoots : Dashboard principal et notifications</h2>
+<style>
+.phone{width:280px;height:600px;background:#FFF8E7;border-radius:32px;border:3px solid #2D5016;position:relative;overflow:hidden;display:inline-flex;flex-direction:column}
+.notch{width:100px;height:24px;background:#2D5016;border-radius:0 0 14px 14px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:10}
+.status-bar{height:44px;background:#2D5016;padding:0 20px;display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:8px}
+.status-time{color:#fff;font-size:11px;font-weight:500}
+.status-icons{display:flex;gap:4px}
+.status-icons span{color:#fff;font-size:10px}
+.header{background:#2D5016;padding:16px 20px 20px;border-radius:0 0 24px 24px}
+.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.header-greeting{color:#D4A574;font-size:12px}
+.header-name{color:#fff;font-size:18px;font-weight:500;font-family:Georgia,serif}
+.header-avatar{width:44px;height:44px;background:#D4A574;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#5D4037;font-weight:500;font-size:14px}
+.header-family{background:rgba(255,255,255,0.15);border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px}
+.family-icon{width:40px;height:40px;background:#4A7023;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.family-icon svg{width:24px;height:24px}
+.family-info{flex:1}
+.family-name{color:#fff;font-size:14px;font-weight:500}
+.family-members{color:#D4A574;font-size:11px}
+.family-arrow{color:#D4A574;font-size:16px}
+.content{flex:1;overflow-y:auto;padding:16px}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.section-title h3{color:#2D5016;font-size:14px;font-weight:500}
+.section-title a{color:#8B4513;font-size:12px;text-decoration:none}
+.quick-actions{display:flex;gap:10px;margin-bottom:20px}
+.quick-btn{flex:1;background:#F5F5DC;border-radius:14px;padding:14px 8px;text-align:center;border:1px solid #D4A574}
+.quick-btn svg{width:24px;height:24px;margin:0 auto 6px;display:block}
+.quick-btn span{font-size:10px;color:#5D4037}
+.event-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #D4A574;display:flex;gap:12px;align-items:center}
+.event-date{width:44px;height:50px;background:#2D5016;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.event-day{color:#fff;font-size:18px;font-weight:500}
+.event-month{color:#D4A574;font-size:9px;text-transform:uppercase}
+.event-info{flex:1}
+.event-type{font-size:10px;color:#8B4513;margin-bottom:2px}
+.event-title{font-size:13px;color:#2D5016;font-weight:500;margin-bottom:2px}
+.event-desc{font-size:11px;color:#5D4037}
+.event-badge{padding:4px 10px;border-radius:12px;font-size:10px;font-weight:500}
+.badge-birthday{background:#E8F5E9;color:#2D5016}
+.badge-wedding{background:#F3E5F5;color:#9C27B0}
+.badge-birth{background:#FCE4EC;color:#E91E63}
+.activity-item{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start}
+.activity-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500}
+.activity-content{flex:1}
+.activity-text{font-size:12px;color:#5D4037;line-height:1.4}
+.activity-text strong{color:#2D5016}
+.activity-time{font-size:10px;color:#8B4513;margin-top:2px}
+.tab-bar{height:60px;background:#fff;border-top:1px solid #D4A574;display:flex;justify-content:space-around;align-items:center;padding:0 10px}
+.tab-item{display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0.5}
+.tab-item.active{opacity:1}
+.tab-item svg{width:22px;height:22px}
+.tab-item span{font-size:9px;color:#5D4037}
+.tab-item.active span{color:#2D5016;font-weight:500}
+.screens-row{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;padding:16px 0}
+.screen-label{text-align:center;color:var(--color-text-secondary);font-size:12px;margin-top:12px}
+.notif-badge{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:#E91E63;border-radius:50%;color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:500}
+</style>
+<div class="screens-row">
+<div>
+<div class="phone">
+<div class="notch"></div>
+<div class="status-bar">
+<span class="status-time">09:41</span>
+<div class="status-icons"><span>5G</span><span>100%</span></div>
+</div>
+<div class="header">
+<div class="header-top">
+<div>
+<div class="header-greeting">Bonjour,</div>
+<div class="header-name">Steve-Landry</div>
+</div>
+<div class="header-avatar">SL</div>
+</div>
+<div class="header-family">
+<div class="family-icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+<path d="M12 5v14M5 12h14"/>
+<circle cx="12" cy="5" r="2"/>
+<circle cx="5" cy="12" r="2"/>
+<circle cx="19" cy="12" r="2"/>
+<circle cx="12" cy="19" r="2"/>
+</svg>
+</div>
+<div class="family-info">
+<div class="family-name">Famille KOUOKAM</div>
+<div class="family-members">47 membres • 4 generations</div>
+</div>
+<span class="family-arrow">›</span>
+</div>
+</div>
+<div class="content">
+<div class="section-title"><h3>Actions rapides</h3></div>
+<div class="quick-actions">
+<div class="quick-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2">
+<circle cx="12" cy="8" r="4"/>
+<path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+<path d="M16 4l2 2-2 2"/>
+</svg>
+<span>Ajouter</span>
+</div>
+<div class="quick-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2">
+<path d="M12 3v12M5 10l7 7 7-7"/>
+<rect x="4" y="17" width="16" height="4" rx="1"/>
+</svg>
+<span>Inviter</span>
+</div>
+<div class="quick-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2">
+<rect x="3" y="4" width="18" height="16" rx="2"/>
+<path d="M3 10h18"/>
+</svg>
+<span>Evenement</span>
+</div>
+<div class="quick-btn">
+<svg viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="2">
+<circle cx="11" cy="11" r="6"/>
+<path d="M21 21l-4-4"/>
+</svg>
+<span>Rechercher</span>
+</div>
+</div>
+<div class="section-title"><h3>Evenements a venir</h3><a href="#">Voir tout</a></div>
+<div class="event-card">
+<div class="event-date"><span class="event-day">12</span><span class="event-month">Avr</span></div>
+<div class="event-info">
+<div class="event-type">Anniversaire</div>
+<div class="event-title">Celia KOUOKAM</div>
+<div class="event-desc">Ta cousine fete ses 25 ans</div>
+</div>
+<span class="event-badge badge-birthday">3j</span>
+</div>
+<div class="event-card">
+<div class="event-date"><span class="event-day">18</span><span class="event-month">Avr</span></div>
+<div class="event-info">
+<div class="event-type">Noces de coton</div>
+<div class="event-title">Loic & Lindsay</div>
+<div class="event-desc">1 an de mariage</div>
+</div>
+<span class="event-badge badge-wedding">9j</span>
+</div>
+<div class="event-card">
+<div class="event-date"><span class="event-day">25</span><span class="event-month">Avr</span></div>
+<div class="event-info">
+<div class="event-type">Anniversaire</div>
+<div class="event-title">Papa Jean</div>
+<div class="event-desc">Ton oncle fete ses 60 ans</div>
+</div>
+<span class="event-badge badge-birthday">16j</span>
+</div>
+</div>
+<div class="tab-bar">
+<div class="tab-item active">
+<svg viewBox="0 0 24 24" fill="#2D5016" stroke="none"><path d="M3 12l9-9 9 9v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1v-9z"/></svg>
+<span>Accueil</span>
+</div>
+<div class="tab-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg>
+<span>Arbre</span>
+</div>
+<div class="tab-item" style="position:relative">
+<svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+<span>Alertes</span>
+<div class="notif-badge">3</div>
+</div>
+<div class="tab-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+<span>Profil</span>
+</div>
+</div>
+</div>
+<div class="screen-label">Dashboard principal</div>
+</div>
+
+<div>
+<div class="phone">
+<div class="notch"></div>
+<div class="status-bar">
+<span class="status-time">09:41</span>
+<div class="status-icons"><span>5G</span><span>100%</span></div>
+</div>
+<div style="background:#2D5016;padding:16px 20px">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div style="color:#fff;font-size:16px;font-weight:500;font-family:Georgia,serif">Activite recente</div>
+<div style="position:relative">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="M21 21l-4-4"/></svg>
+</div>
+</div>
+</div>
+<div class="content" style="padding-top:20px">
+<div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #D4A574">
+<div style="font-size:11px;color:#8B4513;margin-bottom:12px">Aujourd'hui</div>
+<div class="activity-item">
+<div class="activity-avatar" style="background:#FCE4EC;color:#E91E63">MK</div>
+<div class="activity-content">
+<div class="activity-text"><strong>Marie KOUOKAM</strong> a ajoute une photo de naissance de <strong>Malik</strong></div>
+<div class="activity-time">Il y a 2 heures</div>
+</div>
+</div>
+<div class="activity-item">
+<div class="activity-avatar" style="background:#E8F5E9;color:#2D5016">JD</div>
+<div class="activity-content">
+<div class="activity-text"><strong>Jean DIALLO</strong> a rejoint la famille</div>
+<div class="activity-time">Il y a 5 heures</div>
+</div>
+</div>
+</div>
+<div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #D4A574">
+<div style="font-size:11px;color:#8B4513;margin-bottom:12px">Hier</div>
+<div class="activity-item">
+<div class="activity-avatar" style="background:#F3E5F5;color:#9C27B0">AK</div>
+<div class="activity-content">
+<div class="activity-text"><strong>Amadou KOUOKAM</strong> a mis a jour sa date de naissance</div>
+<div class="activity-time">Hier a 18:32</div>
+</div>
+</div>
+<div class="activity-item">
+<div class="activity-avatar" style="background:#FFF8E7;color:#8B4513">FK</div>
+<div class="activity-content">
+<div class="activity-text"><strong>Fatima KOUOKAM</strong> a ajoute <strong>3 photos</strong> a l'album "Reunion 2024"</div>
+<div class="activity-time">Hier a 14:15</div>
+</div>
+</div>
+</div>
+<div>
+<div style="font-size:11px;color:#8B4513;margin-bottom:12px">Cette semaine</div>
+<div class="activity-item">
+<div class="activity-avatar" style="background:#E3F2FD;color:#2196F3">PK</div>
+<div class="activity-content">
+<div class="activity-text"><strong>Pierre KOUOKAM</strong> a complete son profil</div>
+<div class="activity-time">Lundi a 09:20</div>
+</div>
+</div>
+<div class="activity-item">
+<div class="activity-avatar" style="background:#FFF3E0;color:#FF9800">SK</div>
+<div class="activity-content">
+<div class="activity-text"><strong>Sophie KOUOKAM</strong> a cree l'evenement "Reunion annuelle"</div>
+<div class="activity-time">Lundi a 08:45</div>
+</div>
+</div>
+<div class="activity-item">
+<div class="activity-avatar" style="background:#E8F5E9;color:#2D5016">LK</div>
+<div class="activity-content">
+<div class="activity-text"><strong>Lucas KOUOKAM</strong> a lie son profil a <strong>Marie</strong> (mere)</div>
+<div class="activity-time">Dimanche a 20:10</div>
+</div>
+</div>
+</div>
+</div>
+<div class="tab-bar">
+<div class="tab-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h5v-6h2v6h5a1 1 0 001-1V10"/></svg>
+<span>Accueil</span>
+</div>
+<div class="tab-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg>
+<span>Arbre</span>
+</div>
+<div class="tab-item active" style="position:relative">
+<svg viewBox="0 0 24 24" fill="#2D5016" stroke="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7l5-7v4h4l-5 7z"/></svg>
+<span>Activite</span>
+</div>
+<div class="tab-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+<span>Profil</span>
+</div>
+</div>
+</div>
+<div class="screen-label">Fil d'activite</div>
+</div>
+
+<div>
+<div class="phone">
+<div class="notch"></div>
+<div class="status-bar">
+<span class="status-time">09:41</span>
+<div class="status-icons"><span>5G</span><span>100%</span></div>
+</div>
+<div style="background:#2D5016;padding:16px 20px">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div style="color:#fff;font-size:16px;font-weight:500;font-family:Georgia,serif">Notifications</div>
+<div style="color:#D4A574;font-size:12px">Tout marquer lu</div>
+</div>
+</div>
+<div class="content" style="padding:12px">
+<div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border-left:4px solid #E91E63;border-top:1px solid #D4A574;border-right:1px solid #D4A574;border-bottom:1px solid #D4A574">
+<div style="display:flex;gap:12px;align-items:flex-start">
+<div style="width:40px;height:40px;background:#FCE4EC;border-radius:50%;display:flex;align-items:center;justify-content:center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="#E91E63"><circle cx="12" cy="8" r="5"/><path d="M3 21c0-4.5 4-8 9-8s9 3.5 9 8"/></svg>
+</div>
+<div style="flex:1">
+<div style="font-size:13px;color:#2D5016;font-weight:500;margin-bottom:4px">Nouveau membre !</div>
+<div style="font-size:12px;color:#5D4037;line-height:1.4">Bienvenue a <strong>Malik DIALLO</strong>, fils d'Amadou et Fatima</div>
+<div style="font-size:10px;color:#8B4513;margin-top:6px">Il y a 2 heures</div>
+</div>
+</div>
+</div>
+<div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border-left:4px solid #4CAF50;border-top:1px solid #D4A574;border-right:1px solid #D4A574;border-bottom:1px solid #D4A574">
+<div style="display:flex;gap:12px;align-items:flex-start">
+<div style="width:40px;height:40px;background:#E8F5E9;border-radius:50%;display:flex;align-items:center;justify-content:center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><path d="M20 12v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7"/><path d="M12 3v12M8 7l4-4 4 4"/></svg>
+</div>
+<div style="flex:1">
+<div style="font-size:13px;color:#2D5016;font-weight:500;margin-bottom:4px">Rappel anniversaire</div>
+<div style="font-size:12px;color:#5D4037;line-height:1.4">C'est l'anniversaire de <strong>Celia</strong> dans 3 jours !</div>
+<div style="font-size:10px;color:#8B4513;margin-top:6px">Il y a 1 jour</div>
+</div>
+</div>
+</div>
+<div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border-left:4px solid #9C27B0;border-top:1px solid #D4A574;border-right:1px solid #D4A574;border-bottom:1px solid #D4A574">
+<div style="display:flex;gap:12px;align-items:flex-start">
+<div style="width:40px;height:40px;background:#F3E5F5;border-radius:50%;display:flex;align-items:center;justify-content:center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="#9C27B0"><path d="M12 4C8 4 4 8 4 12c0 6 8 10 8 10s8-4 8-10c0-4-4-8-8-8z"/></svg>
+</div>
+<div style="flex:1">
+<div style="font-size:13px;color:#2D5016;font-weight:500;margin-bottom:4px">Noces de coton</div>
+<div style="font-size:12px;color:#5D4037;line-height:1.4"><strong>Loic & Lindsay</strong> fetent 1 an de mariage le 18 avril</div>
+<div style="font-size:10px;color:#8B4513;margin-top:6px">Il y a 2 jours</div>
+</div>
+</div>
+</div>
+<div style="background:#FFF8E7;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #D4A574;opacity:0.7">
+<div style="display:flex;gap:12px;align-items:flex-start">
+<div style="width:40px;height:40px;background:#F5F5DC;border-radius:50%;display:flex;align-items:center;justify-content:center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B4513" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6"/></svg>
+</div>
+<div style="flex:1">
+<div style="font-size:13px;color:#5D4037;font-weight:500;margin-bottom:4px">Profil mis a jour</div>
+<div style="font-size:12px;color:#8B4513;line-height:1.4">Pierre a complete ses informations</div>
+<div style="font-size:10px;color:#8B4513;margin-top:6px">Il y a 3 jours • Lu</div>
+</div>
+</div>
+</div>
+</div>
+<div class="tab-bar">
+<div class="tab-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h5v-6h2v6h5a1 1 0 001-1V10"/></svg>
+<span>Accueil</span>
+</div>
+<div class="tab-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><path d="M12 3v12M5 10l7-7 7 7"/><circle cx="12" cy="19" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg>
+<span>Arbre</span>
+</div>
+<div class="tab-item active">
+<svg viewBox="0 0 24 24" fill="#2D5016" stroke="none"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+<span>Alertes</span>
+</div>
+<div class="tab-item">
+<svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+<span>Profil</span>
+</div>
+</div>
+</div>
+<div class="screen-label">Centre de notifications</div>
+</div>
+</div>
+
+<div style="text-align:center;margin-top:16px">
+<button style="padding:10px 24px;border-radius:20px;background:#2D5016;border:none;color:#fff;cursor:pointer;font-size:13px" onclick="sendPrompt('Montre maintenant le dashboard web desktop FamilyRoots')">Voir version Web Desktop</button>
+</div>

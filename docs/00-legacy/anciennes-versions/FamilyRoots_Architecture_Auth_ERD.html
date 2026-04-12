@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FamilyRoots - Architecture Auth + ERD MVP</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+  <style>
+    :root {
+      --foret: #2D5016;
+      --feuille: #4A7023;
+      --olive: #6B8E23;
+      --terre: #8B4513;
+      --sable: #D4A574;
+      --ivoire: #FFF8E7;
+      --creme: #F5F5DC;
+      --succes: #4CAF50;
+      --warning: #FF9800;
+      --info: #2196F3;
+      --erreur: #F44336;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--creme); color: var(--terre); line-height: 1.6; }
+    
+    .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    
+    .header {
+      background: linear-gradient(135deg, var(--foret) 0%, var(--feuille) 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 12px 12px 0 0;
+      text-align: center;
+    }
+    .header h1 { font-size: 26px; margin-bottom: 8px; }
+    .header p { color: var(--sable); font-size: 14px; }
+    .badge { display: inline-block; background: var(--sable); color: var(--terre); padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-top: 10px; }
+    
+    .content { background: white; padding: 30px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    
+    .section-title {
+      color: var(--foret);
+      font-size: 20px;
+      margin: 30px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 3px solid var(--foret);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title:first-of-type { margin-top: 0; }
+    
+    .subsection { color: var(--feuille); font-size: 16px; margin: 20px 0 12px; font-weight: 600; }
+    
+    .decision-box {
+      background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+      border: 2px solid var(--succes);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+    .decision-box h3 { color: var(--succes); margin-bottom: 12px; font-size: 16px; }
+    .decision-box ul { margin-left: 20px; font-size: 13px; }
+    .decision-box li { margin: 6px 0; }
+    
+    .warning-box {
+      background: #FFF3E0;
+      border-left: 4px solid var(--warning);
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+    }
+    
+    .info-box {
+      background: var(--ivoire);
+      border-left: 4px solid var(--foret);
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+    }
+    
+    .diagram-container {
+      background: white;
+      border: 1px solid var(--sable);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+    .diagram-title { font-size: 14px; color: var(--terre); margin-bottom: 16px; font-weight: 600; text-align: center; }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 12px;
+    }
+    th {
+      background: var(--foret);
+      color: white;
+      padding: 10px 8px;
+      text-align: left;
+      font-weight: 600;
+    }
+    td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--sable);
+      vertical-align: top;
+    }
+    tr:nth-child(even) { background: var(--ivoire); }
+    
+    .col-type { font-family: 'Consolas', monospace; font-size: 11px; color: var(--info); }
+    .col-pk { color: var(--succes); font-weight: 600; }
+    .col-fk { color: var(--warning); font-style: italic; }
+    .col-required { color: var(--erreur); }
+    
+    code {
+      background: #263238;
+      color: #EEFFFF;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 11px;
+    }
+    
+    pre {
+      background: #263238;
+      color: #EEFFFF;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 16px 0;
+    }
+    pre .comment { color: #546E7A; }
+    pre .keyword { color: #C792EA; }
+    pre .type { color: #FFCB6B; }
+    pre .string { color: #C3E88D; }
+    pre .decorator { color: #82AAFF; }
+    
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin: 12px 0;
+      padding: 12px;
+      background: var(--ivoire);
+      border-radius: 8px;
+    }
+    .flow-number {
+      background: var(--foret);
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .flow-content { flex: 1; }
+    .flow-content strong { color: var(--foret); }
+    .flow-content p { font-size: 12px; margin-top: 4px; }
+    .flow-content code { font-size: 10px; }
+    
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 11px;
+      color: var(--terre);
+    }
+
+    @media print {
+      body { background: white; }
+      .container { padding: 0; }
+      .content { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🏗️ Architecture Auth + ERD MVP</h1>
+      <p>Paquet 2 — Architecture Technique — FamilyRoots</p>
+      <span class="badge">Document Technique — 11 Avril 2026</span>
+    </div>
+    
+    <div class="content">
+      
+      <!-- ==================== SECTION 1: DÉCISION AUTH ==================== -->
+      <h2 class="section-title">🔐 1. Décision Architecture Auth</h2>
+      
+      <div class="warning-box">
+        <strong>⚠️ Problème identifié :</strong> Le PRD mentionne Supabase Auth + table User avec password_hash. 
+        Ces deux approches sont incompatibles. Il faut trancher.
+      </div>
+      
+      <h3 class="subsection">Options analysées</h3>
+      
+      <table>
+        <thead>
+          <tr>
+            <th style="width:15%">Option</th>
+            <th style="width:35%">Description</th>
+            <th style="width:25%">Avantages</th>
+            <th style="width:25%">Inconvénients</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>A — Supabase Auth</strong></td>
+            <td>Supabase gère email, password, confirmation, sessions. Table <code>profiles</code> liée à <code>auth.users</code>.</td>
+            <td>✓ Confirmation email native<br>✓ JWT + refresh tokens<br>✓ RLS avec <code>auth.uid()</code><br>✓ Moins de code</td>
+            <td>✗ Dépendance Supabase<br>✗ Moins de contrôle</td>
+          </tr>
+          <tr>
+            <td><strong>B — Auth Custom</strong></td>
+            <td>NestJS gère tout : bcrypt, JWT, confirmation email, reset.</td>
+            <td>✓ Contrôle total<br>✓ Portabilité</td>
+            <td>✗ Plus de code<br>✗ Sécurité à gérer<br>✗ Rate limiting manual</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="decision-box">
+        <h3>✅ DÉCISION : Option A — Supabase Auth</h3>
+        <ul>
+          <li><strong>Supabase Auth</strong> est la source de vérité pour l'authentification</li>
+          <li>La table <code>auth.users</code> (gérée par Supabase) stocke email, password_hash, confirmed_at</li>
+          <li>Notre table <code>User</code> devient <code>Profile</code> : profil applicatif lié via <code>auth_user_id</code></li>
+          <li>Pas de <code>password_hash</code> dans notre schéma — Supabase le gère</li>
+          <li>Confirmation email via Supabase (magic link ou OTP natif)</li>
+          <li>JWT fournis par Supabase, validés côté NestJS via <code>@supabase/supabase-js</code></li>
+        </ul>
+      </div>
+      
+      <h3 class="subsection">Implications techniques</h3>
+      
+      <div class="info-box">
+        <strong>Conséquences sur le modèle de données :</strong>
+        <ul style="margin-left:20px;margin-top:8px">
+          <li><code>User</code> → renommé <code>Profile</code></li>
+          <li>Champ <code>auth_user_id: UUID</code> (FK vers <code>auth.users.id</code>)</li>
+          <li>Suppression de <code>password_hash</code>, <code>email_verified</code></li>
+          <li><code>email</code> dédupliqué depuis <code>auth.users</code> pour convenience (dénormalisation acceptable)</li>
+        </ul>
+      </div>
+      
+      <!-- ==================== SECTION 2: ERD ==================== -->
+      <h2 class="section-title">📊 2. ERD PostgreSQL — Modèle MVP</h2>
+      
+      <div class="info-box">
+        <strong>8 tables MVP</strong> (conformément au Scope Freeze) + 1 table Supabase gérée (<code>auth.users</code>)
+      </div>
+      
+      <div class="diagram-container">
+        <div class="diagram-title">Entity Relationship Diagram — FamilyRoots MVP</div>
+        <pre class="mermaid">
+erDiagram
+    %% Supabase managed
+    AUTH_USERS {
+        uuid id PK
+        string email UK
+        string encrypted_password
+        timestamp confirmed_at
+        timestamp created_at
+    }
+    
+    %% Application tables
+    PROFILE {
+        uuid id PK
+        uuid auth_user_id FK UK
+        string email
+        string first_name
+        string last_name
+        string avatar_url
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    FAMILY {
+        uuid id PK
+        string name
+        string code UK
+        enum tier
+        uuid created_by FK
+        timestamp created_at
+    }
+    
+    USER_FAMILY {
+        uuid id PK
+        uuid profile_id FK
+        uuid family_id FK
+        enum role
+        timestamp joined_at
+    }
+    
+    MEMBER {
+        uuid id PK
+        uuid family_id FK
+        uuid linked_profile_id FK
+        string first_name
+        string last_name
+        date birth_date
+        date death_date
+        enum gender
+        string photo_url
+        text bio
+        string birth_place
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    RELATIONSHIP {
+        uuid id PK
+        uuid member_id FK
+        uuid related_member_id FK
+        enum type
+        timestamp created_at
+    }
+    
+    EVENT {
+        uuid id PK
+        uuid family_id FK
+        uuid member_id FK
+        enum type
+        date event_date
+        int reminder_days
+        timestamp created_at
+    }
+    
+    INVITATION {
+        uuid id PK
+        uuid family_id FK
+        string code UK
+        uuid created_by FK
+        timestamp expires_at
+        uuid used_by FK
+        timestamp used_at
+        timestamp created_at
+    }
+    
+    NOTIFICATION {
+        uuid id PK
+        uuid profile_id FK
+        enum type
+        string title
+        text content
+        jsonb metadata
+        timestamp read_at
+        timestamp created_at
+    }
+    
+    %% Relations
+    AUTH_USERS ||--o| PROFILE : "has"
+    PROFILE ||--o{ USER_FAMILY : "belongs to"
+    FAMILY ||--o{ USER_FAMILY : "has"
+    PROFILE ||--o{ FAMILY : "creates"
+    FAMILY ||--o{ MEMBER : "contains"
+    PROFILE ||--o| MEMBER : "linked to"
+    MEMBER ||--o{ RELATIONSHIP : "has"
+    MEMBER ||--o{ RELATIONSHIP : "related to"
+    FAMILY ||--o{ EVENT : "has"
+    MEMBER ||--o{ EVENT : "triggers"
+    FAMILY ||--o{ INVITATION : "generates"
+    PROFILE ||--o{ INVITATION : "creates"
+    PROFILE ||--o| INVITATION : "uses"
+    PROFILE ||--o{ NOTIFICATION : "receives"
+        </pre>
+      </div>
+      
+      <!-- ==================== SECTION 3: TABLES DÉTAILLÉES ==================== -->
+      <h2 class="section-title">📋 3. Spécification des Tables</h2>
+      
+      <h3 class="subsection">3.1 Profile (ex-User)</h3>
+      <table>
+        <thead>
+          <tr><th>Colonne</th><th>Type</th><th>Contraintes</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-pk">id</td><td class="col-type">UUID</td><td>PK, DEFAULT gen_random_uuid()</td><td>Identifiant unique</td></tr>
+          <tr><td class="col-fk">auth_user_id</td><td class="col-type">UUID</td><td>FK → auth.users(id), UNIQUE, NOT NULL</td><td>Lien vers Supabase Auth</td></tr>
+          <tr><td>email</td><td class="col-type">VARCHAR(255)</td><td>NOT NULL</td><td>Email (dénormalisé depuis auth.users)</td></tr>
+          <tr><td>first_name</td><td class="col-type">VARCHAR(100)</td><td>NOT NULL</td><td>Prénom</td></tr>
+          <tr><td>last_name</td><td class="col-type">VARCHAR(100)</td><td>NOT NULL</td><td>Nom de famille</td></tr>
+          <tr><td>avatar_url</td><td class="col-type">TEXT</td><td>NULLABLE</td><td>URL photo de profil (Supabase Storage)</td></tr>
+          <tr><td>created_at</td><td class="col-type">TIMESTAMPTZ</td><td>DEFAULT NOW()</td><td>Date création</td></tr>
+          <tr><td>updated_at</td><td class="col-type">TIMESTAMPTZ</td><td>DEFAULT NOW()</td><td>Date mise à jour</td></tr>
+        </tbody>
+      </table>
+      
+      <h3 class="subsection">3.2 Family</h3>
+      <table>
+        <thead>
+          <tr><th>Colonne</th><th>Type</th><th>Contraintes</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-pk">id</td><td class="col-type">UUID</td><td>PK</td><td>Identifiant unique</td></tr>
+          <tr><td>name</td><td class="col-type">VARCHAR(100)</td><td>NOT NULL</td><td>Nom de la famille</td></tr>
+          <tr><td>code</td><td class="col-type">VARCHAR(12)</td><td>UNIQUE, NOT NULL</td><td>Code invitation (FAM-XXXXXX)</td></tr>
+          <tr><td>tier</td><td class="col-type">ENUM</td><td>DEFAULT 'FREE'</td><td>FREE | FAMILLE | FAMILLE_PLUS</td></tr>
+          <tr><td class="col-fk">created_by</td><td class="col-type">UUID</td><td>FK → profile(id), NOT NULL</td><td>Admin fondateur</td></tr>
+          <tr><td>created_at</td><td class="col-type">TIMESTAMPTZ</td><td>DEFAULT NOW()</td><td>Date création</td></tr>
+        </tbody>
+      </table>
+      
+      <h3 class="subsection">3.3 UserFamily (table pivot)</h3>
+      <table>
+        <thead>
+          <tr><th>Colonne</th><th>Type</th><th>Contraintes</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-pk">id</td><td class="col-type">UUID</td><td>PK</td><td>Identifiant unique</td></tr>
+          <tr><td class="col-fk">profile_id</td><td class="col-type">UUID</td><td>FK → profile(id), NOT NULL</td><td>Utilisateur</td></tr>
+          <tr><td class="col-fk">family_id</td><td class="col-type">UUID</td><td>FK → family(id), NOT NULL</td><td>Famille</td></tr>
+          <tr><td>role</td><td class="col-type">ENUM</td><td>NOT NULL</td><td>ADMIN | MEMBER</td></tr>
+          <tr><td>joined_at</td><td class="col-type">TIMESTAMPTZ</td><td>DEFAULT NOW()</td><td>Date d'adhésion</td></tr>
+          <tr><td colspan="4" style="font-size:11px;color:var(--terre)"><em>UNIQUE(profile_id, family_id) — un user ne peut appartenir qu'une fois à une famille</em></td></tr>
+        </tbody>
+      </table>
+      
+      <div class="warning-box">
+        <strong>Note MVP :</strong> Le Scope Freeze limite à 1 famille par user en MVP. La table UserFamily permet déjà le multi-familles (V1.5) sans migration.
+      </div>
+      
+      <h3 class="subsection">3.4 Member</h3>
+      <table>
+        <thead>
+          <tr><th>Colonne</th><th>Type</th><th>Contraintes</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-pk">id</td><td class="col-type">UUID</td><td>PK</td><td>Identifiant unique</td></tr>
+          <tr><td class="col-fk">family_id</td><td class="col-type">UUID</td><td>FK → family(id), NOT NULL</td><td>Famille d'appartenance</td></tr>
+          <tr><td class="col-fk">linked_profile_id</td><td class="col-type">UUID</td><td>FK → profile(id), NULLABLE</td><td>User lié (si membre a un compte)</td></tr>
+          <tr><td>first_name</td><td class="col-type">VARCHAR(100)</td><td>NOT NULL</td><td>Prénom</td></tr>
+          <tr><td>last_name</td><td class="col-type">VARCHAR(100)</td><td>NOT NULL</td><td>Nom</td></tr>
+          <tr><td>birth_date</td><td class="col-type">DATE</td><td>NULLABLE</td><td>Date de naissance</td></tr>
+          <tr><td>death_date</td><td class="col-type">DATE</td><td>NULLABLE</td><td>Date de décès (si applicable)</td></tr>
+          <tr><td>gender</td><td class="col-type">ENUM</td><td>NULLABLE</td><td>MALE | FEMALE | OTHER</td></tr>
+          <tr><td>photo_url</td><td class="col-type">TEXT</td><td>NULLABLE</td><td>Photo du membre</td></tr>
+          <tr><td>bio</td><td class="col-type">TEXT</td><td>NULLABLE</td><td>Biographie courte</td></tr>
+          <tr><td>birth_place</td><td class="col-type">VARCHAR(200)</td><td>NULLABLE</td><td>Lieu de naissance</td></tr>
+          <tr><td>created_at</td><td class="col-type">TIMESTAMPTZ</td><td>DEFAULT NOW()</td><td>Date création</td></tr>
+          <tr><td>updated_at</td><td class="col-type">TIMESTAMPTZ</td><td>DEFAULT NOW()</td><td>Date mise à jour</td></tr>
+        </tbody>
+      </table>
+      
+      <h3 class="subsection">3.5 Relationship</h3>
+      <table>
+        <thead>
+          <tr><th>Colonne</th><th>Type</th><th>Contraintes</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-pk">id</td><td class="col-type">UUID</td><td>PK</td><td>Identifiant unique</td></tr>
+          <tr><td class="col-fk">member_id</td><td class="col-type">UUID</td><td>FK → member(id), NOT NULL</td><td>Membre source</td></tr>
+          <tr><td class="col-fk">related_member_id</td><td class="col-type">UUID</td><td>FK → member(id), NOT NULL</td><td>Membre cible</td></tr>
+          <tr><td>type</td><td class="col-type">ENUM</td><td>NOT NULL</td><td>PARENT | CHILD | SPOUSE</td></tr>
+          <tr><td>created_at</td><td class="col-type">TIMESTAMPTZ</td><td>DEFAULT NOW()</td><td>Date création</td></tr>
+          <tr><td colspan="4" style="font-size:11px;color:var(--terre)"><em>CHECK(member_id != related_member_id) — pas d'auto-relation</em></td></tr>
+        </tbody>
+      </table>
+      
+      <div class="info-box">
+        <strong>Logique des relations :</strong>
+        <ul style="margin-left:20px;margin-top:8px">
+          <li><code>PARENT</code> : member_id est parent de related_member_id</li>
+          <li><code>CHILD</code> : member_id est enfant de related_member_id (inverse de PARENT)</li>
+          <li><code>SPOUSE</code> : relation bidirectionnelle (2 entrées créées)</li>
+          <li>Les relations SIBLING sont calculées dynamiquement (même parents)</li>
+        </ul>
+      </div>
+      
+      <h3 class="subsection">3.6 Event</h3>
+      <table>
+        <thead>
+          <tr><th>Colonne</th><th>Type</th><th>Contraintes</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-pk">id</td><td class="col-type">UUID</td><td>PK</td><td>Identifiant unique</td></tr>
+          <tr><td class="col-fk">family_id</td><td class="col-type">UUID</td><td>FK → family(id), NOT NULL</td><td>Famille</td></tr>
+          <tr><td class="col-fk">member_id</td><td class="col-type">UUID</td><td>FK → member(id), NULLABLE</td><td>Membre concerné (si applicable)</td></tr>
+          <tr><td>type</td><td class="col-type">ENUM</td><td>NOT NULL</td><td>BIRTHDAY | WEDDING | DEATH | CUSTOM</td></tr>
+          <tr><td>event_date</td><td class="col-type">DATE</td><td>NOT NULL</td><td>Date de l'événement</td></tr>
+          <tr><td>reminder_days</td><td class="col-type">INT[]</td><td>DEFAULT '{7,1,0}'</td><td>Jours de rappel avant (J-7, J-1, J)</td></tr>
+          <tr><td>created_at</td><td class="col-type">TIMESTAMPTZ</td><td>DEFAULT NOW()</td><td>Date création</td></tr>
+        </tbody>
+      </table>
+      
+      <h3 class="subsection">3.7 Invitation</h3>
+      <table>
+        <thead>
+          <tr><th>Colonne</th><th>Type</th><th>Contraintes</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-pk">id</td><td class="col-type">UUID</td><td>PK</td><td>Identifiant unique</td></tr>
+          <tr><td class="col-fk">family_id</td><td class="col-type">UUID</td><td>FK → family(id), NOT NULL</td><td>Famille</td></tr>
+          <tr><td>code</td><td class="col-type">VARCHAR(12)</td><td>UNIQUE, NOT NULL</td><td>Code unique (FAM-XXXXXX)</td></tr>
+          <tr><td class="col-fk">created_by</td><td class="col-type">UUID</td><td>FK → profile(id), NOT NULL</td><td>Créateur</td></tr>
+          <tr><td>expires_at</td><td class="col-type">TIMESTAMPTZ</td><td>NOT NULL</td><td>Expiration (défaut: +7 jours)</td></tr>
+          <tr><td class="col-fk">used_by</td><td class="col-type">UUID</td><td>FK → profile(id), NULLABLE</td><td>Utilisateur ayant utilisé le code</td></tr>
+          <tr><td>used_at</td><td class="col-type">TIMESTAMPTZ</td><td>NULLABLE</td><td>Date d'utilisation</td></tr>
+          <tr><td>created_at</td><td class="col-type">TIMESTAMPTZ</td><td>DEFAULT NOW()</td><td>Date création</td></tr>
+        </tbody>
+      </table>
+      
+      <h3 class="subsection">3.8 Notification</h3>
+      <table>
+        <thead>
+          <tr><th>Colonne</th><th>Type</th><th>Contraintes</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-pk">id</td><td class="col-type">UUID</td><td>PK</td><td>Identifiant unique</td></tr>
+          <tr><td class="col-fk">profile_id</td><td class="col-type">UUID</td><td>FK → profile(id), NOT NULL</td><td>Destinataire</td></tr>
+          <tr><td>type</td><td class="col-type">ENUM</td><td>NOT NULL</td><td>BIRTHDAY | WEDDING | MEMBER_ADDED | INVITATION</td></tr>
+          <tr><td>title</td><td class="col-type">VARCHAR(200)</td><td>NOT NULL</td><td>Titre de la notification</td></tr>
+          <tr><td>content</td><td class="col-type">TEXT</td><td>NULLABLE</td><td>Contenu détaillé</td></tr>
+          <tr><td>metadata</td><td class="col-type">JSONB</td><td>NULLABLE</td><td>Données additionnelles (member_id, event_id, etc.)</td></tr>
+          <tr><td>read_at</td><td class="col-type">TIMESTAMPTZ</td><td>NULLABLE</td><td>Date de lecture (NULL = non lue)</td></tr>
+          <tr><td>created_at</td><td class="col-type">TIMESTAMPTZ</td><td>DEFAULT NOW()</td><td>Date création</td></tr>
+        </tbody>
+      </table>
+      
+      <!-- ==================== SECTION 4: ENUMS ==================== -->
+      <h2 class="section-title">🏷️ 4. Types ENUM PostgreSQL</h2>
+      
+      <pre>
+<span class="comment">-- Tiers d'abonnement</span>
+<span class="keyword">CREATE TYPE</span> <span class="type">family_tier</span> <span class="keyword">AS ENUM</span> (<span class="string">'FREE'</span>, <span class="string">'FAMILLE'</span>, <span class="string">'FAMILLE_PLUS'</span>);
+
+<span class="comment">-- Rôles utilisateur dans une famille</span>
+<span class="keyword">CREATE TYPE</span> <span class="type">user_role</span> <span class="keyword">AS ENUM</span> (<span class="string">'ADMIN'</span>, <span class="string">'MEMBER'</span>);
+
+<span class="comment">-- Genre</span>
+<span class="keyword">CREATE TYPE</span> <span class="type">gender</span> <span class="keyword">AS ENUM</span> (<span class="string">'MALE'</span>, <span class="string">'FEMALE'</span>, <span class="string">'OTHER'</span>);
+
+<span class="comment">-- Types de relation familiale</span>
+<span class="keyword">CREATE TYPE</span> <span class="type">relationship_type</span> <span class="keyword">AS ENUM</span> (<span class="string">'PARENT'</span>, <span class="string">'CHILD'</span>, <span class="string">'SPOUSE'</span>);
+
+<span class="comment">-- Types d'événement</span>
+<span class="keyword">CREATE TYPE</span> <span class="type">event_type</span> <span class="keyword">AS ENUM</span> (<span class="string">'BIRTHDAY'</span>, <span class="string">'WEDDING'</span>, <span class="string">'DEATH'</span>, <span class="string">'CUSTOM'</span>);
+
+<span class="comment">-- Types de notification</span>
+<span class="keyword">CREATE TYPE</span> <span class="type">notification_type</span> <span class="keyword">AS ENUM</span> (
+    <span class="string">'BIRTHDAY'</span>, <span class="string">'WEDDING'</span>, <span class="string">'MEMBER_ADDED'</span>, <span class="string">'INVITATION_RECEIVED'</span>, <span class="string">'FAMILY_JOINED'</span>
+);
+      </pre>
+      
+      <!-- ==================== SECTION 5: FLUX BACKEND ==================== -->
+      <h2 class="section-title">⚡ 5. Flux Backend — Transactions & Règles d'Écriture</h2>
+      
+      <h3 class="subsection">5.1 Inscription + Création Famille (Flux Admin Fondateur)</h3>
+      
+      <div class="flow-step">
+        <div class="flow-number">1</div>
+        <div class="flow-content">
+          <strong>Supabase Auth : signUp()</strong>
+          <p>Email + password → Supabase crée <code>auth.users</code> row + envoie email confirmation</p>
+          <code>supabase.auth.signUp({ email, password })</code>
+        </div>
+      </div>
+      
+      <div class="flow-step">
+        <div class="flow-number">2</div>
+        <div class="flow-content">
+          <strong>Trigger DB : on_auth_user_created</strong>
+          <p>Supabase trigger crée automatiquement une row <code>Profile</code> liée</p>
+          <code>INSERT INTO profile (auth_user_id, email, first_name, last_name) VALUES (...)</code>
+        </div>
+      </div>
+      
+      <div class="flow-step">
+        <div class="flow-number">3</div>
+        <div class="flow-content">
+          <strong>User confirme email</strong>
+          <p>Clic sur lien ou saisie OTP → <code>auth.users.confirmed_at</code> rempli</p>
+        </div>
+      </div>
+      
+      <div class="flow-step">
+        <div class="flow-number">4</div>
+        <div class="flow-content">
+          <strong>API : createFamily()</strong>
+          <p>Transaction atomique :</p>
+          <code>
+            BEGIN;<br>
+            &nbsp;&nbsp;INSERT INTO family (name, code, created_by) → family_id<br>
+            &nbsp;&nbsp;INSERT INTO user_family (profile_id, family_id, role='ADMIN')<br>
+            &nbsp;&nbsp;INSERT INTO member (family_id, linked_profile_id, first_name, last_name) → "Moi"<br>
+            &nbsp;&nbsp;INSERT INTO event (family_id, member_id, type='BIRTHDAY', event_date) si birth_date<br>
+            COMMIT;
+          </code>
+        </div>
+      </div>
+      
+      <h3 class="subsection">5.2 Rejoindre une Famille (Flux Invité)</h3>
+      
+      <div class="flow-step">
+        <div class="flow-number">1</div>
+        <div class="flow-content">
+          <strong>API : validateInvitationCode(code)</strong>
+          <p>Vérifie : code existe, non utilisé, non expiré</p>
+          <code>SELECT * FROM invitation WHERE code = $1 AND used_by IS NULL AND expires_at > NOW()</code>
+        </div>
+      </div>
+      
+      <div class="flow-step">
+        <div class="flow-number">2</div>
+        <div class="flow-content">
+          <strong>API : joinFamily()</strong>
+          <p>Transaction atomique :</p>
+          <code>
+            BEGIN;<br>
+            &nbsp;&nbsp;UPDATE invitation SET used_by = $profile_id, used_at = NOW()<br>
+            &nbsp;&nbsp;INSERT INTO user_family (profile_id, family_id, role='MEMBER')<br>
+            &nbsp;&nbsp;INSERT INTO member (family_id, linked_profile_id, ...) → "Moi"<br>
+            &nbsp;&nbsp;INSERT INTO notification (profile_id = admin, type='FAMILY_JOINED', ...)<br>
+            COMMIT;
+          </code>
+        </div>
+      </div>
+      
+      <h3 class="subsection">5.3 Ajouter un Membre à l'Arbre</h3>
+      
+      <div class="flow-step">
+        <div class="flow-number">1</div>
+        <div class="flow-content">
+          <strong>API : addMember()</strong>
+          <p>Vérification : user a accès à cette famille (via user_family)</p>
+        </div>
+      </div>
+      
+      <div class="flow-step">
+        <div class="flow-number">2</div>
+        <div class="flow-content">
+          <strong>Transaction</strong>
+          <code>
+            BEGIN;<br>
+            &nbsp;&nbsp;INSERT INTO member (...) → new_member_id<br>
+            &nbsp;&nbsp;INSERT INTO relationship (member_id, related_member_id, type)<br>
+            &nbsp;&nbsp;IF type = 'SPOUSE' THEN INSERT relationship inverse<br>
+            &nbsp;&nbsp;IF birth_date THEN INSERT INTO event (type='BIRTHDAY', ...)<br>
+            &nbsp;&nbsp;INSERT INTO notification pour tous les user_family de cette famille<br>
+            COMMIT;
+          </code>
+        </div>
+      </div>
+      
+      <h3 class="subsection">5.4 Génération Notifications Anniversaire (CRON)</h3>
+      
+      <div class="flow-step">
+        <div class="flow-number">1</div>
+        <div class="flow-content">
+          <strong>Job quotidien (Supabase Edge Function ou NestJS CRON)</strong>
+          <code>
+            SELECT e.*, m.first_name, m.last_name, m.photo_url, f.id as family_id<br>
+            FROM event e<br>
+            JOIN member m ON e.member_id = m.id<br>
+            JOIN family f ON e.family_id = f.id<br>
+            WHERE e.type = 'BIRTHDAY'<br>
+            &nbsp;&nbsp;AND EXTRACT(MONTH FROM e.event_date) = EXTRACT(MONTH FROM CURRENT_DATE)<br>
+            &nbsp;&nbsp;AND EXTRACT(DAY FROM e.event_date) = EXTRACT(DAY FROM CURRENT_DATE + INTERVAL '7 days')<br>
+            -- Répéter pour J-1, J
+          </code>
+        </div>
+      </div>
+      
+      <div class="flow-step">
+        <div class="flow-number">2</div>
+        <div class="flow-content">
+          <strong>Pour chaque événement trouvé</strong>
+          <code>
+            FOR EACH profile IN user_family WHERE family_id = event.family_id:<br>
+            &nbsp;&nbsp;INSERT INTO notification (profile_id, type='BIRTHDAY', title, content, metadata)<br>
+            &nbsp;&nbsp;CALL push_notification_service(profile.fcm_token, ...)<br>
+          </code>
+        </div>
+      </div>
+      
+      <!-- ==================== SECTION 6: INDEX ==================== -->
+      <h2 class="section-title">🔍 6. Index Recommandés</h2>
+      
+      <pre>
+<span class="comment">-- Performance queries fréquentes</span>
+<span class="keyword">CREATE INDEX</span> idx_profile_auth_user <span class="keyword">ON</span> profile(auth_user_id);
+<span class="keyword">CREATE INDEX</span> idx_user_family_profile <span class="keyword">ON</span> user_family(profile_id);
+<span class="keyword">CREATE INDEX</span> idx_user_family_family <span class="keyword">ON</span> user_family(family_id);
+<span class="keyword">CREATE INDEX</span> idx_member_family <span class="keyword">ON</span> member(family_id);
+<span class="keyword">CREATE INDEX</span> idx_member_linked_profile <span class="keyword">ON</span> member(linked_profile_id);
+<span class="keyword">CREATE INDEX</span> idx_relationship_member <span class="keyword">ON</span> relationship(member_id);
+<span class="keyword">CREATE INDEX</span> idx_relationship_related <span class="keyword">ON</span> relationship(related_member_id);
+<span class="keyword">CREATE INDEX</span> idx_event_family <span class="keyword">ON</span> event(family_id);
+<span class="keyword">CREATE INDEX</span> idx_event_date <span class="keyword">ON</span> event(event_date);
+<span class="keyword">CREATE INDEX</span> idx_notification_profile <span class="keyword">ON</span> notification(profile_id);
+<span class="keyword">CREATE INDEX</span> idx_notification_unread <span class="keyword">ON</span> notification(profile_id) <span class="keyword">WHERE</span> read_at <span class="keyword">IS NULL</span>;
+<span class="keyword">CREATE INDEX</span> idx_invitation_code <span class="keyword">ON</span> invitation(code);
+<span class="keyword">CREATE INDEX</span> idx_family_code <span class="keyword">ON</span> family(code);
+      </pre>
+      
+      <!-- ==================== SECTION 7: RLS ==================== -->
+      <h2 class="section-title">🔒 7. Row Level Security (RLS)</h2>
+      
+      <div class="info-box">
+        Supabase RLS permet de sécuriser les données au niveau PostgreSQL. Chaque table a des policies basées sur <code>auth.uid()</code>.
+      </div>
+      
+      <pre>
+<span class="comment">-- Activer RLS sur toutes les tables</span>
+<span class="keyword">ALTER TABLE</span> profile <span class="keyword">ENABLE ROW LEVEL SECURITY</span>;
+<span class="keyword">ALTER TABLE</span> family <span class="keyword">ENABLE ROW LEVEL SECURITY</span>;
+<span class="keyword">ALTER TABLE</span> user_family <span class="keyword">ENABLE ROW LEVEL SECURITY</span>;
+<span class="keyword">ALTER TABLE</span> member <span class="keyword">ENABLE ROW LEVEL SECURITY</span>;
+<span class="comment">-- etc.</span>
+
+<span class="comment">-- Profile : user ne voit que son propre profil</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can view own profile"</span> <span class="keyword">ON</span> profile
+    <span class="keyword">FOR SELECT USING</span> (auth_user_id = auth.uid());
+
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can update own profile"</span> <span class="keyword">ON</span> profile
+    <span class="keyword">FOR UPDATE USING</span> (auth_user_id = auth.uid());
+
+<span class="comment">-- Family : user voit les familles dont il est membre</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can view their families"</span> <span class="keyword">ON</span> family
+    <span class="keyword">FOR SELECT USING</span> (
+        id <span class="keyword">IN</span> (
+            <span class="keyword">SELECT</span> family_id <span class="keyword">FROM</span> user_family uf
+            <span class="keyword">JOIN</span> profile p <span class="keyword">ON</span> uf.profile_id = p.id
+            <span class="keyword">WHERE</span> p.auth_user_id = auth.uid()
+        )
+    );
+
+<span class="comment">-- Member : user voit les membres de ses familles</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can view family members"</span> <span class="keyword">ON</span> member
+    <span class="keyword">FOR SELECT USING</span> (
+        family_id <span class="keyword">IN</span> (
+            <span class="keyword">SELECT</span> family_id <span class="keyword">FROM</span> user_family uf
+            <span class="keyword">JOIN</span> profile p <span class="keyword">ON</span> uf.profile_id = p.id
+            <span class="keyword">WHERE</span> p.auth_user_id = auth.uid()
+        )
+    );
+      </pre>
+      
+      <!-- ==================== FOOTER ==================== -->
+      <div style="margin-top:30px;padding-top:20px;border-top:2px solid var(--sable)">
+        <h3 style="color:var(--foret);font-size:14px;margin-bottom:12px">📋 Prochaines étapes</h3>
+        <ol style="font-size:13px;margin-left:20px">
+          <li><strong>Prisma Schema</strong> — Traduire cet ERD en schema.prisma</li>
+          <li><strong>Backlog priorisé</strong> — User stories techniques basées sur ces flux</li>
+          <li><strong>API Spec GraphQL</strong> — Types et resolvers basés sur ce modèle</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="footer">
+      FamilyRoots — Architecture Auth + ERD MVP — Paquet 2 — Steve-Landry KOUOKAM NONO — HETIC Mastère Data & IA
+    </div>
+  </div>
+  
+  <script>
+    mermaid.initialize({ 
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#E8F5E9',
+        primaryTextColor: '#2D5016',
+        primaryBorderColor: '#4A7023',
+        lineColor: '#8B4513',
+        secondaryColor: '#FFF8E7',
+        tertiaryColor: '#F5F5DC'
+      }
+    });
+  </script>
+</body>
+</html>

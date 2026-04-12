@@ -1,0 +1,226 @@
+// =============================================================================
+// FamilyRoots — Prisma Schema MVP
+// =============================================================================
+// Version: 1.0
+// Date: 11 Avril 2026
+// Auth: Supabase Auth (table auth.users gérée par Supabase)
+// Database: PostgreSQL (Supabase)
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum FamilyTier {
+  FREE
+  FAMILLE
+  FAMILLE_PLUS
+}
+
+enum UserRole {
+  ADMIN
+  MEMBER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum RelationshipType {
+  PARENT
+  CHILD
+  SPOUSE
+}
+
+enum EventType {
+  BIRTHDAY
+  WEDDING
+  DEATH
+  CUSTOM
+}
+
+enum NotificationType {
+  BIRTHDAY
+  WEDDING
+  MEMBER_ADDED
+  INVITATION_RECEIVED
+  FAMILY_JOINED
+}
+
+// =============================================================================
+// MODELS
+// =============================================================================
+
+/// Profil applicatif lié à Supabase Auth
+/// Note: auth.users est géré par Supabase, cette table est notre extension
+model Profile {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  authUserId   String   @unique @map("auth_user_id") @db.Uuid
+  email        String   @db.VarChar(255)
+  firstName    String   @map("first_name") @db.VarChar(100)
+  lastName     String   @map("last_name") @db.VarChar(100)
+  avatarUrl    String?  @map("avatar_url") @db.Text
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  // Relations
+  familiesCreated   Family[]       @relation("FamilyCreator")
+  userFamilies      UserFamily[]
+  linkedMember      Member?        @relation("LinkedProfile")
+  invitationsCreated Invitation[]  @relation("InvitationCreator")
+  invitationsUsed   Invitation[]   @relation("InvitationUser")
+  notifications     Notification[]
+
+  @@map("profile")
+}
+
+/// Famille - groupe familial avec code d'invitation
+model Family {
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String     @db.VarChar(100)
+  code      String     @unique @db.VarChar(12)
+  tier      FamilyTier @default(FREE)
+  createdBy String     @map("created_by") @db.Uuid
+  createdAt DateTime   @default(now()) @map("created_at") @db.Timestamptz
+
+  // Relations
+  creator     Profile      @relation("FamilyCreator", fields: [createdBy], references: [id])
+  userFamilies UserFamily[]
+  members     Member[]
+  events      Event[]
+  invitations Invitation[]
+
+  @@map("family")
+}
+
+/// Table pivot User <-> Family avec rôle
+model UserFamily {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  profileId String   @map("profile_id") @db.Uuid
+  familyId  String   @map("family_id") @db.Uuid
+  role      UserRole
+  joinedAt  DateTime @default(now()) @map("joined_at") @db.Timestamptz
+
+  // Relations
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  family  Family  @relation(fields: [familyId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, familyId])
+  @@index([profileId])
+  @@index([familyId])
+  @@map("user_family")
+}
+
+/// Membre de l'arbre généalogique
+model Member {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  familyId        String    @map("family_id") @db.Uuid
+  linkedProfileId String?   @unique @map("linked_profile_id") @db.Uuid
+  firstName       String    @map("first_name") @db.VarChar(100)
+  lastName        String    @map("last_name") @db.VarChar(100)
+  birthDate       DateTime? @map("birth_date") @db.Date
+  deathDate       DateTime? @map("death_date") @db.Date
+  gender          Gender?
+  photoUrl        String?   @map("photo_url") @db.Text
+  bio             String?   @db.Text
+  birthPlace      String?   @map("birth_place") @db.VarChar(200)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  // Relations
+  family           Family         @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  linkedProfile    Profile?       @relation("LinkedProfile", fields: [linkedProfileId], references: [id], onDelete: SetNull)
+  relationshipsFrom Relationship[] @relation("RelationshipFrom")
+  relationshipsTo   Relationship[] @relation("RelationshipTo")
+  events           Event[]
+
+  @@index([familyId])
+  @@index([linkedProfileId])
+  @@map("member")
+}
+
+/// Relation entre deux membres (parent, enfant, conjoint)
+model Relationship {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  memberId        String           @map("member_id") @db.Uuid
+  relatedMemberId String           @map("related_member_id") @db.Uuid
+  type            RelationshipType
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz
+
+  // Relations
+  member        Member @relation("RelationshipFrom", fields: [memberId], references: [id], onDelete: Cascade)
+  relatedMember Member @relation("RelationshipTo", fields: [relatedMemberId], references: [id], onDelete: Cascade)
+
+  @@index([memberId])
+  @@index([relatedMemberId])
+  @@map("relationship")
+}
+
+/// Événement familial (anniversaire, mariage, décès)
+model Event {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  familyId     String    @map("family_id") @db.Uuid
+  memberId     String?   @map("member_id") @db.Uuid
+  type         EventType
+  eventDate    DateTime  @map("event_date") @db.Date
+  reminderDays Int[]     @default([7, 1, 0]) @map("reminder_days")
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  // Relations
+  family Family  @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  member Member? @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([familyId])
+  @@index([eventDate])
+  @@map("event")
+}
+
+/// Invitation à rejoindre une famille
+model Invitation {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  familyId  String    @map("family_id") @db.Uuid
+  code      String    @unique @db.VarChar(12)
+  createdBy String    @map("created_by") @db.Uuid
+  expiresAt DateTime  @map("expires_at") @db.Timestamptz
+  usedBy    String?   @map("used_by") @db.Uuid
+  usedAt    DateTime? @map("used_at") @db.Timestamptz
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  // Relations
+  family  Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  creator Profile  @relation("InvitationCreator", fields: [createdBy], references: [id])
+  user    Profile? @relation("InvitationUser", fields: [usedBy], references: [id])
+
+  @@index([code])
+  @@map("invitation")
+}
+
+/// Notification push/in-app
+model Notification {
+  id        String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  profileId String           @map("profile_id") @db.Uuid
+  type      NotificationType
+  title     String           @db.VarChar(200)
+  content   String?          @db.Text
+  metadata  Json?            @db.JsonB
+  readAt    DateTime?        @map("read_at") @db.Timestamptz
+  createdAt DateTime         @default(now()) @map("created_at") @db.Timestamptz
+
+  // Relations
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+  @@index([profileId, readAt])
+  @@map("notification")
+}

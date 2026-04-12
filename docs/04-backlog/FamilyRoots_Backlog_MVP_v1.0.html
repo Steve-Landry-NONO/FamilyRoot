@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FamilyRoots - Backlog Priorisé MVP</title>
+  <style>
+    :root {
+      --foret: #2D5016;
+      --feuille: #4A7023;
+      --olive: #6B8E23;
+      --terre: #8B4513;
+      --sable: #D4A574;
+      --ivoire: #FFF8E7;
+      --creme: #F5F5DC;
+      --must: #4CAF50;
+      --should: #FF9800;
+      --could: #2196F3;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--creme); color: var(--terre); line-height: 1.5; }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    
+    .header {
+      background: linear-gradient(135deg, var(--foret) 0%, var(--feuille) 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .header h1 { font-size: 26px; margin-bottom: 8px; }
+    .header p { color: var(--sable); font-size: 14px; }
+    
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .stat-value { font-size: 32px; font-weight: 700; color: var(--foret); }
+    .stat-label { font-size: 11px; color: var(--terre); text-transform: uppercase; }
+    
+    .epic {
+      background: white;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .epic-header {
+      background: var(--foret);
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .epic-title { font-size: 16px; font-weight: 600; }
+    .epic-meta { font-size: 11px; color: var(--sable); }
+    .epic-body { padding: 20px; }
+    
+    .story {
+      border: 1px solid var(--sable);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .story:last-child { margin-bottom: 0; }
+    .story-header {
+      background: var(--ivoire);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--sable);
+    }
+    .story-id { font-weight: 700; color: var(--foret); font-size: 13px; }
+    .story-priority {
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+    }
+    .priority-must { background: var(--must); }
+    .priority-should { background: var(--should); }
+    .priority-could { background: var(--could); }
+    
+    .story-content { padding: 12px 16px; }
+    .story-title { font-size: 13px; font-weight: 600; color: var(--terre); margin-bottom: 8px; }
+    .story-desc { font-size: 12px; color: #666; font-style: italic; margin-bottom: 10px; }
+    
+    .tasks { margin-top: 10px; }
+    .task {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 6px 0;
+      font-size: 11px;
+      border-bottom: 1px dashed var(--sable);
+    }
+    .task:last-child { border-bottom: none; }
+    .task-check { color: var(--must); }
+    .task-text { flex: 1; }
+    .task-estimate {
+      background: var(--creme);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      color: var(--terre);
+    }
+    
+    .ac { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--sable); }
+    .ac-title { font-size: 11px; font-weight: 600; color: var(--foret); margin-bottom: 6px; }
+    .ac-item { font-size: 11px; color: #555; padding: 3px 0; padding-left: 16px; position: relative; }
+    .ac-item::before { content: "☐"; position: absolute; left: 0; color: var(--sable); }
+    
+    .deps {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #FFF3E0;
+      border-radius: 6px;
+      font-size: 10px;
+      color: var(--terre);
+    }
+    .deps strong { color: var(--should); }
+    
+    .sprint-divider {
+      background: var(--feuille);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin: 24px 0;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 11px;
+      color: var(--terre);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📋 Backlog Priorisé MVP</h1>
+      <p>User Stories Techniques — FamilyRoots — Paquet 2</p>
+    </div>
+    
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value">6</div>
+        <div class="stat-label">Epics</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">24</div>
+        <div class="stat-label">User Stories</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">~85</div>
+        <div class="stat-label">Story Points</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">3</div>
+        <div class="stat-label">Sprints (2 sem)</div>
+      </div>
+    </div>
+    
+    <!-- ==================== SPRINT 1 ==================== -->
+    <div class="sprint-divider">
+      <span>🚀 SPRINT 1 — Infrastructure & Auth</span>
+      <span>~30 pts • Semaines 1-2</span>
+    </div>
+    
+    <!-- EPIC: Infrastructure -->
+    <div class="epic">
+      <div class="epic-header">
+        <span class="epic-title">⚙️ EPIC 1: Infrastructure & Setup</span>
+        <span class="epic-meta">4 stories • ~12 pts</span>
+      </div>
+      <div class="epic-body">
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">TECH-001</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Setup projet NestJS + GraphQL</div>
+            <div class="story-desc">En tant que développeur, je veux un projet NestJS configuré avec GraphQL, Prisma et les modules de base.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Init NestJS avec TypeScript strict</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Config GraphQL (Apollo) code-first</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Setup Prisma avec schema MVP</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Config env vars (.env.example)</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Docker Compose dev (postgres local)</span><span class="task-estimate">2h</span></div>
+            </div>
+            <div class="ac">
+              <div class="ac-title">Acceptance Criteria</div>
+              <div class="ac-item">npm run start:dev démarre sans erreur</div>
+              <div class="ac-item">GraphQL Playground accessible sur /graphql</div>
+              <div class="ac-item">Prisma migrate dev fonctionne</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">TECH-002</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Setup Supabase (Auth + DB + Storage)</div>
+            <div class="story-desc">En tant que développeur, je veux Supabase configuré avec Auth, PostgreSQL et Storage.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Créer projet Supabase</span><span class="task-estimate">0.5h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Configurer Auth (email, confirm)</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Appliquer migrations Prisma</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Créer bucket Storage "avatars"</span><span class="task-estimate">0.5h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Trigger on_auth_user_created → Profile</span><span class="task-estimate">2h</span></div>
+            </div>
+            <div class="ac">
+              <div class="ac-title">Acceptance Criteria</div>
+              <div class="ac-item">Auth signup crée user + profile automatiquement</div>
+              <div class="ac-item">Storage policies configurées</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">TECH-003</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Setup Flutter projet mobile</div>
+            <div class="story-desc">En tant que développeur, je veux un projet Flutter configuré avec la stack de state management et navigation.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Init Flutter 3.x avec structure clean archi</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Setup Riverpod + GoRouter</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Config Supabase client</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Setup GraphQL client (graphql_flutter)</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Theme avec charte Nature & Héritage</span><span class="task-estimate">2h</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">TECH-004</span>
+            <span class="story-priority priority-should">SHOULD</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">CI/CD Pipeline basique</div>
+            <div class="story-desc">En tant que développeur, je veux un pipeline CI qui lint et test à chaque push.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">GitHub Actions: lint + test backend</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">GitHub Actions: lint + test Flutter</span><span class="task-estimate">2h</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- EPIC: Auth -->
+    <div class="epic">
+      <div class="epic-header">
+        <span class="epic-title">🔐 EPIC 2: Authentification</span>
+        <span class="epic-meta">5 stories • ~18 pts</span>
+      </div>
+      <div class="epic-body">
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">AUTH-001</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">API: Guard Supabase JWT</div>
+            <div class="story-desc">En tant qu'API, je veux valider les JWT Supabase sur toutes les routes protégées.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Créer SupabaseAuthGuard</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Decorator @CurrentUser()</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Tests unitaires guard</span><span class="task-estimate">1h</span></div>
+            </div>
+            <div class="ac">
+              <div class="ac-title">Acceptance Criteria</div>
+              <div class="ac-item">Requête sans token → 401 Unauthorized</div>
+              <div class="ac-item">Requête avec token invalide → 401</div>
+              <div class="ac-item">Requête avec token valide → accès + user injecté</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">AUTH-002</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Écrans Onboarding</div>
+            <div class="story-desc">En tant qu'utilisateur, je veux voir 3 écrans d'onboarding expliquant l'app.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Splash screen avec logo animé</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">PageView 3 slides onboarding</span><span class="task-estimate">3h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Persistance "onboarding vu" (SharedPrefs)</span><span class="task-estimate">1h</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">AUTH-003</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Inscription + Confirmation email</div>
+            <div class="story-desc">En tant que nouvel utilisateur, je veux créer un compte et confirmer mon email.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Écran inscription (form validation)</span><span class="task-estimate">3h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Appel Supabase signUp()</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Écran confirmation (OTP 4 digits)</span><span class="task-estimate">3h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Appel Supabase verifyOtp()</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Bouton "Renvoyer code" avec cooldown</span><span class="task-estimate">1h</span></div>
+            </div>
+            <div class="ac">
+              <div class="ac-title">Acceptance Criteria</div>
+              <div class="ac-item">Validation email format + password 8 chars min</div>
+              <div class="ac-item">Email de confirmation reçu en < 30s</div>
+              <div class="ac-item">Code valide → navigation vers écran suivant</div>
+              <div class="ac-item">Code invalide → message d'erreur clair</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">AUTH-004</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Connexion</div>
+            <div class="story-desc">En tant qu'utilisateur existant, je veux me connecter avec email/password.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Écran connexion</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Appel Supabase signInWithPassword()</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Gestion erreurs (mauvais credentials)</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Persist session + auto-login</span><span class="task-estimate">2h</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">AUTH-005</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Déconnexion</div>
+            <div class="story-desc">En tant qu'utilisateur, je veux me déconnecter depuis les réglages.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Bouton déconnexion dans Settings</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Appel Supabase signOut() + clear state</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Redirect vers Login</span><span class="task-estimate">0.5h</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ==================== SPRINT 2 ==================== -->
+    <div class="sprint-divider">
+      <span>🌳 SPRINT 2 — Famille & Arbre</span>
+      <span>~30 pts • Semaines 3-4</span>
+    </div>
+    
+    <!-- EPIC: Famille -->
+    <div class="epic">
+      <div class="epic-header">
+        <span class="epic-title">👨‍👩‍👧‍👦 EPIC 3: Gestion Famille</span>
+        <span class="epic-meta">5 stories • ~15 pts</span>
+      </div>
+      <div class="epic-body">
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">FAM-001</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">API: Mutation createFamily</div>
+            <div class="story-desc">En tant qu'API, je veux une mutation pour créer une famille avec l'utilisateur comme admin.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Resolver createFamily</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Service: génération code FAM-XXXXXX</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Transaction: Family + UserFamily + Member "Moi"</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Tests e2e</span><span class="task-estimate">1h</span></div>
+            </div>
+            <div class="ac">
+              <div class="ac-title">Acceptance Criteria</div>
+              <div class="ac-item">Code unique généré (format FAM-XXXXXX)</div>
+              <div class="ac-item">UserFamily créé avec role ADMIN</div>
+              <div class="ac-item">Member "Moi" créé et linked_profile_id rempli</div>
+              <div class="ac-item">Event BIRTHDAY créé si birth_date fournie</div>
+              <div class="ac-item" style="color:var(--should)"><strong>MVP:</strong> Erreur ALREADY_IN_FAMILY si profil déjà dans une famille</div>
+            </div>
+            <div class="deps"><strong>Dépend de:</strong> TECH-001, TECH-002</div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">FAM-002</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Écran "Créer ma famille"</div>
+            <div class="story-desc">En tant que nouvel utilisateur, je veux créer ma famille après inscription.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">UI form: nom famille, rôle, origine</span><span class="task-estimate">3h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Mutation GraphQL createFamily</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Navigation vers Dashboard après succès</span><span class="task-estimate">1h</span></div>
+            </div>
+            <div class="deps"><strong>Dépend de:</strong> AUTH-003, FAM-001</div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">FAM-003</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">API: Query/Mutation Invitations</div>
+            <div class="story-desc">En tant qu'API, je veux gérer les invitations (création, validation, utilisation).</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Mutation createInvitation (format INV-XXXXXXXXXXXX)</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Query validateInvitationCode</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Mutation joinFamily</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Tests: code expiré, code déjà utilisé, profil déjà dans famille</span><span class="task-estimate">1h</span></div>
+            </div>
+            <div class="ac">
+              <div class="ac-title">Acceptance Criteria</div>
+              <div class="ac-item">invitation.code ≠ family.code (INV- vs FAM-)</div>
+              <div class="ac-item">Code expiré → erreur INVITATION_EXPIRED</div>
+              <div class="ac-item">Code déjà utilisé → erreur INVITATION_ALREADY_USED</div>
+              <div class="ac-item" style="color:var(--should)"><strong>MVP:</strong> Erreur ALREADY_IN_FAMILY si profil déjà dans une famille</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">FAM-004</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Écran "Rejoindre famille"</div>
+            <div class="story-desc">En tant qu'utilisateur invité, je veux saisir un code d'invitation pour rejoindre une famille.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">UI form: saisie code INV-XXXXXXXXXXXX</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Validation temps réel (format + API)</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Afficher nom famille si code valide</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Mutation joinFamily + nav Dashboard</span><span class="task-estimate">1h</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">FAM-005</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Écran Invitation (partage)</div>
+            <div class="story-desc">En tant qu'admin, je veux partager le code d'invitation de ma famille.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">UI: affichage code + bouton copier</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Share sheet natif (WhatsApp, SMS, etc.)</span><span class="task-estimate">1h</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- EPIC: Arbre -->
+    <div class="epic">
+      <div class="epic-header">
+        <span class="epic-title">🌳 EPIC 4: Arbre Généalogique</span>
+        <span class="epic-meta">5 stories • ~15 pts</span>
+      </div>
+      <div class="epic-body">
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">TREE-001</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">API: Query getFamilyTree</div>
+            <div class="story-desc">En tant qu'API, je veux retourner l'arbre complet avec membres et relations.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Query getFamilyTree(familyId)</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Type TreeNode avec relations imbriquées</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Optimisation N+1 (DataLoader)</span><span class="task-estimate">2h</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">TREE-002</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Vue Arbre interactive</div>
+            <div class="story-desc">En tant qu'utilisateur, je veux voir mon arbre avec zoom et pan.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Widget arbre avec InteractiveViewer</span><span class="task-estimate">4h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Rendu nœuds (avatar, nom, lien)</span><span class="task-estimate">3h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Lignes de connexion (CustomPainter)</span><span class="task-estimate">3h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Boutons zoom +/-</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Centrage sur "Moi" au chargement</span><span class="task-estimate">1h</span></div>
+            </div>
+            <div class="ac">
+              <div class="ac-title">Acceptance Criteria</div>
+              <div class="ac-item">Arbre scrollable et zoomable (pinch)</div>
+              <div class="ac-item">Tap sur nœud → popup membre</div>
+              <div class="ac-item">Bouton + visible pour ajouter</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">TREE-003</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">API: Mutation addMember</div>
+            <div class="story-desc">En tant qu'API, je veux ajouter un membre avec sa relation.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Mutation addMember(input)</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Création relation bidirectionnelle si SPOUSE</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Création Event BIRTHDAY auto</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Notification à tous les membres famille</span><span class="task-estimate">1h</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">TREE-004</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Écran "Ajouter membre"</div>
+            <div class="story-desc">En tant qu'utilisateur, je veux ajouter un nouveau membre à l'arbre.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Form: prénom, nom, date naissance, genre</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Sélection relation (parent, enfant, conjoint)</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Upload photo optionnel</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Mutation addMember + refresh arbre</span><span class="task-estimate">1h</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">TREE-005</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Popup détail membre</div>
+            <div class="story-desc">En tant qu'utilisateur, je veux voir les infos rapides d'un membre depuis l'arbre.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">BottomSheet avec photo, nom, dates</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Bouton "Voir profil complet"</span><span class="task-estimate">0.5h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Bouton "Modifier" (si autorisé)</span><span class="task-estimate">0.5h</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ==================== SPRINT 3 ==================== -->
+    <div class="sprint-divider">
+      <span>📱 SPRINT 3 — Dashboard & Notifications</span>
+      <span>~25 pts • Semaines 5-6</span>
+    </div>
+    
+    <!-- EPIC: Dashboard -->
+    <div class="epic">
+      <div class="epic-header">
+        <span class="epic-title">🏠 EPIC 5: Dashboard & Profils</span>
+        <span class="epic-meta">5 stories • ~12 pts</span>
+      </div>
+      <div class="epic-body">
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">DASH-001</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">API: Query getDashboard</div>
+            <div class="story-desc">En tant qu'API, je veux retourner les données du dashboard (stats + événements à venir).</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Query getDashboard(familyId)</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Stats: nb membres, générations</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Événements 30 prochains jours</span><span class="task-estimate">1h</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">DASH-002</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Écran Dashboard</div>
+            <div class="story-desc">En tant qu'utilisateur, je veux voir un dashboard avec stats et événements.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Header avec greeting + avatar</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Cards stats (membres, générations)</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Quick actions (ajouter, inviter)</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Liste événements à venir</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Tab bar navigation</span><span class="task-estimate">2h</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">DASH-003</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Écran Mon Profil + Modifier</div>
+            <div class="story-desc">En tant qu'utilisateur, je veux voir et modifier mon profil.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Écran profil (photo, infos, bio)</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Écran édition profil</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Upload photo (Supabase Storage)</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Mutation updateProfile + updateMember</span><span class="task-estimate">1h</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">DASH-004</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Écran Profil Membre</div>
+            <div class="story-desc">En tant qu'utilisateur, je veux voir le profil détaillé d'un autre membre.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Query getMember(id)</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">UI profil membre (similaire à mon profil)</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Afficher lien de parenté avec "Moi"</span><span class="task-estimate">2h</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">DASH-005</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Écran Réglages</div>
+            <div class="story-desc">En tant qu'utilisateur, je veux accéder aux paramètres de l'app.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Liste settings (compte, notifs, déconnexion)</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Toggle notifications</span><span class="task-estimate">1h</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- EPIC: Notifications -->
+    <div class="epic">
+      <div class="epic-header">
+        <span class="epic-title">🔔 EPIC 6: Notifications</span>
+        <span class="epic-meta">4 stories • ~13 pts</span>
+      </div>
+      <div class="epic-body">
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">NOTIF-001</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">API: CRUD Notifications</div>
+            <div class="story-desc">En tant qu'API, je veux gérer les notifications (création, lecture, marquage lu).</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Query getNotifications(profileId)</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Query getUnreadCount</span><span class="task-estimate">0.5h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Mutation markAsRead</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Service createNotification</span><span class="task-estimate">1h</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">NOTIF-002</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Backend: CRON anniversaires</div>
+            <div class="story-desc">En tant que système, je veux générer des notifications pour les anniversaires (J-7, J-1, J).</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Supabase Edge Function ou NestJS CRON</span><span class="task-estimate">3h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Query événements upcoming</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Création batch notifications</span><span class="task-estimate">2h</span></div>
+            </div>
+            <div class="ac">
+              <div class="ac-title">Acceptance Criteria</div>
+              <div class="ac-item">CRON exécuté quotidiennement à 8h</div>
+              <div class="ac-item">Notif créée pour chaque membre de la famille</div>
+              <div class="ac-item">Pas de doublon si déjà notifié</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">NOTIF-003</span>
+            <span class="story-priority priority-must">MUST</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Écran Centre Notifications</div>
+            <div class="story-desc">En tant qu'utilisateur, je veux voir toutes mes notifications.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Liste notifications avec badges couleur</span><span class="task-estimate">3h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Swipe to mark as read</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Tap → navigation vers profil/événement</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Badge unread dans tab bar</span><span class="task-estimate">1h</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="story">
+          <div class="story-header">
+            <span class="story-id">NOTIF-004</span>
+            <span class="story-priority priority-should">SHOULD</span>
+          </div>
+          <div class="story-content">
+            <div class="story-title">Mobile: Push Notifications (FCM)</div>
+            <div class="story-desc">En tant qu'utilisateur, je veux recevoir des push notifications.</div>
+            <div class="tasks">
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Setup Firebase Cloud Messaging</span><span class="task-estimate">2h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Stocker FCM token dans Profile</span><span class="task-estimate">1h</span></div>
+              <div class="task"><span class="task-check">☐</span><span class="task-text">Service envoi push dans CRON</span><span class="task-estimate">2h</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      FamilyRoots — Backlog Priorisé MVP — Paquet 2 — Steve-Landry KOUOKAM NONO — HETIC Mastère Data & IA
+    </div>
+  </div>
+</body>
+</html>
