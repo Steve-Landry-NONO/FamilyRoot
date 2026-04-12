@@ -1,0 +1,228 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input AddMemberInput {
+  bio: String
+  birthDate: DateTime
+  birthPlace: String
+  deathDate: DateTime
+  firstName: String!
+  gender: String
+  lastName: String!
+
+  """ID of an existing member to create a relationship with"""
+  relatedMemberId: String!
+
+  """Type of relationship: PARENT, CHILD, or SPOUSE"""
+  relationType: String!
+}
+
+input CreateFamilyInput {
+  """Founder first name"""
+  founderFirstName: String!
+
+  """Founder last name"""
+  founderLastName: String!
+
+  """Family name (e.g., "Famille Dupont")"""
+  name: String!
+}
+
+type Dashboard {
+  family: Family!
+  generationCount: Int!
+  memberCount: Int!
+  recentMembers: [RecentMember!]!
+  upcomingEvents: [UpcomingEvent!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Family {
+  """Public family code (FAM-XXXXXX)"""
+  code: String!
+  createdAt: DateTime!
+  id: ID!
+  memberCount: Int
+  members: [Member!]
+  name: String!
+  tier: FamilyTier!
+  updatedAt: DateTime!
+}
+
+"""Subscription tier for a family"""
+enum FamilyTier {
+  FAMILLE
+  FAMILLE_PLUS
+  FREE
+}
+
+"""Gender of a family member"""
+enum Gender {
+  FEMALE
+  MALE
+  OTHER
+}
+
+type Invitation {
+  """Invitation code (INV-XXXXXXXXXXXX)"""
+  code: String!
+  createdAt: DateTime!
+  createdByName: String
+  expiresAt: DateTime!
+  familyName: String
+  id: ID!
+
+  """Whether the invitation has expired"""
+  isExpired: Boolean!
+
+  """Whether the invitation has been used"""
+  isUsed: Boolean!
+  usedAt: DateTime
+}
+
+type Member {
+  bio: String
+  birthDate: DateTime
+  birthPlace: String
+  createdAt: DateTime!
+  deathDate: DateTime
+  firstName: String!
+  gender: Gender
+
+  """Whether this member has a linked user account"""
+  hasLinkedProfile: Boolean
+  id: ID!
+
+  """Whether this member is deceased"""
+  isDeceased: Boolean
+  lastName: String!
+  photoUrl: String
+  relations: [Relationship!]
+  updatedAt: DateTime!
+}
+
+type Mutation {
+  addMember(input: AddMemberInput!): Member!
+  createFamily(input: CreateFamilyInput!): Family!
+  createInvitation(expiresInDays: Float = 7): Invitation!
+  joinFamily(code: String!, firstName: String!, lastName: String!): Boolean!
+  markAllNotificationsAsRead: Int!
+  markNotificationAsRead(id: String!): Notification!
+
+  """Update FCM token for push notifications"""
+  updateFcmToken(token: String!): Profile!
+  updateMember(id: String!, input: UpdateMemberInput!): Member!
+
+  """Update current user profile"""
+  updateProfile(input: UpdateProfileInput!): Profile!
+}
+
+type Notification {
+  body: String!
+  createdAt: DateTime!
+  id: ID!
+  isRead: Boolean!
+  title: String!
+  type: NotificationTypeEnum!
+}
+
+"""Type of notification"""
+enum NotificationTypeEnum {
+  BIRTHDAY_REMINDER
+  FAMILY_JOINED
+  INVITATION_USED
+  MEMBER_ADDED
+  WEDDING_REMINDER
+}
+
+type Profile {
+  avatarUrl: String
+  createdAt: DateTime!
+  email: String!
+  families: [UserFamily!]
+  firstName: String!
+
+  """Whether the user has a family"""
+  hasFamily: Boolean!
+  id: ID!
+  lastName: String!
+  updatedAt: DateTime!
+}
+
+type Query {
+  dashboard: Dashboard
+  familyTree: Family
+
+  """Get current user profile"""
+  me: Profile!
+  member(id: String!): Member
+  notifications(limit: Int = 50, unreadOnly: Boolean = false): [Notification!]!
+  unreadNotificationCount: Int!
+  validateInvitationCode(code: String!): ValidateInvitationResult!
+}
+
+type RecentMember {
+  createdAt: DateTime!
+  firstName: String!
+  id: ID!
+  lastName: String!
+  photoUrl: String
+}
+
+"""Type of relationship between members"""
+enum RelationType {
+  CHILD
+  PARENT
+  SPOUSE
+}
+
+type Relationship {
+  createdAt: DateTime!
+  fromMember: Member!
+  id: ID!
+  toMember: Member!
+  type: RelationType!
+}
+
+type UpcomingEvent {
+  date: DateTime!
+  id: ID!
+  memberName: String
+  title: String!
+  type: String!
+}
+
+input UpdateMemberInput {
+  bio: String
+  birthDate: DateTime
+  birthPlace: String
+  deathDate: DateTime
+  firstName: String
+  gender: String
+  lastName: String
+  photoUrl: String
+}
+
+input UpdateProfileInput {
+  avatarUrl: String
+  firstName: String
+  lastName: String
+}
+
+type UserFamily {
+  family: Family!
+  id: ID!
+  joinedAt: DateTime!
+  role: String!
+}
+
+type ValidateInvitationResult {
+  error: String
+  familyName: String
+  valid: Boolean!
+}
