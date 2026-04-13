@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../family/providers/family_provider.dart';
-import '../widgets/family_tree_painter.dart';
+import '../widgets/family_tree_graphview.dart';
 import '../../member/providers/member_provider.dart';
 
 class TreeScreen extends ConsumerStatefulWidget {
@@ -121,9 +121,8 @@ class _TreeScreenState extends ConsumerState<TreeScreen> {
         ),
       );
     }
-    return FamilyTreeCanvas(
+    return FamilyTreeGraphView(
       members: members.cast<Map<String, dynamic>>(),
-      relationships: (state.relationships ?? []).cast<Map<String, dynamic>>(),
       onMemberTap: (member) {
         showModalBottomSheet(
           context: context,

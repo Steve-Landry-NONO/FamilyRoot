@@ -112,8 +112,18 @@ export class FamilyService {
                 avatarUrl: true,
               },
             },
-            relationsFrom: true,
-            relationsTo: true,
+            relationsFrom: {
+              include: {
+                fromMember: true,
+                toMember: true,
+              },
+            },
+            relationsTo: {
+              include: {
+                fromMember: true,
+                toMember: true,
+              },
+            },
           },
         },
         _count: {
@@ -187,8 +197,18 @@ export class FamilyService {
                     avatarUrl: true,
                   },
                 },
-                relationsFrom: true,
-                relationsTo: true,
+                relationsFrom: {
+                  include: {
+                    fromMember: true,
+                    toMember: true,
+                  },
+                },
+                relationsTo: {
+                  include: {
+                    fromMember: true,
+                    toMember: true,
+                  },
+                },
               },
             },
             _count: {
@@ -255,8 +275,7 @@ export class FamilyService {
       // Membres récemment ajoutés
       this.prisma.member.findMany({
         where: { familyId },
-        orderBy: { createdAt: 'desc' },
-        take: 5,
+          take: 5,
         select: {
           id: true,
           firstName: true,
