@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:graphql_flutter/graphql_flutter.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/services/graphql_service.dart';
+import '../../../core/graphql/queries.dart';
 
 class JoinFamilyScreen extends ConsumerStatefulWidget {
   const JoinFamilyScreen({super.key});
-
   @override
   ConsumerState<JoinFamilyScreen> createState() => _JoinFamilyScreenState();
 }
@@ -19,6 +20,7 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
   bool _isLoading = false;
   bool _isValidating = false;
   String? _familyName;
+  String? _validatedCode;
 
   @override
   void dispose() {
@@ -31,45 +33,72 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
   Future<void> _validateCode() async {
     final code = _codeController.text.trim().toUpperCase();
     if (code.isEmpty) return;
-
     setState(() => _isValidating = true);
-
     try {
-      // TODO: Appel GraphQL pour valider le code
-      await Future.delayed(const Duration(seconds: 1)); // Simulation
-      
-      setState(() {
-        _familyName = 'Famille Exemple'; // Résultat simulé
-      });
+      final client = GraphQLService.instance.client;
+      final result = await client.query(
+        QueryOptions(
+          document: gql(queryValidateInvitation),
+          variables: {'code': code},
+          fetchPolicy: FetchPolicy.networkOnly,
+        ),
+      );
+      if (result.hasException) throw Exception(result.exception.toString());
+      final data = result.data?['validateInvitationCode'];
+      if (data == null) throw Exception('Réponse invalide');
+      if (data['valid'] == true) {
+        setState(() {
+          _familyName = data['familyName'] as String?;
+          _validatedCode = code;
+        });
+      } else {
+        final error = data['error'] as String? ?? 'Code invalide';
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error), backgroundColor: AppTheme.error),
+          );
+        }
+        setState(() { _familyName = null; _validatedCode = null; });
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Code invalide: ${e.toString()}'),
-            backgroundColor: AppTheme.error,
-          ),
+          SnackBar(content: Text('Erreur: \${e.toString()}'), backgroundColor: AppTheme.error),
         );
       }
     } finally {
-      if (mounted) {
-        setState(() => _isValidating = false);
-      }
+      if (mounted) setState(() => _isValidating = false);
     }
   }
 
   Future<void> _handleJoinFamily() async {
     if (!_formKey.currentState!.validate()) return;
-
+    if (_validatedCode == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Veuillez d\'abord valider le code')),
+      );
+      return;
+    }
     setState(() => _isLoading = true);
-
     try {
-      // TODO: Appel GraphQL pour rejoindre la famille
-      await Future.delayed(const Duration(seconds: 1)); // Simulation
-
+      final client = GraphQLService.instance.client;
+      final result = await client.mutate(
+        MutationOptions(
+          document: gql(mutationJoinFamily),
+          variables: {
+            'code': _validatedCode,
+            'firstName': _firstNameController.text.trim(),
+            'lastName': _lastNameController.text.trim(),
+          },
+        ),
+      );
+      if (result.hasException) throw Exception(result.exception.toString());
+      final success = result.data?['joinFamily'] as bool? ?? false;
+      if (!success) throw Exception('Impossible de rejoindre la famille');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Vous avez rejoint la famille !'),
+          SnackBar(
+            content: Text('Vous avez rejoint \$_familyName !'),
             backgroundColor: AppTheme.primary,
           ),
         );
@@ -78,25 +107,18 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur: ${e.toString()}'),
-            backgroundColor: AppTheme.error,
-          ),
+          SnackBar(content: Text('Erreur: \${e.toString()}'), backgroundColor: AppTheme.error),
         );
       }
     } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rejoindre une famille'),
-      ),
+      appBar: AppBar(title: const Text('Rejoindre une famille')),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -105,12 +127,7 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Illustration
-                Icon(
-                  Icons.group_add,
-                  size: 80,
-                  color: AppTheme.primary,
-                ),
+                Icon(Icons.group_add, size: 80, color: AppTheme.primary),
                 const SizedBox(height: 16),
                 Text(
                   'Rejoignez votre famille',
@@ -124,65 +141,53 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
-
-                // Code d'invitation
                 TextFormField(
                   controller: _codeController,
                   textCapitalization: TextCapitalization.characters,
                   decoration: InputDecoration(
                     labelText: 'Code d\'invitation',
                     prefixIcon: const Icon(Icons.vpn_key_outlined),
-                    hintText: 'INV-XXXXXXXXXXXX',
+                    hintText: 'FAM-XXXXXXX',
                     suffixIcon: _isValidating
                         ? const Padding(
                             padding: EdgeInsets.all(12),
                             child: SizedBox(
-                              height: 20,
-                              width: 20,
+                              height: 20, width: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             ),
                           )
                         : IconButton(
                             icon: const Icon(Icons.check_circle_outline),
                             onPressed: _validateCode,
+                            tooltip: 'Valider le code',
                           ),
                   ),
                   onChanged: (value) {
                     if (_familyName != null) {
-                      setState(() => _familyName = null);
+                      setState(() { _familyName = null; _validatedCode = null; });
                     }
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Veuillez entrer le code d\'invitation';
-                    }
+                    if (value == null || value.isEmpty) return 'Veuillez entrer le code d\'invitation';
                     return null;
                   },
                 ),
-                
-                // Famille trouvée
                 if (_familyName != null) ...[
                   const SizedBox(height: 16),
                   Card(
-                    color: AppTheme.primary.withOpacity(0.1),
+                    color: AppTheme.primary.withValues(alpha: 0.1),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Row(
                         children: [
-                          const Icon(
-                            Icons.check_circle,
-                            color: AppTheme.primary,
-                          ),
+                          const Icon(Icons.check_circle, color: AppTheme.primary),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text('Famille trouvée !'),
-                                Text(
-                                  _familyName!,
-                                  style: Theme.of(context).textTheme.titleMedium,
-                                ),
+                                Text(_familyName!, style: Theme.of(context).textTheme.titleMedium),
                               ],
                             ),
                           ),
@@ -191,14 +196,8 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-
-                  Text(
-                    'Vos informations',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+                  Text('Vos informations', style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 12),
-
-                  // Prénom
                   TextFormField(
                     controller: _firstNameController,
                     decoration: const InputDecoration(
@@ -206,15 +205,11 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
                       prefixIcon: Icon(Icons.person_outline),
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Veuillez entrer votre prénom';
-                      }
+                      if (value == null || value.isEmpty) return 'Veuillez entrer votre prénom';
                       return null;
                     },
                   ),
                   const SizedBox(height: 16),
-
-                  // Nom
                   TextFormField(
                     controller: _lastNameController,
                     decoration: const InputDecoration(
@@ -222,25 +217,17 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
                       prefixIcon: Icon(Icons.person_outline),
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Veuillez entrer votre nom';
-                      }
+                      if (value == null || value.isEmpty) return 'Veuillez entrer votre nom';
                       return null;
                     },
                   ),
                   const SizedBox(height: 32),
-
-                  // Bouton rejoindre
                   ElevatedButton(
                     onPressed: _isLoading ? null : _handleJoinFamily,
                     child: _isLoading
                         ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
+                            height: 20, width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                           )
                         : const Text('Rejoindre la famille'),
                   ),

@@ -4,7 +4,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 
-// Modules
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { ProfileModule } from './profile/profile.module';
@@ -15,13 +14,11 @@ import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
-    // Configuration globale
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
     }),
 
-    // GraphQL avec Apollo
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
@@ -29,10 +26,10 @@ import { NotificationModule } from './notification/notification.module';
       playground: process.env.NODE_ENV !== 'production',
       introspection: process.env.NODE_ENV !== 'production',
       context: ({ req }) => ({ req }),
+      // Désactiver la protection CSRF en dev (Flutter Web ne peut pas envoyer ces headers)
+      csrfPrevention: false,
       formatError: (error) => {
-        // Formater les erreurs pour le client
         const originalError = error.extensions?.originalError as any;
-        
         return {
           message: error.message,
           code: error.extensions?.code || 'INTERNAL_ERROR',
@@ -41,7 +38,6 @@ import { NotificationModule } from './notification/notification.module';
       },
     }),
 
-    // Modules métier
     PrismaModule,
     AuthModule,
     ProfileModule,

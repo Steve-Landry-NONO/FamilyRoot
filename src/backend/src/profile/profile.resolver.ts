@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ResolveField, Parent } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -11,20 +11,17 @@ import { UpdateProfileInput } from './dto/update-profile.input';
 export class ProfileResolver {
   constructor(private profileService: ProfileService) {}
 
-  /**
-   * Query: me
-   * Retourne le profil de l'utilisateur connecté
-   */
   @Query(() => ProfileType, { name: 'me', description: 'Get current user profile' })
   @UseGuards(JwtAuthGuard)
   async me(@CurrentUser() user: ProfileModel): Promise<ProfileModel> {
     return this.profileService.findById(user.id);
   }
 
-  /**
-   * Mutation: updateProfile
-   * Met à jour le profil de l'utilisateur connecté
-   */
+  @ResolveField('hasFamily', () => Boolean)
+  async hasFamily(@Parent() profile: ProfileModel): Promise<boolean> {
+    return this.profileService.hasFamily(profile.id);
+  }
+
   @Mutation(() => ProfileType, { description: 'Update current user profile' })
   @UseGuards(JwtAuthGuard)
   async updateProfile(
@@ -34,10 +31,6 @@ export class ProfileResolver {
     return this.profileService.update(user.id, input);
   }
 
-  /**
-   * Mutation: updateFcmToken
-   * Met à jour le token FCM pour les push notifications
-   */
   @Mutation(() => ProfileType, { description: 'Update FCM token for push notifications' })
   @UseGuards(JwtAuthGuard)
   async updateFcmToken(
