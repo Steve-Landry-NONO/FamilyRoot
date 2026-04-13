@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../core/theme/app_theme.dart';
-import '../../../core/services/graphql_service.dart';
-import '../../../core/graphql/queries.dart';
+import '../../family/providers/family_provider.dart';
 
 class CreateFamilyScreen extends ConsumerStatefulWidget {
   const CreateFamilyScreen({super.key});
-
   @override
   ConsumerState<CreateFamilyScreen> createState() => _CreateFamilyScreenState();
 }
@@ -18,7 +15,6 @@ class _CreateFamilyScreenState extends ConsumerState<CreateFamilyScreen> {
   final _familyNameController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -31,62 +27,35 @@ class _CreateFamilyScreenState extends ConsumerState<CreateFamilyScreen> {
   Future<void> _handleCreateFamily() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isLoading = true);
+    final success = await ref.read(familyProvider.notifier).createFamily(
+      familyName: _familyNameController.text.trim(),
+      firstName: _firstNameController.text.trim(),
+      lastName: _lastNameController.text.trim(),
+    );
 
-    try {
-      final result = await GraphQLService.instance.mutate(
-        mutationCreateFamily,
-        variables: {
-          'input': {
-            'name': _familyNameController.text.trim(),
-            'founderFirstName': _firstNameController.text.trim(),
-            'founderLastName': _lastNameController.text.trim(),
-          },
-        },
+    if (!mounted) return;
+
+    if (success) {
+      final family = ref.read(familyProvider).family;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Famille "${family?['name']}" créée ! Code : ${family?['code']}'),
+          backgroundColor: AppTheme.primary,
+        ),
       );
-
-      if (result.hasException) {
-        final message = result.exception?.graphqlErrors.isNotEmpty == true
-            ? result.exception!.graphqlErrors.first.message
-            : 'Erreur inconnue';
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Erreur : $message'),
-              backgroundColor: AppTheme.error,
-            ),
-          );
-        }
-        return;
-      }
-
-      final family = result.data?['createFamily'];
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Famille "${family['name']}" créée ! Code : ${family['code']}'),
-            backgroundColor: AppTheme.primary,
-          ),
-        );
-        context.go('/tree');
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur : ${e.toString()}'),
-            backgroundColor: AppTheme.error,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+      context.go('/tree');
+    } else {
+      final error = ref.read(familyProvider).error ?? 'Erreur inconnue';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur : $error'), backgroundColor: AppTheme.error),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(familyProvider).isLoading;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Créer une famille')),
       body: SafeArea(
@@ -111,7 +80,6 @@ class _CreateFamilyScreenState extends ConsumerState<CreateFamilyScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
-
                 TextFormField(
                   controller: _familyNameController,
                   decoration: const InputDecoration(
@@ -120,20 +88,14 @@ class _CreateFamilyScreenState extends ConsumerState<CreateFamilyScreen> {
                     hintText: 'Ex: Famille Dupont',
                   ),
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Veuillez entrer le nom de la famille';
-                    }
-                    if (value.trim().length < 2) {
-                      return 'Le nom doit contenir au moins 2 caractères';
-                    }
+                    if (value == null || value.trim().isEmpty) return 'Veuillez entrer le nom de la famille';
+                    if (value.trim().length < 2) return 'Le nom doit contenir au moins 2 caractères';
                     return null;
                   },
                 ),
                 const SizedBox(height: 24),
-
                 Text('Vos informations', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 12),
-
                 TextFormField(
                   controller: _firstNameController,
                   decoration: const InputDecoration(
@@ -141,14 +103,11 @@ class _CreateFamilyScreenState extends ConsumerState<CreateFamilyScreen> {
                     prefixIcon: Icon(Icons.person_outline),
                   ),
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Veuillez entrer votre prénom';
-                    }
+                    if (value == null || value.trim().isEmpty) return 'Veuillez entrer votre prénom';
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
-
                 TextFormField(
                   controller: _lastNameController,
                   decoration: const InputDecoration(
@@ -156,24 +115,17 @@ class _CreateFamilyScreenState extends ConsumerState<CreateFamilyScreen> {
                     prefixIcon: Icon(Icons.person_outline),
                   ),
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Veuillez entrer votre nom';
-                    }
+                    if (value == null || value.trim().isEmpty) return 'Veuillez entrer votre nom';
                     return null;
                   },
                 ),
                 const SizedBox(height: 32),
-
                 ElevatedButton(
-                  onPressed: _isLoading ? null : _handleCreateFamily,
-                  child: _isLoading
+                  onPressed: isLoading ? null : _handleCreateFamily,
+                  child: isLoading
                       ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
+                          height: 20, width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
                       : const Text('Créer la famille'),
                 ),

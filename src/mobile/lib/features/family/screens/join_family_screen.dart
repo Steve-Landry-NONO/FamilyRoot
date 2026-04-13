@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/services/graphql_service.dart';
-import '../../../core/graphql/queries.dart';
+import '../../family/providers/family_provider.dart';
 
 class JoinFamilyScreen extends ConsumerStatefulWidget {
   const JoinFamilyScreen({super.key});
@@ -17,7 +15,6 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
   final _codeController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  bool _isLoading = false;
   bool _isValidating = false;
   String? _familyName;
   String? _validatedCode;
@@ -35,36 +32,20 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
     if (code.isEmpty) return;
     setState(() => _isValidating = true);
     try {
-      final client = GraphQLService.instance.client;
-      final result = await client.query(
-        QueryOptions(
-          document: gql(queryValidateInvitation),
-          variables: {'code': code},
-          fetchPolicy: FetchPolicy.networkOnly,
-        ),
-      );
-      if (result.hasException) throw Exception(result.exception.toString());
-      final data = result.data?['validateInvitationCode'];
-      if (data == null) throw Exception('Réponse invalide');
-      if (data['valid'] == true) {
+      final result = await ref.read(familyProvider.notifier).validateInvitationCode(code);
+      if (result != null && result['valid'] == true) {
         setState(() {
-          _familyName = data['familyName'] as String?;
+          _familyName = result['familyName'] as String?;
           _validatedCode = code;
         });
       } else {
-        final error = data['error'] as String? ?? 'Code invalide';
+        final error = result?['error'] as String? ?? 'Code invalide';
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(error), backgroundColor: AppTheme.error),
           );
         }
         setState(() { _familyName = null; _validatedCode = null; });
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: \${e.toString()}'), backgroundColor: AppTheme.error),
-        );
       }
     } finally {
       if (mounted) setState(() => _isValidating = false);
@@ -79,44 +60,35 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
       );
       return;
     }
-    setState(() => _isLoading = true);
-    try {
-      final client = GraphQLService.instance.client;
-      final result = await client.mutate(
-        MutationOptions(
-          document: gql(mutationJoinFamily),
-          variables: {
-            'code': _validatedCode,
-            'firstName': _firstNameController.text.trim(),
-            'lastName': _lastNameController.text.trim(),
-          },
+
+    final success = await ref.read(familyProvider.notifier).joinFamily(
+      code: _validatedCode!,
+      firstName: _firstNameController.text.trim(),
+      lastName: _lastNameController.text.trim(),
+    );
+
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Vous avez rejoint $_familyName !'),
+          backgroundColor: AppTheme.primary,
         ),
       );
-      if (result.hasException) throw Exception(result.exception.toString());
-      final success = result.data?['joinFamily'] as bool? ?? false;
-      if (!success) throw Exception('Impossible de rejoindre la famille');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Vous avez rejoint \$_familyName !'),
-            backgroundColor: AppTheme.primary,
-          ),
-        );
-        context.go('/tree');
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: \${e.toString()}'), backgroundColor: AppTheme.error),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+      context.go('/tree');
+    } else {
+      final error = ref.read(familyProvider).error ?? 'Erreur inconnue';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur : $error'), backgroundColor: AppTheme.error),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(familyProvider).isLoading;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Rejoindre une famille')),
       body: SafeArea(
@@ -147,7 +119,7 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
                   decoration: InputDecoration(
                     labelText: 'Code d\'invitation',
                     prefixIcon: const Icon(Icons.vpn_key_outlined),
-                    hintText: 'FAM-XXXXXXX',
+                    hintText: 'INV-XXXXXXXXXXXX',
                     suffixIcon: _isValidating
                         ? const Padding(
                             padding: EdgeInsets.all(12),
@@ -223,8 +195,8 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
                   ),
                   const SizedBox(height: 32),
                   ElevatedButton(
-                    onPressed: _isLoading ? null : _handleJoinFamily,
-                    child: _isLoading
+                    onPressed: isLoading ? null : _handleJoinFamily,
+                    child: isLoading
                         ? const SizedBox(
                             height: 20, width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),

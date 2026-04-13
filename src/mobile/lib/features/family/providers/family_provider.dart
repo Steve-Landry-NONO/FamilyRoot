@@ -62,8 +62,8 @@ class FamilyNotifier extends StateNotifier<FamilyState> {
         variables: {
           'input': {
             'name': familyName,
-            'firstName': firstName,
-            'lastName': lastName,
+            'founderFirstName': firstName,
+            'founderLastName': lastName,
           },
         },
       );
@@ -105,8 +105,8 @@ class FamilyNotifier extends StateNotifier<FamilyState> {
         mutationJoinFamily,
         variables: {
           'code': code,
-          'firstName': firstName,
-          'lastName': lastName,
+          'founderFirstName': firstName,
+          'founderLastName': lastName,
         },
       );
 
