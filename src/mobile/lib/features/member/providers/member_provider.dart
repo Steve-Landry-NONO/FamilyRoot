@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/services/graphql_service.dart';
-import '../../core/graphql/queries.dart';
+import '../../../core/services/graphql_service.dart';
+import '../../../core/graphql/queries.dart';
 
 /// État d'un membre
 class MemberState {

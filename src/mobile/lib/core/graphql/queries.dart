@@ -1,6 +1,6 @@
-/// =====================
-/// QUERIES GraphQL
-/// =====================
+// =====================
+// QUERIES GraphQL
+// =====================
 
 const String queryMe = r'''
   query Me {

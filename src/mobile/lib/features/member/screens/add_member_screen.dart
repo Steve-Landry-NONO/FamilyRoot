@@ -168,7 +168,7 @@ class _AddMemberScreenState extends ConsumerState<AddMemberScreen> {
                     children: [
                       CircleAvatar(
                         radius: 50,
-                        backgroundColor: AppTheme.primary.withOpacity(0.1),
+                        backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
                         child: Icon(
                           _gender == 'MALE' ? Icons.person : Icons.person_2,
                           size: 50,
