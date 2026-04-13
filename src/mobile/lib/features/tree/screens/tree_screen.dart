@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../family/providers/family_provider.dart';
+import '../widgets/family_tree_painter.dart';
 import '../../member/providers/member_provider.dart';
 
 class TreeScreen extends ConsumerStatefulWidget {
@@ -120,59 +121,16 @@ class _TreeScreenState extends ConsumerState<TreeScreen> {
         ),
       );
     }
-    return RefreshIndicator(
-      onRefresh: () => ref.read(familyProvider.notifier).loadFamilyTree(),
-      child: ListView.separated(
-        padding: const EdgeInsets.all(16),
-        itemCount: members.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
-        itemBuilder: (context, index) {
-          final member = members[index] as Map<String, dynamic>;
-          final firstName = member['firstName'] as String? ?? '';
-          final lastName = member['lastName'] as String? ?? '';
-          final gender = member['gender'] as String?;
-          final isDeceased = member['isDeceased'] as bool? ?? false;
-          final hasLinked = member['hasLinkedProfile'] as bool? ?? false;
-          return Card(
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: AppTheme.primary.withValues(alpha: 0.15),
-                child: Text(
-                  firstName.isNotEmpty ? firstName[0].toUpperCase() : '?',
-                  style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold),
-                ),
-              ),
-              title: Text('$firstName $lastName'),
-              subtitle: Row(
-                children: [
-                  if (gender != null) ...[
-                    Icon(
-                      gender == 'MALE' ? Icons.male : gender == 'FEMALE' ? Icons.female : Icons.person,
-                      size: 14, color: Colors.grey,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      gender == 'MALE' ? 'Homme' : gender == 'FEMALE' ? 'Femme' : 'Autre',
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    const SizedBox(width: 8),
-                  ],
-                  if (isDeceased)
-                    const Text('† Décédé', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                ],
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (hasLinked) const Icon(Icons.verified, size: 16, color: AppTheme.primary),
-                  const SizedBox(width: 4),
-                  Icon(Icons.chevron_right, color: Colors.grey[400]),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+    return FamilyTreeCanvas(
+      members: members.cast<Map<String, dynamic>>(),
+      relationships: (state.relationships ?? []).cast<Map<String, dynamic>>(),
+      onMemberTap: (member) {
+        showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.transparent,
+          builder: (ctx) => _MemberDetailSheet(member: member),
+        );
+      },
     );
   }
 }
@@ -400,6 +358,83 @@ class _InviteSheetState extends ConsumerState<_InviteSheet> {
                 : const Icon(Icons.add),
             label: Text(_inviteCode == null ? 'Générer un code d\'invitation' : 'Nouveau code'),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Bottom Sheet : Détail membre ─────────────────────────────────────────────
+
+class _MemberDetailSheet extends StatelessWidget {
+  final Map<String, dynamic> member;
+  const _MemberDetailSheet({required this.member});
+
+  @override
+  Widget build(BuildContext context) {
+    final firstName = member['firstName'] as String? ?? '';
+    final lastName = member['lastName'] as String? ?? '';
+    final gender = member['gender'] as String?;
+    final isDeceased = member['isDeceased'] as bool? ?? false;
+    final hasLinked = member['hasLinkedProfile'] as bool? ?? false;
+    final birthDate = member['birthDate'] as String?;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Center(
+            child: Container(
+              width: 40, height: 4,
+              decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
+            ),
+          ),
+          const SizedBox(height: 20),
+          CircleAvatar(
+            radius: 36,
+            backgroundColor: AppTheme.primary.withValues(alpha: 0.15),
+            child: Text(
+              firstName.isNotEmpty ? firstName[0].toUpperCase() : '?',
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.primary),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text('$firstName $lastName', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (gender != null) ...[
+                Icon(
+                  gender == 'MALE' ? Icons.male : Icons.female,
+                  size: 16,
+                  color: gender == 'MALE' ? Colors.blue : Colors.pink,
+                ),
+                const SizedBox(width: 4),
+                Text(gender == 'MALE' ? 'Homme' : 'Femme',
+                  style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(width: 12),
+              ],
+              if (isDeceased)
+                Text('† Décédé(e)', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey)),
+              if (hasLinked) ...[
+                const Icon(Icons.verified, size: 14, color: AppTheme.primary),
+                const SizedBox(width: 4),
+                Text('Profil lié', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.primary)),
+              ],
+            ],
+          ),
+          if (birthDate != null) ...[
+            const SizedBox(height: 8),
+            Text('Né(e) le ${birthDate.substring(0, 10)}',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey)),
+          ],
+          const SizedBox(height: 24),
         ],
       ),
     );
