@@ -16,17 +16,16 @@ describe('GraphQL API (e2e)', () => {
     await app.init();
   });
 
-  it('serves the GraphQL endpoint', async () => {
-    const response = await request(app.getHttpServer())
+  it('serves the GraphQL endpoint', () => {
+    return request(app.getHttpServer())
       .post('/graphql')
       .send({ query: '{ __typename }' })
-      .expect(200);
-
-    expect(response.body).toEqual({
-      data: {
-        __typename: 'Query',
-      },
-    });
+      .expect(200)
+      .expect({
+        data: {
+          __typename: 'Query',
+        },
+      });
   });
 
   afterEach(async () => {
