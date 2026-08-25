@@ -4,7 +4,7 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
 
-describe('AppController (e2e)', () => {
+describe('GraphQL API (e2e)', () => {
   let app: INestApplication<App>;
 
   beforeEach(async () => {
@@ -16,11 +16,17 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  it('serves the GraphQL endpoint', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/graphql')
+      .send({ query: '{ __typename }' })
+      .expect(200);
+
+    expect(response.body).toEqual({
+      data: {
+        __typename: 'Query',
+      },
+    });
   });
 
   afterEach(async () => {
