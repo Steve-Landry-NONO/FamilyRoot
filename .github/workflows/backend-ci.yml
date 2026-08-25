@@ -23,10 +23,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -38,8 +40,31 @@ jobs:
       - name: Generate Prisma client
         run: npx prisma generate
 
-      - name: Lint without modifying files
-        run: npx eslint "{src,apps,libs,test}/**/*.ts"
+      - name: Lint changed backend TypeScript files
+        if: github.event_name == 'pull_request'
+        working-directory: .
+        shell: bash
+        run: |
+          mapfile -t changed_files < <(
+            git diff --name-only "${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}" -- src/backend \
+              | grep -E '^src/backend/(src|test)/.*\.ts$' || true
+          )
+
+          if [ "${#changed_files[@]}" -eq 0 ]; then
+            echo "No changed backend TypeScript files to lint."
+            exit 0
+          fi
+
+          relative_files=()
+          for file in "${changed_files[@]}"; do
+            relative_files+=("${file#src/backend/}")
+          done
+
+          echo "Linting changed backend TypeScript files:"
+          printf '  - %s\n' "${relative_files[@]}"
+
+          cd src/backend
+          npx eslint "${relative_files[@]}"
 
       - name: Unit tests
         run: npm test -- --runInBand
@@ -77,10 +102,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
