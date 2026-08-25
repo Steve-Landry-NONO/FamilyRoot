@@ -12,7 +12,7 @@ void main() async {
 
   await Supabase.initialize(
     url: AppConfig.supabaseUrl,
-    anonKey: AppConfig.supabaseAnonKey,
+    publishableKey: AppConfig.supabaseAnonKey,
   );
 
   // Initialiser le service GraphQL
