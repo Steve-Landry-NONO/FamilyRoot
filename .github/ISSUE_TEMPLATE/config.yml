@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: FamilyRoots agent operating rules
+    url: https://github.com/Steve-Landry-NONO/FamilyRoot/blob/develop/AGENTS.md
+    about: Read the agent contract before creating autonomous work.
